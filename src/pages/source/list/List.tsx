@@ -1,9 +1,7 @@
 import React from 'react';
 
-interface Props {}
-
-const List = (props: Props) => {
-  return <div>sdf</div>;
-};
+function List() {
+  return <div>sdfdsf</div>;
+}
 
 export default List;
