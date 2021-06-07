@@ -7,7 +7,7 @@ export const localStore = {
   AUTHORIZATION: 'Authorization',
 };
 
-export const getToken = () => {
+export const getToken = (): any => {
   return localStorage.getItem(localStore.ACCESS_TOKEN);
 };
 

@@ -19,8 +19,13 @@ export class PATH {
   static PAGE_404 = '/404';
   static PAGE_500 = '/500';
 
-  //schedule list
-  static SCHEDULE_MANAGEMENT = '/schedules';
-  static SCHEDULE_LIST = '/schedules/list';
-  static SCHEDULE_DETAIL = '/schedules/detail/:id/:abc';
+  static SOURCE_LIST = '/source/list';
+  static SOURCE_VCG_IMAGE_TEXT = '/source/vcg-image/text';
+  static SOURCE_VCG_IMAGE_KEYWOR = '/source/vcg-image/keyword';
+  static SOURCE_VCG_IMAGE_SENSITIVE = '/source/vcg-image/sensitive';
+  static SOURCE_CFP_IMAGE_LIST = '/source/cfp-image/list';
+  static SOURCE_VCG_VIDEO_TEXT = '/source/vcg-video/text';
+  static SOURCE_VCG_VIDEO_KEYWOR = '/source/vcg-video/keyword';
+  static SOURCE_VCG_VIDEO_SENSITIVE = '/source/vcg-video/sensitive';
+  static SOURCE_CFP_VIDEO_LIST = '/source/cfp-video/list';
 }

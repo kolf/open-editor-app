@@ -1,51 +1,57 @@
 .logo {
-    height: 32px;
-    margin: 16px;
-    background: rgba(255, 255, 255, 0.3);
-    text-align: center;
+  height: 32px;
+  margin: 16px;
+  background: rgba(255, 255, 255, 0.3);
+  text-align: center;
+  font-weight: bold;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.site-layout {
+  &-header {
+    padding: 0px;
+  }
+  &-background {
+    background: #fff;
+  }
+  &-content {
+    padding: 24px;
+    min-height: 85vh;
+  }
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  padding-right: 16px;
+  &-logo {
+    font-size: 18px;
+    height:64px;
+    margin-bottom: 0;
+    padding-left: 24px;
+    padding-right: 12px;
+  }
+
+  & .userName {
+    margin-left: 10px;
     font-weight: bold;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .site-layout {
-    &-header {
-      padding: 0px;
-    }
-    &-background {
-      background: #fff;
-    }
-    &-content {
-      padding: 24px;
-      min-height: 75vh;
-    }
+    color: gray;
   }
 
-
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 100%;
-    padding-right: 16px;
-
-    & .userName {
-      margin-left: 10px;
-      font-weight: bold;
-      color: gray;
-    }
-
-    &-profile {
-      cursor: pointer;
-    }
+  &-profile {
+    cursor: pointer;
   }
+}
 
-  .breadcrumbMenu {
-    margin: 15px;
+.breadcrumbMenu {
+  margin: 15px;
 
-    &-item {
-      cursor: pointer;
-    }
+  &-item {
+    cursor: pointer;
   }
+}

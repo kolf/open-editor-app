@@ -60,11 +60,12 @@ export const authenticateSlice = createSlice({
     });
 
     builder.addCase(login.fulfilled, (state, action) => {
+      console.log(action.payload, 'action.payload');
       state.loading = false;
-      state.user = action.payload.data.user;
-      state.token = action.payload.data.token;
-      localStorage.setItem('accessToken', action.payload.data.token);
-      localStorage.setItem('user', JSON.stringify(action.payload.data.user));
+      state.user = action.payload.user;
+      state.token = action.payload.token;
+      localStorage.setItem('accessToken', action.payload.token);
+      localStorage.setItem('user', JSON.stringify(action.payload.user));
     });
 
     builder.addCase(getMe.pending, (state) => {

@@ -6,10 +6,6 @@ import './styles.scss';
 
 const { SubMenu } = Menu;
 
-type Props = {
-  location: any;
-};
-
 const getMenuActive = (path: string) => {
   const listPath = path.split('/');
   return {
@@ -18,7 +14,8 @@ const getMenuActive = (path: string) => {
   };
 };
 
-const MenuLink: React.FC<Props> = memo(function MenuLink({ location }) {
+const MenuLink: React.FC<any> = ({ location, menuKey }) => {
+  console.log(location, menuKey, 'location');
   const menu = getMenuActive(location.pathname);
 
   return (
@@ -56,6 +53,6 @@ const MenuLink: React.FC<Props> = memo(function MenuLink({ location }) {
       })}
     </Menu>
   );
-});
+};
 
 export default withRouter(MenuLink);

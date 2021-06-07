@@ -1,12 +1,21 @@
-.login{
-    display: flex;
-    height: 100vh;
+.login {
+  display: flex;
+  height: 100vh;
 
-    &-form {
-        border: 1px solid #ddd;
-        align-items: center;
-        justify-content: center;
-        padding: 20px;
-        width: 100%;
+  &-form {
+    background: #fff;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    width: 320px;
+  }
+  &-brand {
+    height: 140px;
+    text-align: center;
+    padding: 30px 0;
+    & > img {
+      display: inline-block;
+      width: 120px;
     }
+  }
 }

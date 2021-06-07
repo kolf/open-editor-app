@@ -1,21 +1,13 @@
-import { Button, Col, Form, Input, Row, Checkbox } from 'antd';
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
+import { Button, Col, Form, Input, Row, Checkbox } from 'antd';
 import { login } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
+import logoUrl from 'src/assets/img/logo.svg';
 import './styles.scss';
 
 Login.propTypes = {};
-
-const layout = {
-  labelCol: { span: 8 },
-  wrapperCol: { span: 10 },
-};
-
-const tailLayout = {
-  wrapperCol: { offset: 8, span: 16 },
-};
 
 function Login() {
   const dispatch = useDispatch();
@@ -35,49 +27,36 @@ function Login() {
     }
   };
 
-  const onFinishFailed = (errorInfo: any) => {
-    console.log('Failed:', errorInfo);
-  };
-
   return (
-    <Row justify="center" align="middle" className="login">
-      <Col xxl={8} xl={10} md={16} sm={20} xs={22} span={8}>
-        <div className="login-form">
-          <Form
-            {...layout}
-            name="basic"
-            initialValues={{ remember: true }}
-            onFinish={onFinish}
-            onFinishFailed={onFinishFailed}
-          >
-            <Form.Item
-              label="Login id"
-              name="login_id"
-              rules={[{ required: true, message: 'Please input your login id!' }]}
-            >
-              <Input />
-            </Form.Item>
-
-            <Form.Item
-              label="Password"
-              name="password"
-              rules={[{ required: true, message: 'Please input your password!' }]}
-            >
-              <Input.Password />
-            </Form.Item>
-
-            <Form.Item {...tailLayout} name="remember" valuePropName="checked">
-              <Checkbox>Remember me</Checkbox>
-            </Form.Item>
-
-            <Form.Item {...tailLayout}>
-              <Button type="primary" htmlType="submit" loading={loading}>
-                Submit
-              </Button>
-            </Form.Item>
-          </Form>
+    <Row
+      justify="center"
+      align="middle"
+      className="login"
+      style={{
+        backgroundImage: `url(https://bing.ioliu.cn/v1/rand?w=1920&h=1080)`,
+      }}
+    >
+      <div className="login-form">
+        <div className="login-brand">
+          <img src={logoUrl} title="视觉中国" />
         </div>
-      </Col>
+        <Form initialValues={{ remember: true }} onFinish={onFinish}>
+          <Form.Item name="userName" rules={[{ required: true, message: '请输入用户名！' }]}>
+            <Input size="large" placeholder="请输入用户名" />
+          </Form.Item>
+          <Form.Item name="password" rules={[{ required: true, message: '请输入用户密码!' }]}>
+            <Input.Password size="large" placeholder="请输入用户密码" />
+          </Form.Item>
+          <Form.Item>
+            <Button size="large" type="primary" htmlType="submit" loading={loading} block>
+              登陆
+            </Button>
+          </Form.Item>
+          <Form.Item name="remember" valuePropName="checked">
+            <Checkbox>记住我</Checkbox>
+          </Form.Item>
+        </Form>
+      </div>
     </Row>
   );
 }
