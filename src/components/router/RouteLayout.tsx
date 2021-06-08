@@ -24,7 +24,7 @@ export const RouteLayout: React.FC<Props> = ({
   return (
     <Route
       {...props}
-      render={(ownProps) => {
+      render={ownProps => {
         if (Layout)
           return (
             <Layout>
@@ -40,5 +40,5 @@ export const RouteLayout: React.FC<Props> = ({
 export default RouteLayout;
 
 RouteLayout.defaultProps = {
-  isPrivate: true,
+  isPrivate: true
 };

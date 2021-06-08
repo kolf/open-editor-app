@@ -5,17 +5,17 @@ interface CollapsedState {
 }
 
 const initialState: CollapsedState = {
-  isCollapsed: false,
+  isCollapsed: false
 };
 
 export const collapsedSlice = createSlice({
   name: 'collapsed',
   initialState,
   reducers: {
-    setIsCollapsed: (state) => {
+    setIsCollapsed: state => {
       state.isCollapsed = !state.isCollapsed;
-    },
-  },
+    }
+  }
 });
 
 const { actions, reducer } = collapsedSlice;

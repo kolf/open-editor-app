@@ -1,5 +1,5 @@
 import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import authService from 'src/api/authApi';
+import authService from 'src/services/authService';
 interface AuthenticateState {
   token: string;
   user: any;
@@ -11,7 +11,7 @@ const initialState: AuthenticateState = {
   token: localStorage.getItem('accessToken') || '',
   loading: false,
   user: undefined,
-  error: null,
+  error: null
 };
 
 export const login = createAsyncThunk('users/login', async (params: any) => {
@@ -31,24 +31,24 @@ export const authenticateSlice = createSlice({
     setToken: (state, action: PayloadAction<string>) => {
       state.token = action.payload;
     },
-    removeToken: (state) => {
+    removeToken: state => {
       state.token = '';
     },
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
     },
-    logOut: (state) => {
+    logOut: state => {
       state.token = '';
       state.user = undefined;
       localStorage.removeItem('user');
       localStorage.removeItem('accessToken');
     },
-    setLoading: (state) => {
+    setLoading: state => {
       state.loading = true;
-    },
+    }
   },
-  extraReducers: (builder) => {
-    builder.addCase(login.pending, (state) => {
+  extraReducers: builder => {
+    builder.addCase(login.pending, state => {
       state.loading = true;
     });
 
@@ -68,7 +68,7 @@ export const authenticateSlice = createSlice({
       localStorage.setItem('user', JSON.stringify(action.payload.user));
     });
 
-    builder.addCase(getMe.pending, (state) => {
+    builder.addCase(getMe.pending, state => {
       state.loading = true;
     });
 
@@ -84,7 +84,7 @@ export const authenticateSlice = createSlice({
       state.loading = false;
       state.user = action.payload.data;
     });
-  },
+  }
 });
 
 const { actions, reducer } = authenticateSlice;

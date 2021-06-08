@@ -4,13 +4,13 @@ export const TypeToast = {
   SUCCESS: 'success',
   INFO: 'info',
   WARNING: 'warning',
-  ERROR: 'error',
+  ERROR: 'error'
 };
 
 export const toastMessage = (message: string, description: string, type: string = TypeToast.SUCCESS) => {
   const messageToast = {
     message,
-    description,
+    description
   };
   switch (type) {
     case TypeToast.ERROR:

@@ -5,10 +5,11 @@ const proxys = {
   passport: 'passportservice-vcg-com',
   editor: 'editservice-vcg-com', //开发环境
   edge: 'edgeservice-vcg-com',
+  outsourcing: 'outsourcingservice-vcg-com'
 };
 
 module.exports = function (app) {
-  Object.keys(proxys).forEach((key) => {
+  Object.keys(proxys).forEach(key => {
     const target = `http://${proxys[key]}.${ALI_CONTAINER}`;
     app.use(
       `/api/${key}/*`,
@@ -16,8 +17,8 @@ module.exports = function (app) {
         target,
         changeOrigin: true,
         logLevel: 'debug',
-        pathRewrite: (path, req) => path.replace(`/api/${key}`, ''),
-      }),
+        pathRewrite: (path, req) => path.replace(`/api/${key}`, '')
+      })
     );
   });
 };

@@ -8,21 +8,21 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
   axiosInstance.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
   axiosInstance.interceptors.request.use(
-    (config) => {
+    config => {
       const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
         config.headers.common['Authorization'] = `Bearer ${accessToken}`;
       }
       return config;
     },
-    (error) => Promise.reject(error),
+    error => Promise.reject(error)
   );
 
   axiosInstance.interceptors.response.use(
-    (response) => {
+    response => {
       return response;
     },
-    (error) => {
+    error => {
       switch (error.response.status) {
         case 401:
           window.location.href = PATH.LOGIN;
@@ -40,7 +40,7 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
       }
 
       return Promise.reject(error);
-    },
+    }
   );
 
   return axiosInstance;

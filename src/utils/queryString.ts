@@ -35,7 +35,7 @@ export default class QueryString {
   static parse(text?: string) {
     const params = {} as QueryObject;
     const query = text || window.location.search.replace(/\?/g, '');
-    query.split('&').forEach((param) => {
+    query.split('&').forEach(param => {
       if (param.includes('=')) {
         const [key, value] = param.split('=');
         params[key] = decodeURIComponent(value) || '';
@@ -50,7 +50,7 @@ export default class QueryString {
     const urlParams = QueryString.parse();
     return QueryString.stringify({
       ...urlParams,
-      ...params,
+      ...params
     });
   }
 

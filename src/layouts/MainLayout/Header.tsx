@@ -35,7 +35,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
       <h1 className="header-logo">VCG内容审核管理平台</h1>
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
-          {menus.map((menu) => (
+          {menus.filter(menu => !menu.hidden).map(menu => (
             <Menu.Item key={menu.key}>
               <Link to={menu.path}>{menu.name}</Link>
             </Menu.Item>

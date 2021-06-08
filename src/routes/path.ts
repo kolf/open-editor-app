@@ -5,7 +5,7 @@ interface Params {
 export class PATH {
   static replaceParams(route: string, params: Params = {}) {
     let finalRoute = route;
-    Object.keys(params).forEach((key) => {
+    Object.keys(params).forEach(key => {
       finalRoute = finalRoute.replace(`:${key}`, params[key]);
     });
     return finalRoute;

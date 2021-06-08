@@ -1,9 +1,8 @@
-import { Breadcrumb } from 'antd';
 import React from 'react';
 import { Link, useHistory } from 'react-router-dom';
+import { Breadcrumb } from 'antd';
 import { PATH } from 'src/routes/path';
 import { menus } from '../../routes/menus';
-import { HomeOutlined } from '@ant-design/icons';
 
 const breadcrumbNameMap: any = {};
 
@@ -17,9 +16,7 @@ menus.forEach((item: any) => {
 });
 
 const BreadcrumbMenu = () => {
-  const history = useHistory();
-
-  const pathSnippets = [...location.pathname.split('/')].filter((i) => i);
+  const pathSnippets = [...location.pathname.split('/')].filter(i => i);
 
   const extraBreadcrumbItems = pathSnippets.map((_, index) => {
     const url = `/${pathSnippets.slice(0, index + 1).join('/')}`;
@@ -40,14 +37,8 @@ const BreadcrumbMenu = () => {
       );
     return <Breadcrumb.Item key={url}></Breadcrumb.Item>;
   });
-  const breadcrumbItems = [
-    <Breadcrumb.Item key={PATH.HOME} onClick={() => history.push(PATH.HOME)} className="breadcrumbMenu-item">
-      <HomeOutlined />
-      {/* <Link to={PATH.HOME}>{PATH.BREADCRUMB_HOME}</Link> */}
-    </Breadcrumb.Item>,
-  ].concat(extraBreadcrumbItems);
 
-  return <Breadcrumb>{breadcrumbItems}</Breadcrumb>;
+  return <Breadcrumb>{extraBreadcrumbItems}</Breadcrumb>;
 };
 
 export default BreadcrumbMenu;

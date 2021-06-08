@@ -23,6 +23,10 @@
   }
   &-sidebar {
     background: #fff;
+    .ant-layout-sider-trigger {
+      background-color: #fff;
+      color: #333;
+    }
   }
 }
 

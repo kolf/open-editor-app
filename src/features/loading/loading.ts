@@ -5,17 +5,17 @@ interface LoadingState {
 }
 
 const initialState: LoadingState = {
-  isLoading: false,
+  isLoading: false
 };
 
 export const loadingSlice = createSlice({
   name: 'loading',
   initialState,
   reducers: {
-    setLoading: (state) => {
+    setLoading: state => {
       state.isLoading = !state.isLoading;
-    },
-  },
+    }
+  }
 });
 
 const { actions, reducer } = loadingSlice;

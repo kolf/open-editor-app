@@ -6,7 +6,6 @@ import { getMe } from 'src/features/auth/authenticate';
 import { setIsCollapsed } from 'src/features/collapsedMenu/collapsedMenu';
 import { RootState } from 'src/store';
 import { menus } from 'src/routes/menus';
-import BreadcrumbMenu from './Breadcrumb';
 import AppHeader from './Header';
 import MenuLink from './MenuLink';
 
@@ -15,7 +14,7 @@ type Props = {
   children: React.ReactNode;
 };
 
-const MainLayout: FC<Props> = (props) => {
+const MainLayout: FC<Props> = props => {
   const collapsed = useSelector((state: RootState) => state.collapsed.isCollapsed);
   const user = useSelector((state: RootState) => state.user.user);
   const [menuKey, setMenuKey] = useState(menus[0].key);
@@ -45,18 +44,9 @@ const MainLayout: FC<Props> = (props) => {
         <Sider className="site-layout-sidebar" collapsible collapsed={collapsed} onCollapse={handleCollapse}>
           <MenuLink menuKey={menuKey} />
         </Sider>
-        <Layout className="site-layout-main">
-          <Content style={{ margin: '0 16px' }}>
-            <div className="breadcrumbMenu">
-              <Row>
-                <Col xs={0} sm={24} span={24}>
-                  <BreadcrumbMenu />
-                </Col>
-              </Row>
-            </div>
-            <div className="site-layout-background site-layout-content">{props.children}</div>
-          </Content>
-        </Layout>
+        <Content style={{ margin: '16px' }}>
+          <div className="site-layout-background site-layout-content">{props.children}</div>
+        </Content>
         <BackTop />
       </Layout>
     </Layout>

@@ -4,7 +4,7 @@ export const localStore = {
   UID: 'uid',
   EXPIRY: 'expiry',
   TOKEN_TYPE: 'token-type',
-  AUTHORIZATION: 'Authorization',
+  AUTHORIZATION: 'Authorization'
 };
 
 export const getToken = (): any => {

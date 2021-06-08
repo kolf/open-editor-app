@@ -33,7 +33,7 @@ function Login() {
       align="middle"
       className="login"
       style={{
-        backgroundImage: `url(https://bing.ioliu.cn/v1/rand?w=1920&h=1080)`,
+        backgroundImage: `url(https://bing.ioliu.cn/v1/rand?w=1920&h=1080)`
       }}
     >
       <div className="login-form">

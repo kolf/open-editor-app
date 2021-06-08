@@ -8,23 +8,22 @@ import './styles.scss';
 const { SubMenu } = Menu;
 
 const getMenuActive = (path: string) => {
-  const listPath = path.split('/');
+  const paths = path.split('/');
   return {
-    menuActive: `/${listPath[1]}` || '/',
-    subMenuActive: listPath[2],
+    menuActive: `/${paths[1]}` || '/',
+    subMenuActive: paths[2]
   };
 };
 
 const MenuLink: React.FC<any> = ({ location, menuKey }) => {
-  console.log(location, menuKey, 'location');
-  const menuList = menus.find((menu) => menu.key === menuKey)?.children || [];
+  const menuList = menus.find(menu => menu.key === menuKey)?.children || [];
   const menu = getMenuActive(location.pathname);
 
   return (
     <Menu
       className="dashboard-menu"
       mode="inline"
-      defaultSelectedKeys={[location.pathname]}
+      selectedKeys={[location.pathname]}
       defaultOpenKeys={[menu.menuActive]}
     >
       {menuList.map((sub: any) => {

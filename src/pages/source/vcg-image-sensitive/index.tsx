@@ -1,7 +1,7 @@
 import React from 'react';
 
 function List() {
-  return <div>sdfdsf</div>;
+  return <div>创意安全审核</div>;
 }
 
 export default List;

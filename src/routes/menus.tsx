@@ -16,7 +16,7 @@ export const menus = [
         icon: 'icon-data',
         path: PATH.SOURCE_LIST,
         breadcrumbName: '来源管理',
-        hidden: false,
+        hidden: false
       },
       {
         key: '_SOURCE_VCG_IMAGE',
@@ -32,7 +32,7 @@ export const menus = [
             hasChild: true,
             path: PATH.SOURCE_VCG_IMAGE_TEXT,
             breadcrumbName: '创意类质量审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.SOURCE_VCG_IMAGE_KEYWORD,
@@ -40,7 +40,7 @@ export const menus = [
             hasChild: true,
             path: PATH.SOURCE_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.SOURCE_VCG_IMAGE_SENSITIVE,
@@ -48,7 +48,7 @@ export const menus = [
             hasChild: true,
             path: PATH.SOURCE_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.SOURCE_CFP_IMAGE_LIST,
@@ -56,11 +56,11 @@ export const menus = [
             hasChild: true,
             path: PATH.SOURCE_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false,
-          },
-        ],
-      },
-    ],
+            hidden: false
+          }
+        ]
+      }
+    ]
   },
   {
     key: '_SYSTEM_REVIEW',
@@ -84,7 +84,7 @@ export const menus = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_VCG_IMAGE_TEXT,
             breadcrumbName: '创意类质量审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.SYSTEM_REVIEW_VCG_IMAGE_KEYWORD,
@@ -92,7 +92,7 @@ export const menus = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.SYSTEM_REVIEW_VCG_IMAGE_SENSITIVE,
@@ -100,7 +100,7 @@ export const menus = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.SYSTEM_REVIEW_CFP_IMAGE_LIST,
@@ -108,11 +108,11 @@ export const menus = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false,
-          },
-        ],
-      },
-    ],
+            hidden: false
+          }
+        ]
+      }
+    ]
   },
   {
     key: '_USER_REVIEW',
@@ -136,7 +136,7 @@ export const menus = [
             hasChild: false,
             path: PATH.USER_REVIEW_VCG_IMAGE_TEXT,
             breadcrumbName: '创意类质量审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.USER_REVIEW_VCG_IMAGE_KEYWORD,
@@ -144,7 +144,7 @@ export const menus = [
             hasChild: false,
             path: PATH.USER_REVIEW_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.USER_REVIEW_VCG_IMAGE_SENSITIVE,
@@ -152,7 +152,7 @@ export const menus = [
             hasChild: false,
             path: PATH.USER_REVIEW_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.USER_REVIEW_CFP_IMAGE_LIST,
@@ -160,11 +160,11 @@ export const menus = [
             hasChild: false,
             path: PATH.USER_REVIEW_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false,
-          },
-        ],
-      },
-    ],
+            hidden: false
+          }
+        ]
+      }
+    ]
   },
   {
     key: '_REVIEW_RESULT',
@@ -188,7 +188,7 @@ export const menus = [
             hasChild: false,
             path: PATH.REVIEW_RESULT_VCG_IMAGE_TEXT,
             breadcrumbName: '创意类质量审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.REVIEW_RESULT_VCG_IMAGE_KEYWORD,
@@ -196,7 +196,7 @@ export const menus = [
             hasChild: false,
             path: PATH.REVIEW_RESULT_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.REVIEW_RESULT_VCG_IMAGE_SENSITIVE,
@@ -204,7 +204,7 @@ export const menus = [
             hasChild: false,
             path: PATH.REVIEW_RESULT_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false,
+            hidden: false
           },
           {
             key: PATH.REVIEW_RESULT_CFP_IMAGE_LIST,
@@ -212,26 +212,46 @@ export const menus = [
             hasChild: false,
             path: PATH.REVIEW_RESULT_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false,
-          },
-        ],
-      },
-    ],
+            hidden: false
+          }
+        ]
+      }
+    ]
   },
   {
-    key: PATH.STATISTICAL_LIST,
+    key: '_STATISTICAL',
     name: '统计',
-    hasChild: false,
+    hasChild: true,
     path: PATH.STATISTICAL_LIST,
     breadcrumbName: '统计',
     hidden: false,
+    children: [
+      {
+        key: PATH.STATISTICAL_LIST,
+        name: '数据审核统计',
+        hasChild: false,
+        path: PATH.STATISTICAL_LIST,
+        breadcrumbName: '数据审核统计',
+        hidden: false
+      }
+    ]
   },
   {
-    key: PATH.HELP_LIST,
+    key: '_HELP',
     name: '帮助',
-    hasChild: false,
+    hasChild: true,
     path: PATH.HELP_LIST,
     breadcrumbName: '帮助',
     hidden: false,
-  },
+    children: [
+      {
+        key: PATH.HELP_LIST,
+        name: '帮助文档',
+        hasChild: false,
+        path: PATH.HELP_LIST,
+        breadcrumbName: '帮助文档',
+        hidden: false
+      }
+    ]
+  }
 ];

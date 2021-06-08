@@ -6,11 +6,11 @@ export const store = configureStore({
   reducer: {
     collapsed: collapsedSlice,
     user: authenticateSlice,
-    loading: loadingSlice,
+    loading: loadingSlice
   },
   middleware: getDefaultMiddleware({
-    serializableCheck: false,
-  }),
+    serializableCheck: false
+  })
 });
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

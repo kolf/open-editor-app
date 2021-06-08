@@ -16,7 +16,7 @@ export class AuthService {
       const res2 = await this.getUser(res1.data.TGT);
       return Promise.resolve<any>({
         token: res1.data.TGT,
-        user: res2.data.data,
+        user: res2.data.data
       });
     } catch (error) {
       return Promise.reject(new Error(`用户名或密码错误！`));
