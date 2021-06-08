@@ -29,7 +29,7 @@ import ReviewResultVcgImageKeyword from 'src/pages/review-result/vcg-image-keywo
 import ReviewResultVcgImageSensitive from 'src/pages/review-result/vcg-image-sensitive';
 import ReviewResultCfpImageList from 'src/pages/review-result/cfp-image-list';
 // 统计
-import statisticalList from 'src/pages/statistical/list';
+import StatisticalList from 'src/pages/statistical/list';
 // 帮助
 import HelpList from 'src/pages/help/list';
 
@@ -74,6 +74,56 @@ export const RootRouter = React.memo(() => {
         layout={MainLayout}
         exact
       />
+      <RouteLayout
+        path={PATH.USER_REVIEW_VCG_IMAGE_TEXT}
+        component={UserReviewVcgImageText}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.USER_REVIEW_VCG_IMAGE_KEYWORD}
+        component={UserReviewVcgImageKeyword}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.USER_REVIEW_VCG_IMAGE_SENSITIVE}
+        component={UserReviewVcgImageSensitive}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.USER_REVIEW_CFP_IMAGE_LIST}
+        component={UserReviewCfpImageList}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.REVIEW_RESULT_VCG_IMAGE_TEXT}
+        component={ReviewResultVcgImageText}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.REVIEW_RESULT_VCG_IMAGE_KEYWORD}
+        component={ReviewResultVcgImageKeyword}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.REVIEW_RESULT_VCG_IMAGE_SENSITIVE}
+        component={ReviewResultVcgImageSensitive}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout
+        path={PATH.REVIEW_RESULT_CFP_IMAGE_LIST}
+        component={ReviewResultCfpImageList}
+        layout={MainLayout}
+        exact
+      />
+      <RouteLayout path={PATH.STATISTICAL_LIST} component={StatisticalList} layout={MainLayout} exact />
+      <RouteLayout path={PATH.HELP_LIST} component={HelpList} layout={MainLayout} exact />
       <RouteLayout path={PATH.PAGE_404} component={PageNotFound} layout={GuestLayout} isPrivate={false} exact />
       <RouteLayout path={PATH.PAGE_500} component={ServerError} layout={GuestLayout} isPrivate={false} exact />
       <RouteLayout path="*" component={PageNotFound} layout={GuestLayout} isPrivate={false} exact />

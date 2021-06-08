@@ -2,7 +2,7 @@ import { PATH } from 'src/routes/path';
 
 export const menus = [
   {
-    key: 'SOURCE',
+    key: '_SOURCE',
     name: '数据分配',
     hasChild: true,
     path: PATH.SOURCE_LIST,
@@ -19,7 +19,7 @@ export const menus = [
         hidden: false,
       },
       {
-        key: 'SOURCE_VCG_IMAGE',
+        key: '_SOURCE_VCG_IMAGE',
         name: '图片数据分配',
         hasChild: true,
         icon: 'icon-ic_image',
@@ -63,7 +63,7 @@ export const menus = [
     ],
   },
   {
-    key: 'SYSTEM_REVIEW',
+    key: '_SYSTEM_REVIEW',
     name: '全部资源',
     hasChild: true,
     path: PATH.SYSTEM_REVIEW_VCG_IMAGE_TEXT,
@@ -71,7 +71,7 @@ export const menus = [
     hidden: false,
     children: [
       {
-        key: 'SYSTEM_REVIEW_IMAGE',
+        key: '_SYSTEM_REVIEW_IMAGE',
         name: '图片审核',
         hasChild: true,
         icon: 'icon-ic_image',
@@ -115,7 +115,7 @@ export const menus = [
     ],
   },
   {
-    key: 'USER_REVIEW',
+    key: '_USER_REVIEW',
     name: '我的审核',
     hasChild: true,
     path: PATH.USER_REVIEW_VCG_IMAGE_TEXT,
@@ -123,7 +123,7 @@ export const menus = [
     hidden: false,
     children: [
       {
-        key: 'USER_REVIEW_IMAGE',
+        key: '_USER_REVIEW_IMAGE',
         name: '图片审核',
         hasChild: true,
         icon: 'icon-ic_image',
@@ -165,5 +165,73 @@ export const menus = [
         ],
       },
     ],
+  },
+  {
+    key: '_REVIEW_RESULT',
+    name: '终审',
+    hasChild: true,
+    path: PATH.REVIEW_RESULT_VCG_IMAGE_TEXT,
+    breadcrumbName: '终审',
+    hidden: false,
+    children: [
+      {
+        key: '_REVIEW_RESULT_IMAGE',
+        name: '图片审核',
+        hasChild: true,
+        icon: 'icon-ic_image',
+        breadcrumbName: '图片审核',
+        hidden: false,
+        children: [
+          {
+            key: PATH.REVIEW_RESULT_VCG_IMAGE_TEXT,
+            name: '创意类质量审核',
+            hasChild: false,
+            path: PATH.REVIEW_RESULT_VCG_IMAGE_TEXT,
+            breadcrumbName: '创意类质量审核',
+            hidden: false,
+          },
+          {
+            key: PATH.REVIEW_RESULT_VCG_IMAGE_KEYWORD,
+            name: '创意类关键词审核',
+            hasChild: false,
+            path: PATH.REVIEW_RESULT_VCG_IMAGE_KEYWORD,
+            breadcrumbName: '创意类关键词审核',
+            hidden: false,
+          },
+          {
+            key: PATH.REVIEW_RESULT_VCG_IMAGE_SENSITIVE,
+            name: '创意类安全审核',
+            hasChild: false,
+            path: PATH.REVIEW_RESULT_VCG_IMAGE_SENSITIVE,
+            breadcrumbName: '创意类安全审核',
+            hidden: false,
+          },
+          {
+            key: PATH.REVIEW_RESULT_CFP_IMAGE_LIST,
+            name: '编辑类审核',
+            hasChild: false,
+            path: PATH.REVIEW_RESULT_CFP_IMAGE_LIST,
+            breadcrumbName: '编辑类审核',
+            hidden: false,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    key: PATH.STATISTICAL_LIST,
+    name: '统计',
+    hasChild: false,
+    path: PATH.STATISTICAL_LIST,
+    breadcrumbName: '统计',
+    hidden: false,
+  },
+  {
+    key: PATH.HELP_LIST,
+    name: '帮助',
+    hasChild: false,
+    path: PATH.HELP_LIST,
+    breadcrumbName: '帮助',
+    hidden: false,
   },
 ];

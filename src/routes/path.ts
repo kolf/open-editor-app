@@ -12,8 +12,6 @@ export class PATH {
   }
 
   static HOME = '/';
-  static USER_MANAGEMENT = '/users';
-  static ABOUT = '/users/about';
   static PROFILE = '/users/profile';
   static LOGIN = '/login';
   static PAGE_404 = '/404';
