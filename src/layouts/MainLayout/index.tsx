@@ -5,6 +5,7 @@ import Loading from 'src/components/common/Loading';
 import { getMe } from 'src/features/auth/authenticate';
 import { setIsCollapsed } from 'src/features/collapsedMenu/collapsedMenu';
 import { RootState } from 'src/store';
+import { menus } from 'src/routes/menus';
 import BreadcrumbMenu from './Breadcrumb';
 import AppHeader from './Header';
 import MenuLink from './MenuLink';
@@ -17,7 +18,7 @@ type Props = {
 const MainLayout: FC<Props> = (props) => {
   const collapsed = useSelector((state: RootState) => state.collapsed.isCollapsed);
   const user = useSelector((state: RootState) => state.user.user);
-  const [menuKey, setMenuKey] = useState('source');
+  const [menuKey, setMenuKey] = useState(menus[0].key);
   const loading = useSelector((state: RootState) => state.user.loading);
   const dispatch = useDispatch();
 
@@ -38,13 +39,13 @@ const MainLayout: FC<Props> = (props) => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header className="site-layout-header site-layout-background">
-        <AppHeader onChange={handleMenuChange} />
+        <AppHeader menuKey={menuKey} onChange={handleMenuChange} />
       </Header>
       <Layout>
-        <Sider className="sidebar" collapsible collapsed={collapsed} onCollapse={handleCollapse}>
+        <Sider className="site-layout-sidebar" collapsible collapsed={collapsed} onCollapse={handleCollapse}>
           <MenuLink menuKey={menuKey} />
         </Sider>
-        <Layout className="site-layout">
+        <Layout className="site-layout-main">
           <Content style={{ margin: '0 16px' }}>
             <div className="breadcrumbMenu">
               <Row>

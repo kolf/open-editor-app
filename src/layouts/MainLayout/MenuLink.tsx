@@ -1,6 +1,7 @@
 import { Menu } from 'antd';
 import React, { memo } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
+import Iconfont from 'src/components/Iconfont';
 import { menus } from '../../routes/menus';
 import './styles.scss';
 
@@ -16,25 +17,30 @@ const getMenuActive = (path: string) => {
 
 const MenuLink: React.FC<any> = ({ location, menuKey }) => {
   console.log(location, menuKey, 'location');
+  const menuList = menus.find((menu) => menu.key === menuKey)?.children || [];
   const menu = getMenuActive(location.pathname);
 
   return (
     <Menu
-      theme="dark"
       className="dashboard-menu"
       mode="inline"
       defaultSelectedKeys={[location.pathname]}
       defaultOpenKeys={[menu.menuActive]}
     >
-      {menus.map((sub: any) => {
+      {menuList.map((sub: any) => {
         if (sub.hasChild) {
           return (
-            <SubMenu key={sub.key} className="dashboard-menu_sub" title={<span>{sub.name}</span>} icon={sub.icon}>
+            <SubMenu
+              key={sub.key}
+              className="dashboard-menu_sub"
+              title={<span>{sub.name}</span>}
+              icon={sub.icon ? <Iconfont type={sub.icon} /> : null}
+            >
               {sub.children.map((item: any) => {
                 if (!item.hidden)
                   return (
                     <Menu.Item key={item.key}>
-                      <NavLink to={item.path} className="dashboard-menu-link">
+                      <NavLink to={item.path || ''} className="dashboard-menu-link">
                         <span>{item.name}</span>
                       </NavLink>
                     </Menu.Item>
@@ -44,8 +50,12 @@ const MenuLink: React.FC<any> = ({ location, menuKey }) => {
           );
         }
         return (
-          <Menu.Item className="dashboard-menu-item" key={sub.key} icon={sub.icon}>
-            <NavLink to={sub.path} className="dashboard-menu-link">
+          <Menu.Item
+            className="dashboard-menu-item"
+            key={sub.key}
+            icon={sub.icon ? <Iconfont type={sub.icon} /> : null}
+          >
+            <NavLink to={sub.path || ''} className="dashboard-menu-link">
               <span>{sub.name}</span>
             </NavLink>
           </Menu.Item>

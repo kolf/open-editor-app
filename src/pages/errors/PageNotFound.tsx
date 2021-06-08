@@ -11,7 +11,7 @@ function PageNotFound() {
       <Result
         status="404"
         title="404"
-        subTitle="Sorry, the page you visited does not exist."
+        subTitle="对不起，页面不存在，请检测URL"
         extra={
           <Button type="primary" onClick={() => history.push(PATH.HOME)}>
             返回首页

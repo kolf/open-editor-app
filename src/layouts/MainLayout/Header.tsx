@@ -6,9 +6,10 @@ import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { logOut } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
+import { menus } from 'src/routes/menus';
 import { RootState } from 'src/store';
 
-export const Header: React.FC<any> = ({ onChange }) => {
+export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const user = useSelector((state: RootState) => state.user.user);
   const dispatch = useDispatch();
   const history = useHistory();
@@ -32,26 +33,13 @@ export const Header: React.FC<any> = ({ onChange }) => {
   return (
     <div className="header">
       <h1 className="header-logo">VCG内容审核管理平台</h1>
-      <div className="header-menu" style={{ flex: 1 }}>
-        <Menu mode="horizontal" onClick={onChange}>
-          <Menu.Item>
-            <Link to={PATH.PROFILE}>数据分配</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={PATH.PROFILE}>全部资源</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={PATH.PROFILE}>我的审核</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={PATH.PROFILE}>终审</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={PATH.PROFILE}>数据统计</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to={PATH.PROFILE}>帮助</Link>
-          </Menu.Item>
+      <div className="header-menu">
+        <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
+          {menus.map((menu) => (
+            <Menu.Item key={menu.key}>
+              <Link to={menu.path}>{menu.name}</Link>
+            </Menu.Item>
+          ))}
         </Menu>
       </div>
       <Dropdown overlay={menu} className="header-profile">

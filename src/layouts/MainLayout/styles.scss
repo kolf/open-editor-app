@@ -21,6 +21,9 @@
     padding: 24px;
     min-height: 85vh;
   }
+  &-sidebar {
+    background: #fff;
+  }
 }
 
 .header {
@@ -29,9 +32,15 @@
   align-items: center;
   height: 100%;
   padding-right: 16px;
+  border-bottom: 1px solid #eee;
+  &-menu {
+    flex: 1;
+    height: 63px;
+    overflow: hidden;
+  }
   &-logo {
     font-size: 18px;
-    height:64px;
+    height: 64px;
     margin-bottom: 0;
     padding-left: 24px;
     padding-right: 12px;
