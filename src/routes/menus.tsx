@@ -1,4 +1,4 @@
-import { PATH } from 'src/routes/path';
+import { PATH } from './path';
 
 export const menus = [
   {
@@ -11,11 +11,11 @@ export const menus = [
     children: [
       {
         key: PATH.SOURCE_LIST,
-        name: '来源管理',
+        name: '数据来源管理',
         hasChild: false,
         icon: 'icon-data',
         path: PATH.SOURCE_LIST,
-        breadcrumbName: '来源管理',
+        breadcrumbName: '数据来源管理',
         hidden: false,
       },
       {
