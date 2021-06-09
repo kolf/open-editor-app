@@ -1,12 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import { useQuery } from 'react-query';
+import { useRequest } from 'ahooks';
 import { Table, Space, Tag } from 'antd';
+import GridList from 'src/components/list/GridList';
 import FormList from './FormList';
+import ListItem from './ListItem';
 import imageService from 'src/services/imageService';
 
 function List() {
   const [query, setQuery] = useState({ assetFamily: 2, desc: 2, pageType: 21, pageNum: 1, pageSize: 60 });
-  const { isFetching, error, data } = useQuery(['images', query], () => imageService.getList(makeQuery(query)));
+  const [selectedIds, setSelectedIds] = useState([]);
+  const { data, loading, error, run } = useRequest(() => imageService.getList(makeQuery(query)));
+
+  useEffect(() => {
+    run();
+  }, [query]);
 
   function makeQuery(query) {
     let result = Object.keys(query).reduce((result, key) => {
@@ -24,70 +31,46 @@ function List() {
     return result;
   }
 
-  const columns = [
-    {
-      title: '序号',
-      dataIndex: 'index'
-    },
-    {
-      title: 'ID',
-      dataIndex: 'id'
-    },
-    {
-      title: '创建时间',
-      dataIndex: 'age'
-    },
-    {
-      title: '名称',
-      dataIndex: 'address'
-    },
-    {
-      title: '审核类型',
-      dataIndex: 'address'
-    },
-    {
-      title: '分配',
-      dataIndex: 'address'
-    },
-    {
-      title: '资源类型',
-      dataIndex: 'address'
-    },
-    {
-      title: '敏感检测',
-      dataIndex: 'address'
-    },
-    {
-      title: 'AI检测',
-      dataIndex: 'address'
-    },
-    {
-      title: '创建人',
-      dataIndex: 'address'
-    },
-    {
-      title: '状态',
-      dataIndex: 'address'
-    },
-    {
-      title: '操作',
-      dataIndex: 'options',
-      width: 120,
-      render(text, creds) {
-        return (
-          <Space>
-            <Tag>编辑</Tag>
-            <Tag>关闭</Tag>
-          </Space>
-        );
-      }
+  const handleClick = (index, field) => {
+    switch (field) {
+      case 'resId':
+        showDetails(index);
+        break;
+      case 'cover':
+        handleSelect(index);
+        break;
+
+      default:
+        alert(field);
+        break;
     }
-  ];
+    console.log(index, field);
+  };
+
+  const handleSelect = index => {
+    alert(index);
+  };
+
+  const showDetails = index => {
+    alert(index);
+  };
+
   return (
     <>
       <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
       <div className="gap-top">
-        <Table rowKey="id" columns={columns} loading={isFetching} dataSource={data?.list} />
+        <GridList
+          loading={loading}
+          dataSource={data?.list}
+          renderItem={(item, index) => (
+            <ListItem
+              selected={selectedIds.includes(item.resId)}
+              dataSource={item}
+              index={index}
+              onClick={field => handleClick(index, field)}
+            />
+          )}
+        />
       </div>
     </>
   );

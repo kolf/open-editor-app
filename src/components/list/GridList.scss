@@ -1,0 +1,47 @@
+.grid {
+  &-loading {
+    height: 300px;
+  }
+  &-item {
+    &-root {
+      border: 1px solid #d9d9d9;
+      margin-bottom: 16px;
+      padding: 8px;
+      font-size: 12px;
+    }
+    &-cover {
+      display: flex;
+      height: 120px;
+      img {
+        max-width: 100%;
+        max-height: 100%;
+        margin: auto;
+      }
+    }
+    &-row {
+      padding: 2px 0;
+      display: flex;
+      align-items: center;
+    }
+    &-label {
+      margin-right: 8px;
+    }
+    &-control {
+      flex: 1;
+    }
+    &-actions {
+      flex: 1;
+    }
+    &-index {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 20px;
+    }
+    &-footer {
+      display: flex;
+      padding-top: 8px;
+      margin-top: 8px;
+      border-top: 1px solid #eee;
+    }
+  }
+}
