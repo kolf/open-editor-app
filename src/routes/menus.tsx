@@ -1,6 +1,6 @@
 import { PATH } from './path';
 
-export const menus = [
+export const menus: Menu[] = [
   {
     key: '_SOURCE',
     name: '数据分配',
@@ -212,17 +212,16 @@ export const menus = [
             hasChild: false,
             path: PATH.REVIEW_RESULT_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false
-          }
-        ]
-      }
-    ]
+            hidden: false,
+          },
+        ],
+      },
+    ],
   },
   {
-    key: '_STATISTICAL',
+    key: '_STATISTIC',
     name: '统计',
     hasChild: true,
-    path: PATH.STATISTICAL_LIST,
     breadcrumbName: '统计',
     hidden: false,
     children: [
@@ -232,9 +231,9 @@ export const menus = [
         hasChild: false,
         path: PATH.STATISTICAL_LIST,
         breadcrumbName: '数据审核统计',
-        hidden: false
-      }
-    ]
+        hidden: false,
+      },
+    ],
   },
   {
     key: '_HELP',
