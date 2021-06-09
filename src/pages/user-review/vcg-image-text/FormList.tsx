@@ -14,11 +14,8 @@ const options1 = [
 ];
 
 export const FormList = (props: any) => {
-  const handleChange = (e: any) => {
-    props.onChange({ ...e, pageNum: 1 });
-  };
   return (
-    <Form layout="inline" onValuesChange={handleChange}>
+    <Form layout="inline" onValuesChange={props.onChange}>
       <Form.Item name="n1" className="filter-form-item">
         <DatePicker placeholder="入库时间" />
       </Form.Item>

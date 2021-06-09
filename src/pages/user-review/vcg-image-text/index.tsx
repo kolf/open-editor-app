@@ -6,7 +6,23 @@ import imageService from 'src/services/imageService';
 
 function List() {
   const [query, setQuery] = useState({ assetFamily: 2, desc: 2, pageType: 21, pageNum: 1, pageSize: 60 });
-  const { isFetching, error, data } = useQuery('images', imageService.getList);
+  const { isFetching, error, data } = useQuery(['images', query], () => imageService.getList(makeQuery(query)));
+
+  function makeQuery(query) {
+    let result = Object.keys(query).reduce((result, key) => {
+      const value = query[key];
+      if (Array.isArray(value)) {
+        result[key] = value.map(item => item.key).join(',');
+      } else if (typeof value === 'object') {
+        result[key] = value.key;
+      } else if (value) {
+        result[key] = value;
+      }
+      return result;
+    }, {});
+
+    return result;
+  }
 
   const columns = [
     {
@@ -69,9 +85,9 @@ function List() {
   ];
   return (
     <>
-      <FormList onChange={setQuery} />
+      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
       <div className="gap-top">
-        <Table rowKey="id" columns={columns} loading={isFetching} dataSource={[]} />
+        <Table rowKey="id" columns={columns} loading={isFetching} dataSource={data?.list} />
       </div>
     </>
   );
