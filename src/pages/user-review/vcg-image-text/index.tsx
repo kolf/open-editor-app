@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
 import { Table, Space, Tag } from 'antd';
 import FormList from './FormList';
-import { useQuery } from 'src/hooks/useQuery';
 import imageService from 'src/services/imageService';
 
 function List() {
   const [query, setQuery] = useState({ assetFamily: 2, desc: 2, pageType: 21, pageNum: 1, pageSize: 60 });
-  const { loading, error, data } = useQuery(imageService.getList, query);
-  const { list, total } = data || { list: [], total: 0 };
+  const { isFetching, error, data } = useQuery('images', imageService.getList);
 
   const columns = [
     {
@@ -72,7 +71,7 @@ function List() {
     <>
       <FormList onChange={setQuery} />
       <div className="gap-top">
-        <Table rowKey="id" columns={columns} loading={loading} dataSource={list} />
+        <Table rowKey="id" columns={columns} loading={isFetching} dataSource={[]} />
       </div>
     </>
   );
