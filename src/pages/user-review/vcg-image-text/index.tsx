@@ -72,7 +72,7 @@ function List() {
     <>
       <FormList onChange={setQuery} />
       <div className="gap-top">
-        <Table rowKey="id" columns={columns} loading={loading} dataSource={list} />
+        <Table rowKey="id" columns={columns} loading={loading} dataSource={list} pagination={false}/>
       </div>
     </>
   );
