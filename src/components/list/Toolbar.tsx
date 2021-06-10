@@ -13,6 +13,7 @@ interface Props {
   dataTotal: any;
   onSelectIds?: any;
   onPagerChange?: any;
+  children?: any;
 }
 
 const defaultProps = {
@@ -20,7 +21,7 @@ const defaultProps = {
   onSelectIds() {}
 };
 
-function Toolbar({ selectedIds, idList, onPagerChange, onSelectIds, dataTotal }: Props): ReactElement {
+function Toolbar({ selectedIds, idList, children, onPagerChange, onSelectIds, dataTotal }: Props): ReactElement {
   const handleClick = key => {
     let nextSelectedIds = [];
     switch (key) {
@@ -47,7 +48,7 @@ function Toolbar({ selectedIds, idList, onPagerChange, onSelectIds, dataTotal }:
             <span>已选中{selectedIds.length}个</span>
           </Space>
         </div>
-        <div className="toolbar-content"></div>
+        <div className="toolbar-content">{children}</div>
         <div className="toolbar-right"></div>
       </div>
     </Affix>

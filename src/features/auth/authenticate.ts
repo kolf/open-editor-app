@@ -74,9 +74,9 @@ export const authenticateSlice = createSlice({
 
     builder.addCase(getMe.rejected, (state, action) => {
       state.error = action.error;
-      // state.user = undefined;
-      // localStorage.removeItem('user');
-      // localStorage.removeItem('accessToken');
+      state.user = undefined;
+      localStorage.removeItem('user');
+      localStorage.removeItem('accessToken');
       state.loading = false;
     });
 

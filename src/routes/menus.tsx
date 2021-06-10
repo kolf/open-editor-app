@@ -172,7 +172,7 @@ export const menus: Menu[] = [
     hasChild: true,
     path: PATH.REVIEW_RESULT_VCG_IMAGE_TEXT,
     breadcrumbName: '终审',
-    hidden: false,
+    hidden: true,
     children: [
       {
         key: '_REVIEW_RESULT_IMAGE',
@@ -242,7 +242,7 @@ export const menus: Menu[] = [
     hasChild: true,
     path: PATH.HELP_LIST,
     breadcrumbName: '帮助',
-    hidden: false,
+    hidden: true,
     children: [
       {
         key: PATH.HELP_LIST,

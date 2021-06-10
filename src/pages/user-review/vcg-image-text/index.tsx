@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
-import { Table, Button, Tag, Result } from 'antd';
+import { Modal, Button, Space, message } from 'antd';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
@@ -9,13 +10,15 @@ import imageService from 'src/services/imageService';
 const dateFormat = 'YYYY-MM-DD';
 
 function List() {
+  const [modal, contextHolder] = Modal.useModal();
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
-  const { data, loading, error, run } = useRequest(imageService.getList, { manual: true });
+  const { data, loading, error, run: fetchData, refresh } = useRequest(imageService.getList, { manual: true });
+  const { run: updateStatus } = useRequest(imageService.qualityReview, { manual: true });
   const { list, total } = data || { list: [], total: 0 };
 
   useEffect(() => {
-    run(makeQuery(query));
+    fetchData(makeQuery(query));
   }, [query]);
 
   function makeQuery(query) {
@@ -52,11 +55,68 @@ function List() {
   const handleSelect = index => {
     const { id } = list[index];
     const nextSelectedIds = selectedIds.includes(id) ? selectedIds.filter(sid => sid !== id) : [...selectedIds, id];
-    setSelectedIds(nextSelectedIds)
+    setSelectedIds(nextSelectedIds);
+  };
+
+  const checkSelectedIds = async () => {
+    if (selectedIds.length === 0) {
+      message.info(`请选择图片！`);
+      return Promise.reject();
+    }
+    return [...selectedIds];
   };
 
   const showDetails = index => {
     alert(index);
+  };
+
+  // 设置通过
+  const setResolve = async e => {
+    const idList = await checkSelectedIds();
+    const imageList = list.filter(item => idList.includes(item.id));
+    try {
+      const res = await updateStatus({ body: imageList, query: { stage: 1, status: 1 } });
+      setSelectedIds([]);
+      message.success(`设置通过成功！`);
+      refresh();
+    } catch (error) {
+      message.error(`设置通过失败！`);
+    }
+  };
+
+  // 设置不通过
+  const setReject = async e => {
+    const idList = await checkSelectedIds();
+    const rejectReason = await confirmRejectReason();
+    const imageList = list.filter(item => idList.includes(item.id));
+    try {
+      const res = await updateStatus({
+        body: imageList,
+        query: { stage: 1, status: 2, standardReason: rejectReason.join(',') }
+      });
+      setSelectedIds([]);
+      message.success(`设置不通过成功！`);
+      refresh();
+    } catch (error) {
+      message.error(`设置不通过失败！`);
+    }
+  };
+
+  // 确认不通过原因
+  const confirmRejectReason = async () => {
+    return [];
+  };
+
+  // 设置rf, rm
+  const setRR = async value => {
+    await checkSelectedIds();
+    alert(`设置RFRm`);
+  };
+
+  // 设置等级
+  const setQuality = async value => {
+    await checkSelectedIds();
+    alert(`设置等级`);
   };
 
   return (
@@ -67,7 +127,36 @@ function List() {
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         dataTotal={total}
-      ></Toolbar>
+      >
+        <Space>
+          <Button type="text" style={{ marginLeft: 8 }}>
+            审核
+          </Button>
+          <Button title="通过" onClick={setResolve} icon={<CheckOutlined />} />
+          <Button title="不通过" onClick={setReject} icon={<CloseOutlined />} />
+          <Button type="text" style={{ marginLeft: 8 }}>
+            编辑
+          </Button>
+          <Button title="通过" onClick={e => setRR('rf')}>
+            RF
+          </Button>
+          <Button title="不通过" onClick={e => setRR('rm')}>
+            RM
+          </Button>
+          <Button title="通过" onClick={e => setQuality('1')}>
+            A
+          </Button>
+          <Button title="不通过" onClick={e => setQuality('2')}>
+            B
+          </Button>
+          <Button title="通过" onClick={e => setQuality('3')}>
+            C
+          </Button>
+          <Button title="不通过" onClick={e => setQuality('4')}>
+            D
+          </Button>
+        </Space>
+      </Toolbar>
       <GridList
         loading={loading}
         dataSource={list}

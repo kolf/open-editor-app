@@ -5,7 +5,12 @@ export class AuthService {
   async me() {
     const token = getToken();
     if (token) {
-      return this.getUser(token);
+      const res = await this.getUser(token);
+      if (res.data.code !== 200) {
+        return Promise.reject(res.data.message)
+      }
+      console.log(res, 'res');
+      return res
     }
     return Promise.reject(new Error(`token过期`));
   }
