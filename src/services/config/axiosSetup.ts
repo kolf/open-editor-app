@@ -23,20 +23,21 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
       return response;
     },
     error => {
+      console.log(error.response, 'error')
       switch (error.response.status) {
         case 401:
           window.location.href = PATH.LOGIN;
-          toastMessage('Error', error.response.data.message, TypeToast.ERROR);
+          toastMessage('你没有权限', error.response.data.error, TypeToast.ERROR);
           localStorage.removeItem('accessToken');
           break;
         case 404:
           window.location.href = PATH.PAGE_404;
           break;
         case 500:
-          toastMessage('Error', error.response.data.message, TypeToast.ERROR);
+          toastMessage('请求错误', error.response.data.error, TypeToast.ERROR);
           break;
         default:
-          toastMessage('Error', error.response.data.message, TypeToast.ERROR);
+          toastMessage('请求错误', error.response.data.error, TypeToast.ERROR);
       }
 
       return Promise.reject(error);

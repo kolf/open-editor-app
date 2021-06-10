@@ -2,20 +2,14 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
-import { ReactQueryDevtools } from 'react-query/devtools';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
-const queryClient = new QueryClient();
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <ReactQueryDevtools initialIsOpen={false} />
-      </QueryClientProvider>
+      <App />
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

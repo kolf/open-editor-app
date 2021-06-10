@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Spin, Row, Col, Empty } from 'antd';
-import './GridList.scss'
+import './GridList.scss';
 
 const layout = {
   xs: 12,
@@ -15,14 +15,16 @@ interface Props {
   dataSource: any;
   renderItem: any;
   loading: boolean;
-  rowKey: string;
+  rowKey?: string;
+  error?: string;
 }
 
 const defaultProps = {
-  rowKey: 'id'
+  rowKey: 'id',
+  dataSource: []
 };
 
-function GridList({ dataSource, renderItem, rowKey, loading }: Props): ReactElement {
+function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): ReactElement {
   if (loading) {
     return (
       <Spin tip="加载中...">
@@ -31,7 +33,11 @@ function GridList({ dataSource, renderItem, rowKey, loading }: Props): ReactElem
     );
   }
   if (dataSource.length === 0) {
-    return <Empty description="暂无数据" />;
+    return (
+      <div style={{ padding: '48px 0' }}>
+        <Empty description="可能这个资源已经飞走了，请修改搜索条件" />
+      </div>
+    );
   }
   return (
     <div className="grid-list-root">

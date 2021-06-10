@@ -1,25 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
-import { Table, Space, Tag } from 'antd';
+import { Table, Button, Tag, Result } from 'antd';
 import GridList from 'src/components/list/GridList';
+import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
 import imageService from 'src/services/imageService';
+const dateFormat = 'YYYY-MM-DD';
 
 function List() {
-  const [query, setQuery] = useState({ assetFamily: 2, desc: 2, pageType: 21, pageNum: 1, pageSize: 60 });
+  const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
-  const { data, loading, error, run } = useRequest(() => imageService.getList(makeQuery(query)));
+  const { data, loading, error, run } = useRequest(imageService.getList, { manual: true });
+  const { list, total } = data || { list: [], total: 0 };
 
   useEffect(() => {
-    run();
+    run(makeQuery(query));
   }, [query]);
 
   function makeQuery(query) {
-    let result = Object.keys(query).reduce((result, key) => {
+    const result = Object.keys(query).reduce((result, key) => {
       const value = query[key];
-      if (Array.isArray(value)) {
-        result[key] = value.map(item => item.key).join(',');
+      if (/Time$/g.test(key)) {
+        result[key] = value.format(dateFormat);
       } else if (typeof value === 'object') {
         result[key] = value.key;
       } else if (value) {
@@ -33,7 +36,7 @@ function List() {
 
   const handleClick = (index, field) => {
     switch (field) {
-      case 'resId':
+      case 'id':
         showDetails(index);
         break;
       case 'cover':
@@ -44,11 +47,12 @@ function List() {
         alert(field);
         break;
     }
-    console.log(index, field);
   };
 
   const handleSelect = index => {
-    alert(index);
+    const { id } = list[index];
+    const nextSelectedIds = selectedIds.includes(id) ? selectedIds.filter(sid => sid !== id) : [...selectedIds, id];
+    setSelectedIds(nextSelectedIds)
   };
 
   const showDetails = index => {
@@ -58,20 +62,24 @@ function List() {
   return (
     <>
       <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
-      <div className="gap-top">
-        <GridList
-          loading={loading}
-          dataSource={data?.list}
-          renderItem={(item, index) => (
-            <ListItem
-              selected={selectedIds.includes(item.resId)}
-              dataSource={item}
-              index={index}
-              onClick={field => handleClick(index, field)}
-            />
-          )}
-        />
-      </div>
+      <Toolbar
+        onSelectIds={setSelectedIds}
+        selectedIds={selectedIds}
+        idList={list.map(item => item.id)}
+        dataTotal={total}
+      ></Toolbar>
+      <GridList
+        loading={loading}
+        dataSource={list}
+        renderItem={(item, index) => (
+          <ListItem
+            selected={selectedIds.includes(item.id)}
+            dataSource={item}
+            index={index}
+            onClick={field => handleClick(index, field)}
+          />
+        )}
+      />
     </>
   );
 }

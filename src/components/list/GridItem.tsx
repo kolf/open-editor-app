@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Space, Button } from 'antd';
+import className from 'classnames';
 
 function loop(e) {}
 
@@ -21,7 +22,7 @@ const defaultProps = {
 
 function GridItem({ onClick, cover, indexProps, actions, children, height, selected }: Props): ReactElement {
   return (
-    <div className="grid-item-root" style={{ height }}>
+    <div className={className('grid-item-root', { active: selected })} style={{ height }}>
       <div className="grid-item-header">
         <div className="grid-item-cover" onClick={e => onClick('cover')}>
           {cover}

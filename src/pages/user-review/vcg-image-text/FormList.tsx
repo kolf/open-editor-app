@@ -16,14 +16,14 @@ const options1 = [
 export const FormList = (props: any) => {
   return (
     <Form layout="inline" onValuesChange={props.onChange}>
-      <Form.Item name="n1" className="filter-form-item">
+      <Form.Item name="createdTime" className="form-list-item">
         <DatePicker placeholder="入库时间" />
       </Form.Item>
-      <Form.Item name="n2" className="filter-form-item">
+      <Form.Item name="qualityEditTime" className="form-list-item">
         <DatePicker placeholder="审核时间" />
       </Form.Item>
-      <Form.Item name="n3" className="filter-form-item">
-        <Select style={{ width: 120 }}>
+      <Form.Item name="n4" className="form-list-item">
+        <Select allowClear style={{ width: 120 }} placeholder="审核状态">
           {options1.map(o => (
             <Option key={o.value} value={o.value}>
               {o.label}
@@ -31,17 +31,41 @@ export const FormList = (props: any) => {
           ))}
         </Select>
       </Form.Item>
-      <Form.Item name="n4" className="filter-form-item">
-        <Input placeholder="数据来源" />
+      <Form.Item name="n5" className="form-list-item">
+        <Select allowClear style={{ width: 120 }} placeholder="数据来源">
+          {options1.map(o => (
+            <Option key={o.value} value={o.value}>
+              {o.label}
+            </Option>
+          ))}
+        </Select>
       </Form.Item>
-      <Form.Item name="n5" className="filter-form-item">
-        <Input placeholder="AI质量评分" />
+      <Form.Item name="n6" className="form-list-item">
+        <Select allowClear style={{ width: 120 }} placeholder="AI质量评分">
+          {options1.map(o => (
+            <Option key={o.value} value={o.value}>
+              {o.label}
+            </Option>
+          ))}
+        </Select>
       </Form.Item>
-      <Form.Item name="n6" className="filter-form-item">
-        <Input placeholder="AI美学评分" />
+      <Form.Item name="n7" className="form-list-item">
+        <Select allowClear style={{ width: 120 }} placeholder="AI美学评分">
+          {options1.map(o => (
+            <Option key={o.value} value={o.value}>
+              {o.label}
+            </Option>
+          ))}
+        </Select>
       </Form.Item>
-      <Form.Item name="n7" className="filter-form-item">
-        <Input placeholder="质量等级" />
+      <Form.Item name="n8" className="form-list-item">
+        <Select allowClear style={{ width: 120 }} placeholder="质量等级">
+          {options1.map(o => (
+            <Option key={o.value} value={o.value}>
+              {o.label}
+            </Option>
+          ))}
+        </Select>
       </Form.Item>
     </Form>
   );

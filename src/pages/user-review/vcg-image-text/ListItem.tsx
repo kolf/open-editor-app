@@ -12,9 +12,10 @@ interface Props {
 }
 
 export default function ListItem({ dataSource, selected, index, onClick }: Props): ReactElement {
+  console.log(selected, 'selected')
   return (
     <GridItem
-      cover={<img src={dataSource.oss176} />}
+      cover={<img src={dataSource.urlSmall} />}
       indexProps={{ text: index + 1 + '', color: '#ff0000' }}
       height={400}
       onClick={onClick}
@@ -26,7 +27,7 @@ export default function ListItem({ dataSource, selected, index, onClick }: Props
     >
       <GridItemRow label="dsfds" />
       <GridItemRow label="ID:">
-        <a onClick={e => onClick('resId')}>{dataSource.resId}</a>
+        <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>
       <GridItemRow label="供应商:">{dataSource.resId}</GridItemRow>
       <GridItemRow label="供应商:">{dataSource.resId}</GridItemRow>
