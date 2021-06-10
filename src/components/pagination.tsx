@@ -11,14 +11,24 @@ interface ILoadData {
 }
 
 /**
- * 
+ *
  * @param total 数据总数
  * @param pageNum 页面索引
  * @param pageSize 页面数据数量
  * @param loadData 数据刷新函数
  * @returns React.ReactNode
  */
-export default function Pagination(total: number, pageNum: number, pageSize: number, loadData: ILoadData) {
+export default function Pagination({
+  total,
+  pageNum,
+  pageSize,
+  loadData
+}: {
+  total: number;
+  pageNum: number;
+  pageSize: number;
+  loadData: ILoadData;
+}) {
   const pageProps = {
     className: 'ant-pager',
     current: pageNum,

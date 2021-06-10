@@ -14,12 +14,12 @@ declare interface Column {
 }
 
 declare interface Menu {
-  key: string,
-  name: string,
-  hasChild: boolean,
-  icon?: string,
-  path?: string,
-  breadcrumbName: string,
-  hidden: boolean,
-  children?: Menu[]
+  key: string;
+  name: string;
+  hasChild: boolean;
+  icon?: string;
+  path?: string;
+  breadcrumbName: string;
+  hidden: boolean;
+  children?: Menu[];
 }

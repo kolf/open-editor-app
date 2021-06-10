@@ -14,10 +14,29 @@ type Props = {
   children: React.ReactNode;
 };
 
+function getMenukey(menus) {
+  let key = "";
+ 
+  function getKey(menus, rootKey) {
+    menus.forEach(menu => {
+      if (menu.path === window.location.pathname) {
+        return key = rootKey;
+      } 
+      if (menu.children) {
+        getKey(menu.children, rootKey)
+      }    
+    })
+  }
+  menus.forEach(menu => {
+    getKey(menu.children, menu.key)
+  })
+  return key;
+}
+
 const MainLayout: FC<Props> = props => {
   const collapsed = useSelector((state: RootState) => state.collapsed.isCollapsed);
   const user = useSelector((state: RootState) => state.user.user);
-  const [menuKey, setMenuKey] = useState(menus[0].key);
+  const [menuKey, setMenuKey] = useState(getMenukey(menus) || menus[0].key);
   const loading = useSelector((state: RootState) => state.user.loading);
   const dispatch = useDispatch();
 
