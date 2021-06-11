@@ -21,8 +21,8 @@ export enum DataSource {
 
 // 分配模式
 export enum DistributeMode {
-  人工,
-  自动
+  人工 = '0',
+  自动 = '1'
 }
 
 // 优先级
@@ -33,12 +33,29 @@ export enum Priority {
 
 // 敏感检测
 export enum SensitiveDetection {
-  检测,
-  不检测
+  检测 = '0',
+  不检测 = '1'
 }
 
 // AI检测
 export enum AIDetection {
-  AI质量评分,
-  AI分类
+  AI质量评分 = '0',
+  AI美学评分 = '1',
+  AI分类 = '2'
 }
+
+// 资源/审核类型
+export enum AssetType {
+  图片 = '0',
+  视频 = '1'
+}
+
+export enum AssetFamily {
+  创意类 = '0',
+  编辑类 = '1'
+}
+
+export const assetFamilyMap = Object.keys(AssetFamily).reduce((memo, a) => {
+  memo[AssetFamily[a]] = a;
+  return memo;
+}, {})
