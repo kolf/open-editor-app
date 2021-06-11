@@ -15,7 +15,7 @@ const getMenuActive = (path: string) => {
   };
 };
 
-const MenuLink: React.FC<any> = ({ location, menuKey }) => {
+const MenuLink: React.FC<any> = ({ location, menuKey, siderbarKey }) => {
   const menuList = menus.find(menu => menu.key === menuKey)?.children || [];
   const menu = getMenuActive(location.pathname);
 
@@ -24,7 +24,8 @@ const MenuLink: React.FC<any> = ({ location, menuKey }) => {
       className="dashboard-menu"
       mode="inline"
       selectedKeys={[location.pathname]}
-      defaultOpenKeys={[menu.menuActive]}
+      // defaultOpenKeys={[menu.menuActive]}
+      defaultOpenKeys={[siderbarKey]}
     >
       {menuList.map((sub: any) => {
         if (sub.hasChild) {

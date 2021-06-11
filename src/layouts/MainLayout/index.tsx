@@ -15,28 +15,45 @@ type Props = {
 };
 
 function getMenukey(menus) {
-  let key = "";
+  let rootKey = "", secondKey = "";
  
-  function getKey(menus, rootKey) {
-    menus.forEach(menu => {
+  function getKey(menu, rootK, secondK) {
+    if (!menu.hasChild) {
       if (menu.path === window.location.pathname) {
-        return key = rootKey;
+        rootKey = rootK;
+        secondKey = secondK;
       } 
-      if (menu.children) {
-        getKey(menu.children, rootKey)
-      }    
-    })
+    } else {
+      menu.children.forEach(menu => {
+        if (menu.path === window.location.pathname) {
+          rootKey = rootK;
+          secondKey = secondK;
+        } 
+        if (menu.children) {
+          getKey(menu.children, rootK, secondK)
+        }
+      })
+    }
+    
   }
   menus.forEach(menu => {
-    getKey(menu.children, menu.key)
+    if (menu.hasChild) menu.children.forEach(m => getKey(m, menu.key, m.key))
   })
-  return key;
+  return rootKey ? {
+    rootKey,
+    secondKey
+  } : {
+    rootKey: menus[0].key,
+    secondKey: menus[0]?.children[0]?.key
+  };
 }
 
 const MainLayout: FC<Props> = props => {
   const collapsed = useSelector((state: RootState) => state.collapsed.isCollapsed);
   const user = useSelector((state: RootState) => state.user.user);
-  const [menuKey, setMenuKey] = useState(getMenukey(menus) || menus[0].key);
+  const [menuKey, setMenuKey] = useState(getMenukey(menus));
+
+
   const loading = useSelector((state: RootState) => state.user.loading);
   const dispatch = useDispatch();
 
@@ -45,7 +62,10 @@ const MainLayout: FC<Props> = props => {
   };
 
   const handleMenuChange = (e: any) => {
-    setMenuKey(e.key);
+    setMenuKey({
+      ...getMenukey(menus),
+      rootKey: e.key
+    });
   };
 
   useEffect(() => {
@@ -57,11 +77,11 @@ const MainLayout: FC<Props> = props => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header className="site-layout-header site-layout-background">
-        <AppHeader menuKey={menuKey} onChange={handleMenuChange} />
+        <AppHeader menuKey={menuKey.rootKey} onChange={handleMenuChange} />
       </Header>
       <Layout>
         <Sider className="site-layout-sidebar" collapsible collapsed={collapsed} onCollapse={handleCollapse}>
-          <MenuLink menuKey={menuKey} />
+          <MenuLink menuKey={menuKey.rootKey} siderbarKey={ menuKey.secondKey } />
         </Sider>
         <Content style={{ margin: '16px' }}>
           <div className="site-layout-background site-layout-content">{props.children}</div>

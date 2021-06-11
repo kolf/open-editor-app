@@ -12,7 +12,6 @@ interface Props {
 }
 
 export default function ListItem({ dataSource, selected, index, onClick }: Props): ReactElement {
-  console.log(selected, 'selected')
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
