@@ -3,10 +3,17 @@ import { Button, Checkbox, Form, Input, Radio, Table } from 'antd';
 import React, { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
 import Loading from 'src/components/common/Loading';
-import { AIDetection, AssetFamily, assetFamilyMap, AssetType, DistributeMode, SensitiveDetection } from 'src/declarations/enums/query';
+import {
+  AIDetection,
+  AssetFamily,
+  assetFamilyMap,
+  AssetType,
+  DistributeMode,
+  SensitiveDetection
+} from 'src/declarations/enums/query';
 import providerService from 'src/services/providerService';
 import { RootState } from 'src/store';
-import modal from 'src/utils/confirm';
+import modal from 'src/utils/modal';
 
 const columns: Column[] = [
   {
@@ -23,9 +30,12 @@ const columns: Column[] = [
   },
   { title: '名称', dataIndex: 'name' },
   { title: '分配', dataIndex: '' },
-  { title: '资源类型', render: (value, tr) => {
-    return assetFamilyMap[tr.assetFamily]
-  } },
+  {
+    title: '资源类型',
+    render: (value, tr) => {
+      return assetFamilyMap[tr.assetFamily];
+    }
+  },
   { title: '敏感检测', dataIndex: '' },
   { title: 'Ai检测', dataIndex: '' },
   { title: '创建人', dataIndex: '' },

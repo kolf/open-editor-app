@@ -55,6 +55,28 @@ export enum AssetFamily {
   编辑类 = '1'
 }
 
+export enum LicenseType {
+  RM = '1',
+  RF = '2'
+}
+
+export enum Quality {
+  A = '1',
+  B = '2',
+  C = '3',
+  D = '4',
+}
+
+export enum CopyrightType {
+  未取得物权授权 = '7',
+  已取得肖像权授权 = '1',
+  已取得肖像权和物权授权 = '2',
+  已取得物权授权 = '3',
+  未取得肖像权或物权授权 = '9',
+  不涉及肖像权或物权授权 = '0'
+}
+
+
 export const assetFamilyMap = Object.keys(AssetFamily).reduce((memo, a) => {
   memo[AssetFamily[a]] = a;
   return memo;

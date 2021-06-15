@@ -10,6 +10,10 @@ export class ImageService {
     let res = await Api.post(`/api/outsourcing/osiImage/qualityReview?${queryString.stringify(data.query)}`, data.body);
     return res.data.data
   }
+  async update(data: any): Promise<any> {
+    let res = await Api.post(`/api/outsourcing/osiImage/update?${queryString.stringify(data.query)}`, data.body);
+    return res.data.data
+  }
 }
 
 const imageService = new ImageService();

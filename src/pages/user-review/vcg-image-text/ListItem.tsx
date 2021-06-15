@@ -1,19 +1,14 @@
 import React, { ReactElement } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
-import { EditOutlined, EllipsisOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
+import RadioText from 'src/components/RadioText';
+import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 const { Option } = Select;
-const copyrightOptions = [
-  {
-    value: '1',
-    label: 'RM'
-  },
-  {
-    value: '2',
-    label: 'RF'
-  }
-];
+const licenseTypeOptions = options.get(LicenseType);
+const qualityOptions = options.get(Quality);
+const copyrightTypeOptions = options.get(CopyrightType);
 
 interface Props {
   dataSource: any;
@@ -28,12 +23,12 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ text: index + 1 + '', color: '#ff0000' }}
-      height={430}
+      height={432}
       onClick={onClick}
       selected={selected}
       actions={[
-        { icon: <EditOutlined />, value: 'online', label: '上线' },
-        { icon: <EllipsisOutlined />, value: 'online', label: '下线' }
+        { icon: <CheckOutlined />, value: 'resolve', label: '通过' },
+        { icon: <CloseOutlined />, value: 'reject', label: '不通过' }
       ]}
     >
       <GridItemRow label="入库时间">{dataSource.createdTime}</GridItemRow>
@@ -65,36 +60,51 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
             </Space>
           </Col>
           <Col style={{ textAlign: 'center' }}>
-            <Space>
-              {copyrightOptions.map(o => (
-                <a key={o.value} onClick={e => onChange('RR', o.value)}>
-                  {o.label}
-                </a>
-              ))}
-            </Space>
+            <RadioText
+              options={licenseTypeOptions}
+              value={dataSource.licenseType}
+              onChange={value => onChange('licenseType', value)}
+            />
           </Col>
         </Row>
       </GridItemRow>
       <GridItemRow>
         <Row>
           <Col flex="auto">
-            <Select size="small" defaultValue="lucy" style={{ width: 80 }}>
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
-              <Option value="Yiminghe">yiminghe</Option>
+            <Select
+              size="small"
+              value={dataSource.qualityRank}
+              placeholder="等级"
+              onChange={o => {
+                onChange('qualityRank', o);
+              }}
+            >
+              {qualityOptions.map(o => (
+                <Option value={o.value} key={o.value}>
+                  {o.label}
+                </Option>
+              ))}
             </Select>
           </Col>
-          <Col style={{ textAlign: 'center' }}>
-            <Select size="small" defaultValue="lucy" style={{ width: 80 }}>
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
-              <Option value="Yiminghe">yiminghe</Option>
+          <Col style={{ maxWidth: 120 }}>
+            <Select
+              size="small"
+              value={dataSource.copyright}
+              placeholder="授权"
+              style={{ width: '100%' }}
+              onChange={value => onChange('copyright', value)}
+            >
+              {copyrightTypeOptions.map(o => (
+                <Option value={o.value} key={o.value}>
+                  {o.label}
+                </Option>
+              ))}
             </Select>
           </Col>
         </Row>
       </GridItemRow>
       <GridItemRow>
-        <Input size="small" placeholder="备注" />
+        <Input size="small" placeholder="备注" defaultValue={dataSource.memo} />
       </GridItemRow>
     </GridItem>
   );
