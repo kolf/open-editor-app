@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Modal } from 'antd';
+import { Modal, ConfigProvider } from 'antd';
+import zhCN from 'antd/lib/locale/zh_CN';
 
 const IS_REACT_16 = !!ReactDOM.createPortal;
 
@@ -24,9 +25,9 @@ class Mod extends React.Component<IMod> {
     autoIndex: true,
     dragable: true,
     style: {
-      top: 50,
+      top: 50
     },
-    isMobile: false,
+    isMobile: false
   };
 
   created = false;
@@ -52,7 +53,7 @@ class Mod extends React.Component<IMod> {
     return window.innerHeight - this.props.style.top - (this.props.footer === null ? 80 : 130);
   }
 
-  handleMove = (e) => {
+  handleMove = e => {
     const { top, left, right, width } = this.container.getBoundingClientRect();
     this.container.style.top = `${top + e.movementY}px`;
     this.container.style.left = `${left + e.movementX}px`;
@@ -83,7 +84,7 @@ class Mod extends React.Component<IMod> {
     this.container.style.zIndex = max + 1;
   };
 
-  create = (visible) => {
+  create = visible => {
     if (this.created) return false;
     const { title, dragable, autoIndex, style, width, isMobile } = this.props;
     if (title && dragable && visible) {
@@ -128,28 +129,30 @@ class Mod extends React.Component<IMod> {
   render() {
     const { children, wrapClassName = '', autoIndex, style, ...otherProps } = this.props;
     return (
-      <Modal
-        {...otherProps}
-        wrapClassName={`${wrapClassName} ${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
-        mask={!autoIndex}
-        style={
-          (autoIndex && {
-            top: 0,
-            left: 0,
-            width: 'auto',
-            height: 'auto',
-            paddingBottom: 0,
-            display: 'inline-block',
-          }) ||
-          style
-        }
-        bodyStyle={{
-          maxHeight: this.bodyMaxHeight,
-          overflowY: 'auto',
-        }}
-      >
-        {children}
-      </Modal>
+      <ConfigProvider locale={zhCN}>
+        <Modal
+          {...otherProps}
+          wrapClassName={`${wrapClassName} ${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
+          mask={!autoIndex}
+          style={
+            (autoIndex && {
+              top: 0,
+              left: 0,
+              width: 'auto',
+              height: 'auto',
+              paddingBottom: 0,
+              display: 'inline-block'
+            }) ||
+            style
+          }
+          bodyStyle={{
+            maxHeight: this.bodyMaxHeight,
+            overflowY: 'auto'
+          }}
+        >
+          {children}
+        </Modal>
+      </ConfigProvider>
     );
   }
 }
@@ -160,14 +163,14 @@ export default function modal(config) {
   let currentConfig = {
     ...config,
     onCancel: close,
-    visible: true,
+    visible: true
   };
 
   function close(...args) {
     currentConfig = {
       ...currentConfig,
       visible: false,
-      afterClose: destroy.bind(this, ...args),
+      afterClose: destroy.bind(this, ...args)
     };
     if (IS_REACT_16) {
       render(currentConfig);
@@ -178,13 +181,13 @@ export default function modal(config) {
   function update(newConfig) {
     currentConfig = {
       ...currentConfig,
-      ...newConfig,
+      ...newConfig
     };
     render(currentConfig);
   }
   function confirmLoading() {
     update({
-      confirmLoading: true,
+      confirmLoading: true
     });
   }
   function destroy(...args) {
@@ -192,7 +195,7 @@ export default function modal(config) {
     if (unmountResult && div.parentNode) {
       div.parentNode.removeChild(div);
     }
-    const triggerCancel = args && args.length && args.some((arg) => arg && arg.triggerCancel);
+    const triggerCancel = args && args.length && args.some(arg => arg && arg.triggerCancel);
     if (config.onCancel && triggerCancel) {
       config.onCancel(...args);
     }
@@ -205,6 +208,6 @@ export default function modal(config) {
   return {
     close,
     update,
-    confirmLoading,
+    confirmLoading
   };
 }

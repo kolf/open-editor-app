@@ -10,15 +10,14 @@ import imageService from 'src/services/imageService';
 const dateFormat = 'YYYY-MM-DD';
 
 function List() {
-  const [modal, contextHolder] = Modal.useModal();
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
-  const { data, loading, error, run: fetchData, refresh } = useRequest(imageService.getList, { manual: true });
+  const { data, loading, error, run, refresh } = useRequest(imageService.getList, { manual: true });
   const { run: updateStatus } = useRequest(imageService.qualityReview, { manual: true });
   const { list, total } = data || { list: [], total: 0 };
 
   useEffect(() => {
-    fetchData(makeQuery(query));
+    run(makeQuery(query));
   }, [query]);
 
   function makeQuery(query) {
@@ -44,6 +43,18 @@ function List() {
         break;
       case 'cover':
         handleSelect(index);
+        break;
+
+      default:
+        alert(field);
+        break;
+    }
+  };
+
+  const handleChange = (index, field, value) => {
+    switch (field) {
+      case 'RR':
+        setRR(index, value);
         break;
 
       default:
@@ -108,8 +119,10 @@ function List() {
   };
 
   // 设置rf, rm
-  const setRR = async value => {
-    await checkSelectedIds();
+  const setRR = async (index, value) => {
+    const idList = index === -1 ? await checkSelectedIds() : [list[index].id];
+    const imageList = list.filter(item => idList.includes(item.id));
+
     alert(`设置RFRm`);
   };
 
@@ -137,10 +150,10 @@ function List() {
           <Button type="text" style={{ marginLeft: 8 }}>
             编辑
           </Button>
-          <Button title="通过" onClick={e => setRR('rf')}>
+          <Button title="通过" onClick={e => setRR(-1, 'rf')}>
             RF
           </Button>
-          <Button title="不通过" onClick={e => setRR('rm')}>
+          <Button title="不通过" onClick={e => setRR(-1, 'rm')}>
             RM
           </Button>
           <Button title="通过" onClick={e => setQuality('1')}>
@@ -166,6 +179,7 @@ function List() {
             dataSource={item}
             index={index}
             onClick={field => handleClick(index, field)}
+            onChange={(field, value) => handleChange(index, field, value)}
           />
         )}
       />
