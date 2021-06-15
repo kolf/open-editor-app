@@ -58,4 +58,27 @@ export enum AssetFamily {
 export const assetFamilyMap = Object.keys(AssetFamily).reduce((memo, a) => {
   memo[AssetFamily[a]] = a;
   return memo;
-}, {})
+}, {});
+
+
+class Options {
+  map(enumObj) {
+    return Object.keys(enumObj).reduce((result, key) => {
+      result[enumObj[key]] = key
+      return result
+    }, {})
+  }
+  get(enumObj) {
+    return Object.keys(enumObj).reduce((result, key) => {
+      result.push({
+        value: enumObj[key],
+        label: key
+      });
+      return result
+    }, [])
+  }
+}
+
+const options = new Options()
+
+export default options

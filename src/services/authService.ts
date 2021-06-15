@@ -9,8 +9,7 @@ export class AuthService {
       if (res.data.code !== 200) {
         return Promise.reject(res.data.message)
       }
-      console.log(res, 'res');
-      return res
+      return res.data
     }
     return Promise.reject(new Error(`token过期`));
   }

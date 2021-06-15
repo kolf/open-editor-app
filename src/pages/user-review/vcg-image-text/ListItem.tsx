@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
-import { EditOutlined, EllipsisOutlined, SettingOutlined } from '@ant-design/icons';
+import { EditOutlined, EllipsisOutlined } from '@ant-design/icons';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 const { Option } = Select;
@@ -28,7 +28,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ text: index + 1 + '', color: '#ff0000' }}
-      height={406}
+      height={430}
       onClick={onClick}
       selected={selected}
       actions={[
@@ -36,7 +36,8 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         { icon: <EllipsisOutlined />, value: 'online', label: '下线' }
       ]}
     >
-      <GridItemRow label="dsfds" />
+      <GridItemRow label="入库时间">{dataSource.createdTime}</GridItemRow>
+      <GridItemRow label="编辑时间">{dataSource.updatedTime}</GridItemRow>
       <GridItemRow label="ID:">
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>
@@ -51,12 +52,12 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       </GridItemRow>
 
       <GridItemRow>
-        <div style={{ height: 32 }}>美丽的田园</div>
+        <div style={{ height: 32, fontWeight: 700 }}>{dataSource.title}</div>
       </GridItemRow>
       <Divider style={{ margin: '6px 0' }} />
 
       <GridItemRow>
-        <Row>
+        <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
             <Space>
               <span>肖像权文件</span>
@@ -77,14 +78,14 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow>
         <Row>
           <Col flex="auto">
-            <Select size='small' defaultValue="lucy" style={{ width: 80 }}>
+            <Select size="small" defaultValue="lucy" style={{ width: 80 }}>
               <Option value="jack">Jack</Option>
               <Option value="lucy">Lucy</Option>
               <Option value="Yiminghe">yiminghe</Option>
             </Select>
           </Col>
           <Col style={{ textAlign: 'center' }}>
-            <Select size='small' defaultValue="lucy" style={{ width: 80 }}>
+            <Select size="small" defaultValue="lucy" style={{ width: 80 }}>
               <Option value="jack">Jack</Option>
               <Option value="lucy">Lucy</Option>
               <Option value="Yiminghe">yiminghe</Option>

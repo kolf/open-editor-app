@@ -2,14 +2,18 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import { BrowserRouter } from 'react-router-dom';
+import { ConfigProvider } from 'antd';
 import App from './App';
+import zhCN from 'antd/lib/locale/zh_CN';
 import reportWebVitals from './reportWebVitals';
 import { store } from './store';
 
 ReactDOM.render(
   <Provider store={store}>
     <BrowserRouter>
-      <App />
+      <ConfigProvider locale={zhCN}>
+        <App />
+      </ConfigProvider>
     </BrowserRouter>
   </Provider>,
   document.getElementById('root')

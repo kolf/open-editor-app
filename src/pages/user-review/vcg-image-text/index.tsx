@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
+import moment from 'moment';
 import { Modal, Button, Space, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
@@ -7,24 +8,34 @@ import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
 import imageService from 'src/services/imageService';
-const dateFormat = 'YYYY-MM-DD';
+import options, { AIDetection } from 'src/declarations/enums/query';
+import config from 'src/config';
+
+interface listProps {
+  // TODO: 添加图片接口
+  list?: any;
+  total?: number;
+}
 
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { data, loading, error, run, refresh } = useRequest(imageService.getList, { manual: true });
   const { run: updateStatus } = useRequest(imageService.qualityReview, { manual: true });
-  const { list, total } = data || { list: [], total: 0 };
+  const { list, total } = makeData(data);
 
   useEffect(() => {
     run(makeQuery(query));
+
+    console.log(options.get(AIDetection));
   }, [query]);
 
-  function makeQuery(query) {
+  // 格式化查询参数
+  const makeQuery = query => {
     const result = Object.keys(query).reduce((result, key) => {
       const value = query[key];
       if (/Time$/g.test(key)) {
-        result[key] = value.format(dateFormat);
+        result[key] = value.format(config.data.DATE_FORMAT);
       } else if (typeof value === 'object') {
         result[key] = value.key;
       } else if (value) {
@@ -34,6 +45,28 @@ function List() {
     }, {});
 
     return result;
+  };
+
+  // 格式化返回的数据
+  function makeData(data: listProps): listProps {
+    if (!data || !data.list) {
+      return {
+        total: 0,
+        list: []
+      };
+    }
+
+    return {
+      total: data.total,
+      list: data.list.map(item => {
+        const { createdTime, updatedTime } = item;
+        return {
+          ...item,
+          createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
+          updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
+        };
+      })
+    };
   }
 
   const handleClick = (index, field) => {
