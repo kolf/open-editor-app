@@ -44,7 +44,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={432}
+      height={450}
       onClick={onClick}
       selected={selected}
       actions={[
@@ -52,8 +52,16 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         { icon: <CloseOutlined />, value: 'reject', label: '不通过' }
       ]}
     >
-      <GridItemRow label="入库时间">{dataSource.createdTime}</GridItemRow>
-      <GridItemRow label="编辑时间">{dataSource.updatedTime}</GridItemRow>
+      <GridItemRow>
+        <Row>
+          <Col title="入库时间" flex="auto">
+            {dataSource.createdTime}
+          </Col>
+          <Col title="编辑时间" style={{ textAlign: 'right' }}>
+            {dataSource.updatedTime}
+          </Col>
+        </Row>
+      </GridItemRow>
       <GridItemRow label="ID:">
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>

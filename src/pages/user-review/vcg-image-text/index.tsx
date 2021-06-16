@@ -9,6 +9,7 @@ import FormList from './FormList';
 import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
+import { useDocumentTitle } from 'src/hooks/useDom';
 import imageService from 'src/services/imageService';
 import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 import config from 'src/config';
@@ -31,6 +32,7 @@ const initialData = {
 };
 
 function List() {
+  useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { partyId } = useCurrentUser();

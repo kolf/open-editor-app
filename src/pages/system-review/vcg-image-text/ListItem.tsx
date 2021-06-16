@@ -44,12 +44,18 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={432}
+      height={442}
       onClick={onClick}
       selected={selected}
     >
-      <GridItemRow label="入库时间">{dataSource.createdTime}</GridItemRow>
-      <GridItemRow label="编辑时间">{dataSource.updatedTime}</GridItemRow>
+      <Row>
+        <Col title="入库时间" flex="auto">
+          {dataSource.createdTime}
+        </Col>
+        <Col title="编辑时间" style={{ textAlign: 'right' }}>
+          {dataSource.updatedTime}
+        </Col>
+      </Row>
       <GridItemRow label="ID:">
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>

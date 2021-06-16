@@ -51,6 +51,15 @@ export const FormList = (props: any) => {
         className="formList-list"
         style={{ height: collapse ? 'auto' : 38 }}
       >
+        <Form.Item name="userId" className="form-list-item">
+          <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="审核人">
+            {providerOptions.map(o => (
+              <Option key={o.value} value={o.value}>
+                {o.label}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
         <Form.Item name="createdTime" className="form-list-item">
           <DatePicker placeholder="入库时间" />
         </Form.Item>

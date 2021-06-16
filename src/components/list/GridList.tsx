@@ -5,10 +5,10 @@ import './GridList.scss';
 const layout = {
   xs: 12,
   sm: 8,
-  md: 6,
+  md: 8,
   lg: 6,
-  xl: 4,
-  xxl: 3
+  xl: 6,
+  xxl: 4
 };
 
 interface Props {
