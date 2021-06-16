@@ -3,7 +3,8 @@ import { RootState } from 'src/store';
 
 export const useCurrentUser = () => {
   const user = useSelector((state: RootState) => state.user.user);
-
-  if (user.id) return user;
+  if (user.ucId) {
+    return user
+  }
   return undefined;
 };

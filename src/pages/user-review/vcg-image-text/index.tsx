@@ -14,6 +14,7 @@ import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/e
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
+import { useCurrentUser } from 'src/hooks/useCurrentUser';
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
 const copyrightTypeOptions = options.get(CopyrightType);
@@ -32,6 +33,7 @@ const initialData = {
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
+  const { partyId } = useCurrentUser();
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
@@ -48,17 +50,22 @@ function List() {
 
   // 格式化查询参数
   const makeQuery = query => {
-    const result = Object.keys(query).reduce((result, key) => {
-      const value = query[key];
-      if (/Time$/g.test(key)) {
-        result[key] = value.format(config.data.DATE_FORMAT);
-      } else if (typeof value === 'object') {
-        result[key] = value.key;
-      } else if (value) {
-        result[key] = value;
+    const result = Object.keys(query).reduce(
+      (result, key) => {
+        const value = query[key];
+        if (/Time$/g.test(key)) {
+          result[key] = value.format(config.data.DATE_FORMAT);
+        } else if (typeof value === 'object') {
+          result[key] = value.key;
+        } else if (value) {
+          result[key] = value;
+        }
+        return result;
+      },
+      {
+        // qualityAuditorId: partyId
       }
-      return result;
-    }, {});
+    );
 
     return result;
   };

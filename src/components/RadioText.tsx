@@ -8,7 +8,11 @@ interface Props {
   options: any;
 }
 
-export default function RadioText({ value, options, onChange }: Props): ReactElement {
+const defaultProps = {
+  onChange() {}
+};
+
+function RadioText({ value, options, onChange }: Props): ReactElement {
   return (
     <Space>
       {options.map(o => (
@@ -19,3 +23,7 @@ export default function RadioText({ value, options, onChange }: Props): ReactEle
     </Space>
   );
 }
+
+RadioText.defaultProps = defaultProps;
+
+export default RadioText;

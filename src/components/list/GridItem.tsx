@@ -31,17 +31,19 @@ function GridItem({ onClick, cover, indexProps, actions, children, height, selec
       {children}
       <div className="grid-item-footer">
         <div className="grid-item-actions">
-          <Space>
-            {actions.map(action => (
-              <Button
-                title={action.title}
-                key={action.value}
-                size="small"
-                icon={action.icon}
-                onClick={e => onClick(action.value)}
-              />
-            ))}
-          </Space>
+          {actions && (
+            <Space>
+              {actions.map(action => (
+                <Button
+                  title={action.title}
+                  key={action.value}
+                  size="small"
+                  icon={action.icon}
+                  onClick={e => onClick(action.value)}
+                />
+              ))}
+            </Space>
+          )}
         </div>
         <div className="grid-item-index">
           <span title={indexProps.title} style={{ color: indexProps.color }}>
