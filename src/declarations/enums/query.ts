@@ -27,8 +27,8 @@ export enum AssignType {
 
 // 优先级
 export enum Priority {
-  正常,
-  加急
+  正常 = '1',
+  加急 = '2'
 }
 
 // 敏感检测
@@ -69,6 +69,7 @@ export enum BatchAssignStatus {
   分配中 = '2',
   分配完成 = '3'
 }
+
 export enum LicenseType {
   RM = '1',
   RF = '2'
@@ -99,6 +100,22 @@ export enum BatchAssignMode {
 // 审核类型（临时方案）
 export enum BatchAuditType {
   '创意类质量审核（一审）' = '1',
+}
+
+export enum QualityStatus {
+  '未编审' = '14',
+  '已通过' = '24',
+  '不通过' = '34'
+}
+
+export enum IfHaveRelease {
+  无 = '0',
+  有 = '1'
+}
+
+export enum Exclusive {
+  否 = '0',
+  是 = '1'
 }
 
 class Options {

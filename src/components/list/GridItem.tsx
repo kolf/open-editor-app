@@ -44,7 +44,9 @@ function GridItem({ onClick, cover, indexProps, actions, children, height, selec
           </Space>
         </div>
         <div className="grid-item-index">
-          <span style={{ color: indexProps.color }}>{indexProps.text}</span>
+          <span title={indexProps.title} style={{ color: indexProps.color }}>
+            {indexProps.text}
+          </span>
         </div>
       </div>
     </div>

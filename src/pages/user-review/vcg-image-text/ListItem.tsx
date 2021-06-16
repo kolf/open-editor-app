@@ -18,11 +18,32 @@ interface Props {
   selected: boolean;
 }
 
+function getIndexProps(qualityStatus) {
+  if (/^1/.test(qualityStatus)) {
+    return {
+      title: `未编审`,
+      color: '#666666'
+    };
+  }
+  if (/^2/.test(qualityStatus)) {
+    return {
+      title: `已通过`,
+      color: '#09e35c'
+    };
+  }
+  if (/^3/.test(qualityStatus)) {
+    return {
+      title: `不通过`,
+      color: '#e30e09'
+    };
+  }
+}
+
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
-      indexProps={{ text: index + 1 + '', color: '#ff0000' }}
+      indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
       height={432}
       onClick={onClick}
       selected={selected}

@@ -40,7 +40,7 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
           <div>
             <h3 style={{ textAlign: 'center' }}>EXIF</h3>
             {Object.keys(propsNames).map(key => (
-              <div className="ant-row">
+              <div className="ant-row" key={key}>
                 <div className="ant-col-8">{propsNames[key]}</div>
                 <div className="ant-col-16">{dataSource[key] || '---'}</div>
               </div>

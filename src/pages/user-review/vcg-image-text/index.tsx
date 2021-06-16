@@ -24,6 +24,11 @@ interface listProps {
   total?: number;
 }
 
+const initialData = {
+  list: [],
+  total: 0
+};
+
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
@@ -32,10 +37,7 @@ function List() {
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
   const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
     manual: true,
-    initialData: {
-      list: [],
-      total: 0
-    }
+    initialData
   });
   const { list, total } = makeData(data);
 
@@ -63,12 +65,16 @@ function List() {
 
   // 格式化返回的数据
   function makeData(data: listProps): listProps {
+    if (!data) {
+      return initialData;
+    }
     return {
       total: data.total,
       list: data.list.map(item => {
-        const { createdTime, updatedTime, qualityRank, copyright, licenseType } = item;
+        const { createdTime, updatedTime, osiImageReview, qualityRank, copyright, licenseType } = item;
         return {
           ...item,
+          qualityStatus: osiImageReview.qualityStatus,
           copyright: copyright + '',
           qualityRank: qualityRank ? qualityRank + '' : undefined,
           licenseType: licenseType + '' || undefined,
@@ -126,7 +132,6 @@ function List() {
 
   const checkSelectedIds = () => {
     if (selectedIds.length === 0) {
-      // return Promise.reject(`请选择图片！`);
       throw '请选择图片！';
     }
     return [...selectedIds];
@@ -229,8 +234,6 @@ function List() {
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
-
-      // TODO：更换设置等级接口
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
@@ -249,7 +252,6 @@ function List() {
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
-      // TODO：更换设置等级接口
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
@@ -267,7 +269,6 @@ function List() {
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
-      // TODO：更换设置等级接口
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '3', value } });
       mod.close();
