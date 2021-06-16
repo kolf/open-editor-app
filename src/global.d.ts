@@ -10,7 +10,7 @@ declare interface Column {
   title: string;
   dataIndex?: string;
   width?: number;
-  render?: (value: any, tr: any) => JSX.Element;
+  render?: (value: any, tr: any) => React.ReactNode;
 }
 
 declare interface Menu {
