@@ -1,15 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
-import { Radio, Button, Space, message } from 'antd';
+import { Radio, Button, Space, Spin, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
+import ImageDetails from 'src/components/modals/ImageDetails';
+import Loading from 'src/components/common/LoadingBlock';
 import imageService from 'src/services/imageService';
 import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 import config from 'src/config';
+import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -26,6 +29,7 @@ function List() {
   const [selectedIds, setSelectedIds] = useState([]);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
+  const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
   const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
     manual: true,
     initialData: {
@@ -105,6 +109,9 @@ function List() {
       case 'licenseType':
         setLicenseType(index, value);
         break;
+      case 'copyright':
+        setCopyright(index, value);
+        break;
       default:
         alert(field);
         break;
@@ -117,22 +124,38 @@ function List() {
     setSelectedIds(nextSelectedIds);
   };
 
-  const checkSelectedIds = async () => {
+  const checkSelectedIds = () => {
     if (selectedIds.length === 0) {
-      return Promise.reject(`请选择图片！`);
+      // return Promise.reject(`请选择图片！`);
+      throw '请选择图片！';
     }
     return [...selectedIds];
   };
 
-  const showDetails = index => {
-    alert(index);
+  const showDetails = async index => {
+    const { id, urlSmall } = list[index];
+    const mod = modal({
+      title: `图片详情`,
+      width: 640,
+      content: <Loading />,
+      footer: null
+    });
+    try {
+      const res = await showExifDetails({ id });
+      mod.update({
+        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall }} />
+      });
+    } catch (error) {
+      message.error(`请求接口出错！`);
+      mod.close();
+    }
   };
 
   // 设置通过
   const setResolve = async index => {
     let mod = null;
     try {
-      const idList = index === -1 ? await checkSelectedIds() : [list[index].id];
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
       const imageList = list
         .filter(item => idList.includes(item.id))
@@ -159,7 +182,7 @@ function List() {
     let mod = null;
     let standardReason = '';
     try {
-      const idList = index === -1 ? await checkSelectedIds() : [list[index].id];
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({
         title: '设置不通过原因',
         content: (
@@ -200,29 +223,16 @@ function List() {
     }
   };
 
-  // 确认不通过原因
-  const confirmRejectReason = async () => {
-    return [];
-  };
-
   // 设置等级
   const setQuality = async (index, value) => {
     let mod = null;
     try {
-      const idList = index === -1 ? await checkSelectedIds() : [list[index].id];
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
-      const imageList = list
-        .filter(item => idList.includes(item.id))
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
 
       // TODO：更换设置等级接口
       mod.confirmLoading();
-      const res = await update({ body: imageList, query: { type: 'qualityRank', value } });
+      const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
       message.success(`设置等级成功！`);
       setSelectedIds([]);
@@ -237,20 +247,11 @@ function List() {
   const setLicenseType = async (index, value) => {
     let mod = null;
     try {
-      const idList = index === -1 ? await checkSelectedIds() : [list[index].id];
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
-      const imageList = list
-        .filter(item => idList.includes(item.id))
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
-
       // TODO：更换设置等级接口
       mod.confirmLoading();
-      const res = await update({ body: imageList, query: { type: 'licenseType', value } });
+      const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
       message.success(`设置授权成功！`);
       setSelectedIds([]);
@@ -264,20 +265,11 @@ function List() {
   const setCopyright = async (index, value) => {
     let mod = null;
     try {
-      const idList = index === -1 ? await checkSelectedIds() : [list[index].id];
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
-      const imageList = list
-        .filter(item => idList.includes(item.id))
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
-
       // TODO：更换设置等级接口
       mod.confirmLoading();
-      const res = await update({ body: imageList, query: { type: 'copyright', value } });
+      const res = await update({ body: idList, query: { type: '3', value } });
       mod.close();
       message.success(`设置授权成功！`);
       setSelectedIds([]);
