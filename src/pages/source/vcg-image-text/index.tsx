@@ -6,14 +6,20 @@ import { useImperativeHandle } from 'react';
 import { forwardRef } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import config from 'src/config';
-import options, { BatchAssignMode, BatchAssignStatus, BatchAuditType, IfSensitveCheck } from 'src/declarations/enums/query';
+import options, {
+  BatchAssignMode,
+  BatchAssignStatus,
+  BatchAuditType,
+  IfSensitveCheck
+} from 'src/declarations/enums/query';
 import bacthService from 'src/services/batchService';
-import modal from 'src/utils/confirm';
+import modal from 'src/utils/modal';
 import { FormList } from './FormList';
+import AssignForm from './AssignForm';
 
 function VcgImageText() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
-  const assignModalRef = useRef();
+
   const {
     data = { list: [], total: 0 },
     loading,
@@ -21,15 +27,18 @@ function VcgImageText() {
     refresh
   } = useRequest(bacthService.getList, { manual: true });
 
-  function assign (assignModalRef){
+  function assign() {
+    let formRef = null;
     modal({
       width: 500,
       title: '数据分配',
-      content: <AssignModal ref={assignModalRef}/>,
+      content: <AssignForm saveRef={r => (formRef = r)} />,
       onOk
-    })
+    });
     async function onOk() {
-      console.log(assignModalRef.current.getModalData())
+      console.log(formRef, 'formRef')
+      const values = await formRef.validateFields();
+      console.log(values, 'values');
     }
   }
 
@@ -55,14 +64,22 @@ function VcgImageText() {
       }
     },
     { title: '数量', dataIndex: 'quantity' },
-    { title: '分配时间', dataIndex: 'assignTime', render: value => value && moment(value).format(config.data.SECOND_FORMAT) || '-' },
+    {
+      title: '分配时间',
+      dataIndex: 'assignTime',
+      render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
+    },
     { title: '分配状态', dataIndex: 'assignStatus', render: value => options.map(BatchAssignStatus)[value] },
     { title: '分配对象', dataIndex: '' },
     { title: '分配人', dataIndex: 'assignerName' },
     {
       title: '操作',
       render: (value, tr) => {
-        return <Button disabled={ tr.assignStatus != BatchAssignStatus.未分配 } type='text' onClick={assign}>分配</Button>;
+        return (
+          <Button  type="text" onClick={assign}>
+            分配
+          </Button>
+        );
       }
     }
   ];
@@ -84,16 +101,16 @@ function VcgImageText() {
   );
 }
 
-const AssignModal =  React.forwardRef((props, ref) => {
-  const [modalData, setModalData] = useState({a: 1, b: 2});
+const AssignModal = React.forwardRef((props, ref) => {
+  const [modalData, setModalData] = useState({ a: 1, b: 2 });
 
   useImperativeHandle(ref, () => ({
     getModalData: () => {
-      return modalData
+      return modalData;
     }
-  }))
+  }));
 
   return <div>1</div>;
-})
+});
 
 export default VcgImageText;
