@@ -20,9 +20,9 @@ export enum DataSource {
 }
 
 // 分配模式
-export enum DistributeMode {
-  人工 = '0',
-  自动 = '1'
+export enum AssignType {
+  人工 = '1',
+  自动 = '2'
 }
 
 // 优先级
@@ -32,7 +32,7 @@ export enum Priority {
 }
 
 // 敏感检测
-export enum SensitiveDetection {
+export enum IfSensitveCheck {
   检测 = '0',
   不检测 = '1'
 }
@@ -46,15 +46,29 @@ export enum AIDetection {
 
 // 资源/审核类型
 export enum AssetType {
-  图片 = '0',
-  视频 = '1'
+  图片 = '1',
+  视频 = '2',
+  音频 = '3',
 }
 
+// 资源分类
 export enum AssetFamily {
-  创意类 = '0',
+  创意类 = '2',
   编辑类 = '1'
 }
 
+// 数据来源状态
+export enum OsiDbProviderStatus {
+  禁用 = '0',
+  开通 = '1'
+}
+
+// 批次分配状态
+export enum BatchAssignStatus {
+  未分配 = '1',
+  分配中 = '2',
+  分配完成 = '3'
+}
 export enum LicenseType {
   RM = '1',
   RF = '2'
@@ -76,12 +90,16 @@ export enum CopyrightType {
   不涉及肖像权或物权授权 = '0'
 }
 
+// 分配方式
+export enum BatchAssignMode {
+  系统 = '1',
+  人工 = '2'
+}
 
-export const assetFamilyMap = Object.keys(AssetFamily).reduce((memo, a) => {
-  memo[AssetFamily[a]] = a;
-  return memo;
-}, {});
-
+// 审核类型（临时方案）
+export enum BatchAuditType {
+  '创意类质量审核（一审）' = '1',
+}
 
 class Options {
   map(enumObj) {
@@ -103,4 +121,4 @@ class Options {
 
 const options = new Options()
 
-export default options
+export default options;
