@@ -5,6 +5,7 @@ import React from 'react';
 import { useEffect, useState, useRef } from 'react';
 import config from 'src/config';
 import options, {
+  AIDetection,
   BatchAssignMode,
   BatchAssignStatus,
   BatchAuditType,
@@ -16,8 +17,10 @@ import modal from 'src/utils/modal';
 import FormList from './FormList';
 import AssignForm from './AssignForm';
 import Pagination from 'src/components/Pagination';
+import { useDocumentTitle } from 'src/hooks/useDom';
 
 function VcgImageText() {
+  useDocumentTitle('数据分配-创意类质量审核-VCGa内容审核管理平台');
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {
@@ -116,6 +119,14 @@ function VcgImageText() {
             } else {
               Reflect.deleteProperty(memo, q);
             }
+            break;
+          case 'aiDetection':
+            Reflect.deleteProperty(memo, 'ifAiQualityScore');
+            Reflect.deleteProperty(memo, 'ifAiBeautyScore');
+            Reflect.deleteProperty(memo, 'ifAiCategory');
+            if (nextQuery[q] === AIDetection.AI质量评分) memo['ifAiQualityScore'] = '1';
+            if (nextQuery[q] === AIDetection.AI美学评分) memo['ifAiBeautyScore'] = '1';
+            if (nextQuery[q] === AIDetection.AI分类) memo['ifAiCategory'] = '1';
             break;
           default:
             memo[q] = nextQuery[q];

@@ -2,6 +2,7 @@ import React, { FC, memo, useState } from 'react';
 import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import options, {
+  AIDetection,
   AssetFamily,
   BatchAssignMode,
   BatchAssignStatus,
@@ -19,35 +20,39 @@ function filterOption(input, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
-
 const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
     initialData: []
   });
-  
+
   return (
-    <div className='formList-root'>
-      <Form layout="inline" onValuesChange={props.onChange}>
+    <div className="formList-root">
+      <Form
+        layout="inline"
+        onValuesChange={props.onChange}
+        className="formList-list"
+        style={{ height: collapse ? 'auto' : 38 }}
+      >
         <Form.Item name="createdTime" className="form-list-item">
           <DatePicker placeholder="入库时间" />
         </Form.Item>
         <Form.Item name="assignStatus" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配状态">
             {options.get(BatchAssignStatus).map(o => (
-              <Option key={o.value} value={o.value}>
+              <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item name="userList" className="form-list-item">
-          <SearchSelect style={{ width: 120 }} placeholder="分配对象" type="editUser" mode='multiple' manual/>
+          <SearchSelect style={{ width: 160 }} placeholder="分配对象" type="editUser" mode="multiple" manual />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
           <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="数据来源">
             {providerOptions.map(o => (
-              <Option key={o.value} value={o.value}>
+              <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
             ))}
@@ -56,7 +61,7 @@ const FormList = (props: any) => {
         <Form.Item name="assignMode" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配">
             {options.get(BatchAssignMode).map(o => (
-              <Option key={o.value} value={o.value}>
+              <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
             ))}
@@ -65,7 +70,7 @@ const FormList = (props: any) => {
         <Form.Item name="priority" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="优先级">
             {options.get(Priority).map(o => (
-              <Option key={o.value} value={o.value}>
+              <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
             ))}
@@ -74,13 +79,21 @@ const FormList = (props: any) => {
         <Form.Item name="ifSensitveCheck" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="敏感检测">
             {options.get(IfSensitveCheck).map(o => (
-              <Option key={o.value} value={o.value}>
+              <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
             ))}
           </Select>
         </Form.Item>
-        
+        <Form.Item name="aiDetection" className="form-list-item">
+          <Select allowClear style={{ width: 120 }} placeholder="AI分类">
+            {options.get(AIDetection).map(o => (
+              <Option key={`${o.label}${o.value}`} value={o.value}>
+                {o.label}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
       </Form>
       <div className="formList-dropdown">
         {collapse ? (
