@@ -27,9 +27,7 @@ export default function SearchSelect({ type, ...otherProps }: Props): ReactEleme
       labelInValue
       filterOption={false}
       notFoundContent={loading ? <Spin size="small" /> : null}
-      onSearch={e => {
-        setInputValue(e);
-      }}
+      onSearch={setInputValue}
       options={data}
       {...otherProps}
     />
