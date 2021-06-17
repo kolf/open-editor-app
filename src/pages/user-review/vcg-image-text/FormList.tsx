@@ -2,6 +2,7 @@ import React, { FC, memo, useState } from 'react';
 import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
+import SearchSelect from 'src/components/SearchSelect';
 import options, {
   Priority,
   Quality,
@@ -11,9 +12,7 @@ import options, {
   IfSensitveCheck,
   Exclusive
 } from 'src/declarations/enums/query';
-
 import 'src/styles/FormList.scss';
-import commonService from 'src/services/commonService';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -36,12 +35,6 @@ const levelOptions = Array.from({ length: 10 }, (item, index) => ({
 
 export const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
-  const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    initialData: []
-  });
-  const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    initialData: []
-  });
 
   return (
     <div className="formList-root">
@@ -67,13 +60,14 @@ export const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="数据来源">
-            {providerOptions.map(o => (
-              <Option key={o.value} value={o.value}>
-                {o.label}
-              </Option>
-            ))}
-          </Select>
+          <SearchSelect
+            allowClear
+            filterOption={filterOption}
+            showSearch
+            type="provider"
+            style={{ width: 160 }}
+            placeholder="数据来源"
+          />
         </Form.Item>
         <Form.Item name="aiQualityScore" className="form-list-item">
           <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="AI质量评分">
@@ -148,13 +142,7 @@ export const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="category" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="AI分类">
-            {categoryOptions.map(o => (
-              <Option key={o.value} value={o.value}>
-                {o.label}
-              </Option>
-            ))}
-          </Select>
+          <SearchSelect filterOption={filterOption} style={{ width: 120 }} placeholder="AI分类" type="category" />
         </Form.Item>
       </Form>
       <div className="formList-dropdown">

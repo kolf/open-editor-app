@@ -6,12 +6,13 @@ import { useRequest } from 'ahooks';
 
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: string;
+  manual?: boolean;
 }
-export default function SearchSelect({ type, ...otherProps }: Props): ReactElement {
+export default function SearchSelect({ type, manual, ...otherProps }: Props): ReactElement {
   const [inputValue, setInputValue] = useState('');
   const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
     initialData: [],
-    manual: true,
+    manual,
     debounceInterval: 900
   });
 
