@@ -27,7 +27,7 @@ const MenuLink: React.FC<any> = ({ location, menuKey, siderbarKey }) => {
       // defaultOpenKeys={[menu.menuActive]}
       defaultOpenKeys={[siderbarKey]}
     >
-      {menuList.map((sub: any) => {
+      {menuList.filter(sub => !sub.hidden).map((sub: any) => {
         if (sub.hasChild) {
           return (
             <SubMenu
