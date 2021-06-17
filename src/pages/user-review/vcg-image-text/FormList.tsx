@@ -3,6 +3,7 @@ import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import SearchSelect from 'src/components/SearchSelect';
+import InputSlider from 'src/components/InputSlider';
 import options, {
   Priority,
   Quality,
@@ -70,22 +71,10 @@ export const FormList = (props: any) => {
           />
         </Form.Item>
         <Form.Item name="aiQualityScore" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="AI质量评分">
-            {levelOptions.map(o => (
-              <Option key={o.value} value={o.value}>
-                {o.label}
-              </Option>
-            ))}
-          </Select>
+          <InputSlider width={120} placeholder="AI质量评分" />
         </Form.Item>
         <Form.Item name="aiBeautyScore" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="AI美学评分">
-            {levelOptions.map(o => (
-              <Option key={o.value} value={o.value}>
-                {o.label}
-              </Option>
-            ))}
-          </Select>
+          <InputSlider width={120} placeholder="AI美学评分" />
         </Form.Item>
         <Form.Item name="qualityRank" className="form-list-item">
           <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="质量等级">

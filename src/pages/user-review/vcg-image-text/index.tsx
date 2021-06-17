@@ -66,7 +66,7 @@ function List() {
         return result;
       },
       {
-        // qualityAuditorId: partyId
+        qualityAuditorId: partyId
       }
     );
 

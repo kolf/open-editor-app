@@ -5,7 +5,7 @@ import commonService from 'src/services/commonService';
 import { useRequest } from 'ahooks';
 
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
-  type: string;
+  type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
 }
 export default function SearchSelect({ type, manual, ...otherProps }: Props): ReactElement {
