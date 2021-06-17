@@ -65,13 +65,13 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow label="ID:">
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>
-      <GridItemRow label="供应商:">{dataSource.resId}</GridItemRow>
+      <GridItemRow label="供应商:">{dataSource.osiProviderName}</GridItemRow>
       <GridItemRow>
         <Space>
           <span>LAI</span>
-          <span>9.0</span>
-          <span>8.5</span>
-          <span>风景</span>
+          <span>{dataSource.aiBeautyScore}</span>
+          <span>{dataSource.aiQualityScore}</span>
+          <span>{dataSource.categoryNames}</span>
         </Space>
       </GridItemRow>
 

@@ -16,6 +16,7 @@ import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
+import commonService from 'src/services/commonService';
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
 const copyrightTypeOptions = options.get(CopyrightType);
@@ -36,11 +37,18 @@ function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { partyId } = useCurrentUser();
+  const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
+    cacheKey: 'provider'
+  });
+  const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
+    cacheKey: 'category'
+  });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
   const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
     manual: true,
+    throttleInterval: 600,
     initialData
   });
   const { list, total } = makeData(data);
@@ -81,13 +89,28 @@ function List() {
     return {
       total: data.total,
       list: data.list.map(item => {
-        const { createdTime, updatedTime, osiImageReview, qualityRank, copyright, licenseType } = item;
+        const {
+          createdTime,
+          updatedTime,
+          osiImageReview,
+          qualityRank,
+          copyright,
+          licenseType,
+          osiProviderId,
+          category
+        } = item;
+        const categoryList = category.split(',');
         return {
           ...item,
           qualityStatus: osiImageReview.qualityStatus,
           copyright: copyright + '',
           qualityRank: qualityRank ? qualityRank + '' : undefined,
           licenseType: licenseType + '' || undefined,
+          osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
+          categoryNames: categoryOptions
+            .filter((o, index) => categoryList.includes(o.value) && index < 2)
+            .map(o => o.label)
+            .join(','),
           createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
           updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
         };

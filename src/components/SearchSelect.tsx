@@ -13,7 +13,8 @@ export default function SearchSelect({ type, manual, ...otherProps }: Props): Re
   const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
     initialData: [],
     manual,
-    debounceInterval: 900
+    debounceInterval: 900,
+    cacheKey: type
   });
 
   useEffect(() => {
