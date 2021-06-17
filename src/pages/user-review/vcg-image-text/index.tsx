@@ -55,8 +55,9 @@ function List() {
     const result = Object.keys(query).reduce(
       (result, key) => {
         const value = query[key];
-        if (/Time$/g.test(key)) {
-          result[key] = value.format(config.data.DATE_FORMAT);
+        if (/Time$/g.test(key) && value) {
+          const date = value.format(config.data.DATE_FORMAT);
+          result[key] = `${date} 00:00:00,${date} 23:59:59`;
         } else if (typeof value === 'object') {
           result[key] = value.key;
         } else if (value) {

@@ -3,8 +3,8 @@ import { Spin, Row, Col, Empty } from 'antd';
 import './GridList.scss';
 
 const layout = {
-  xs: 12,
-  sm: 8,
+  xs: 24,
+  sm: 12,
   md: 8,
   lg: 6,
   xl: 6,

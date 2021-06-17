@@ -2,6 +2,7 @@ import React, { FC, memo, useState } from 'react';
 import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
+import SearchSelect from 'src/components/SearchSelect';
 import options, {
   Priority,
   Quality,
@@ -11,7 +12,6 @@ import options, {
   IfSensitveCheck,
   Exclusive
 } from 'src/declarations/enums/query';
-
 import 'src/styles/FormList.scss';
 import commonService from 'src/services/commonService';
 
@@ -52,13 +52,7 @@ export const FormList = (props: any) => {
         style={{ height: collapse ? 'auto' : 38 }}
       >
         <Form.Item name="userId" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="审核人">
-            {providerOptions.map(o => (
-              <Option key={o.value} value={o.value}>
-                {o.label}
-              </Option>
-            ))}
-          </Select>
+          <SearchSelect style={{ width: 160 }} placeholder="审核人" type="editUser" />
         </Form.Item>
         <Form.Item name="createdTime" className="form-list-item">
           <DatePicker placeholder="入库时间" />

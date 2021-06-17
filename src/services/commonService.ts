@@ -17,10 +17,19 @@ export class CommonService {
           value: item.id + '',
           label: item.name
         }))
+      } else if (data.type === 'editUser') {
+        const res = await Api.post(`/api/editor/param/pageList?paramType=4`, {
+          assetFamily: 2,
+          searchName: data.value
+        });
+        result = res.data.data.user.map(item => ({
+          value: item.partyId,
+          label: item.name
+        }))
       }
       return Promise.resolve(result)
     } catch (error) {
-      throw new Error(error);
+      return Promise.resolve([])
     }
   }
 }

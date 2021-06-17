@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
 import { Radio, Button, Space, Spin, message } from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
@@ -10,14 +9,10 @@ import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
 import imageService from 'src/services/imageService';
-import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
-import { useCurrentUser } from 'src/hooks/useCurrentUser';
-const qualityOptions = options.get(Quality);
-const licenseTypeOptions = options.get(LicenseType);
-const copyrightTypeOptions = options.get(CopyrightType);
+import { useDocumentTitle } from 'src/hooks/useDom';
 
 interface listProps {
   // TODO: 添加图片接口
@@ -31,6 +26,7 @@ const initialData = {
 };
 
 function List() {
+  useDocumentTitle(`全部资源-VCG内容审核管理平台`);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
@@ -51,7 +47,6 @@ function List() {
   const makeQuery = query => {
     const result = Object.keys(query).reduce((result, key) => {
       const value = query[key];
-      console.log(value, 'value');
       if (/Time$/g.test(key) && value) {
         const date = value.format(config.data.DATE_FORMAT);
         result[key] = `${date} 00:00:00,${date} 23:59:59`;
@@ -97,48 +92,15 @@ function List() {
       case 'cover':
         handleSelect(index);
         break;
-      case 'resolve':
-        setResolve(index);
-        break;
-      case 'reject':
-        setReject(index);
-        break;
       default:
-        alert(field);
         break;
     }
   };
 
   // 改变数据某一项的值
-  const handleChange = (index, field, value) => {
-    switch (field) {
-      case 'qualityRank':
-        setQuality(index, value);
-        break;
-      case 'licenseType':
-        setLicenseType(index, value);
-        break;
-      case 'copyright':
-        setCopyright(index, value);
-        break;
-      default:
-        alert(field);
-        break;
-    }
-  };
+  const handleChange = (index, field, value) => {};
 
-  const handleSelect = index => {
-    const { id } = list[index];
-    const nextSelectedIds = selectedIds.includes(id) ? selectedIds.filter(sid => sid !== id) : [...selectedIds, id];
-    setSelectedIds(nextSelectedIds);
-  };
-
-  const checkSelectedIds = () => {
-    if (selectedIds.length === 0) {
-      throw '请选择图片！';
-    }
-    return [...selectedIds];
-  };
+  const handleSelect = index => {};
 
   const showDetails = async index => {
     const { id, urlSmall } = list[index];
@@ -156,131 +118,6 @@ function List() {
     } catch (error) {
       message.error(`请求接口出错！`);
       mod.close();
-    }
-  };
-
-  // 设置通过
-  const setResolve = async index => {
-    let mod = null;
-    try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
-      const imageList = list
-        .filter(item => idList.includes(item.id))
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
-      mod.confirmLoading();
-      const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
-      mod.close();
-      message.success(`设置通过成功！`);
-      setSelectedIds([]);
-      refresh();
-    } catch (error) {
-      mod && mod.close();
-      error && message.error(error);
-    }
-  };
-
-  // 设置不通过
-  const setReject = async index => {
-    let mod = null;
-    let standardReason = '';
-    try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      mod = await confirm({
-        title: '设置不通过原因',
-        content: (
-          <Radio.Group onChange={e => (standardReason = e.target.value)}>
-            <Space direction="vertical">
-              <Radio value={1}>Option A</Radio>
-              <Radio value={2}>Option B</Radio>
-              <Radio value={3}>Option C</Radio>
-            </Space>
-          </Radio.Group>
-        )
-      });
-
-      if (!standardReason) {
-        throw `请选择不通过原因！`;
-      }
-
-      const imageList = list
-        .filter(item => idList.includes(item.id))
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
-      mod.confirmLoading();
-      const res = await review({
-        body: imageList,
-        query: { stage: 1, status: 2, standardReason }
-      });
-      mod.close();
-      message.success(`设置不通过成功！`);
-      setSelectedIds([]);
-      refresh();
-    } catch (error) {
-      mod && mod.close();
-      error && message.error(error);
-    }
-  };
-
-  // 设置等级
-  const setQuality = async (index, value) => {
-    let mod = null;
-    try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
-      mod.confirmLoading();
-      const res = await update({ body: idList, query: { type: '1', value } });
-      mod.close();
-      message.success(`设置等级成功！`);
-      setSelectedIds([]);
-      refresh();
-    } catch (error) {
-      mod && mod.close();
-      error && message.error(error);
-    }
-  };
-
-  // 设置授权类型
-  const setLicenseType = async (index, value) => {
-    let mod = null;
-    try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
-      mod.confirmLoading();
-      const res = await update({ body: idList, query: { type: '2', value } });
-      mod.close();
-      message.success(`设置授权成功！`);
-      setSelectedIds([]);
-      refresh();
-    } catch (error) {
-      mod && mod.close();
-      error && message.error(error);
-    }
-  };
-  // 设置授权
-  const setCopyright = async (index, value) => {
-    let mod = null;
-    try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
-      mod.confirmLoading();
-      const res = await update({ body: idList, query: { type: '3', value } });
-      mod.close();
-      message.success(`设置授权成功！`);
-      setSelectedIds([]);
-      refresh();
-    } catch (error) {
-      mod && mod.close();
-      error && message.error(error);
     }
   };
 
