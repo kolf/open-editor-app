@@ -1,5 +1,5 @@
 import Api from './config';
-import queryString from 'querystring'
+import queryString from 'querystring';
 
 export class ProviderService {
   async getList(data: any): Promise<any> {

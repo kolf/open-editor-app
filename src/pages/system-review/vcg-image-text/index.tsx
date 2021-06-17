@@ -123,7 +123,10 @@ function List() {
 
   return (
     <>
-      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
+      <FormList onChange={values => {
+        console.log(values)
+        setQuery({ ...query, ...values, pageNum: 1 })
+      }} />
       <Toolbar
         onSelectIds={setSelectedIds}
         selectedIds={selectedIds}

@@ -1,11 +1,6 @@
 import { Select, Pagination as Paging } from 'antd';
 import { Option } from 'antd/lib/mentions';
 
-interface IListData {
-  total: number;
-  list: [object?];
-}
-
 interface ILoadData {
   (type?: string, filterParams?: any): void;
 }
@@ -20,8 +15,8 @@ interface ILoadData {
  */
 export default function Pagination({
   total,
-  pageNum,
-  pageSize,
+  pageNum = 1,
+  pageSize = 60,
   loadData
 }: {
   total: number;

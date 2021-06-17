@@ -1,4 +1,6 @@
 import Api from './config';
+import queryString from 'querystring';
+import { getToken } from 'src/utils/localStorage';
 
 export class CommonService {
   async getOptions(data: any): Promise<any> {
@@ -31,6 +33,12 @@ export class CommonService {
     } catch (error) {
       return Promise.resolve([])
     }
+  }
+
+  async getEditors(paramType, assetFamily, searchName): Promise<any> {
+    const token = getToken();
+    const result = await Api.post(`/api/editor/param/pageList?paramType=${paramType}&token=${token}`, { assetFamily, searchName });
+    return result.data;
   }
 }
 

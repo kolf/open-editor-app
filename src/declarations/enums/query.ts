@@ -2,21 +2,21 @@
 
 // 入库时间
 export enum InStorageTime {
-  今日 = "1",
-  昨天 = "2",
-  近一周 = "3"
+  今日 = '1',
+  昨天 = '2',
+  近一周 = '3'
 }
 // 分配状态
 export enum DistributeState {
   未分配,
   分配中,
-  分配完成,
+  分配完成
 }
 
 // 数据来源
 export enum DataSource {
   '500px.me',
-  '500px.com',
+  '500px.com'
 }
 
 // 分配模式
@@ -48,7 +48,7 @@ export enum AIDetection {
 export enum AssetType {
   图片 = '1',
   视频 = '2',
-  音频 = '3',
+  音频 = '3'
 }
 
 // 资源分类
@@ -79,7 +79,7 @@ export enum Quality {
   A = '1',
   B = '2',
   C = '3',
-  D = '4',
+  D = '4'
 }
 
 export enum CopyrightType {
@@ -99,7 +99,13 @@ export enum BatchAssignMode {
 
 // 审核类型（临时方案）
 export enum BatchAuditType {
-  '创意类质量审核（一审）' = '1',
+  '创意类质量审核（一审）' = '1'
+}
+
+// 批次分配对象
+export enum BatchAssignTarget {
+  全部资源 = '1',
+  编辑 = '2'
 }
 
 export enum QualityStatus {
@@ -121,21 +127,21 @@ export enum Exclusive {
 class Options {
   map(enumObj) {
     return Object.keys(enumObj).reduce((result, key) => {
-      result[enumObj[key]] = key
-      return result
-    }, {})
+      result[enumObj[key]] = key;
+      return result;
+    }, {});
   }
-  get(enumObj) {
+  get(enumObj): { value: string | number; label: string }[] {
     return Object.keys(enumObj).reduce((result, key) => {
       result.push({
         value: enumObj[key],
         label: key
       });
-      return result
-    }, [])
+      return result;
+    }, []);
   }
 }
 
-const options = new Options()
+const options = new Options();
 
 export default options;
