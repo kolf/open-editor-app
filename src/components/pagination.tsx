@@ -1,5 +1,6 @@
 import { Select, Pagination as Paging } from 'antd';
 import { Option } from 'antd/lib/mentions';
+import { memo } from 'react';
 
 interface ILoadData {
   (type?: string, filterParams?: any): void;
@@ -13,7 +14,7 @@ interface ILoadData {
  * @param loadData 数据刷新函数
  * @returns React.ReactNode
  */
-export default function Pagination({
+const Pagination = ({
   total,
   pageNum = 1,
   pageSize = 60,
@@ -23,7 +24,7 @@ export default function Pagination({
   pageNum: number;
   pageSize: number;
   loadData: ILoadData;
-}) {
+}) => {
   const pageProps = {
     className: 'ant-pager',
     current: pageNum,
@@ -58,4 +59,6 @@ export default function Pagination({
       <div className="total-page"> {'共 ' + total + ' 条'} </div>
     </div>
   );
-}
+};
+
+export default memo(Pagination);

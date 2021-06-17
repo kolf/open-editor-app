@@ -1,44 +1,99 @@
-import { Table } from 'antd';
-import React, { useEffect, useState } from 'react';
+import { useRequest } from 'ahooks';
+import { DatePicker, Form, Table } from 'antd';
+import moment from 'moment';
+import React, { useEffect, useState, memo } from 'react';
+import Pagination from 'src/components/Pagination';
+import config from 'src/config';
+import { useDocumentTitle } from 'src/hooks/useDom';
+import bacthService from 'src/services/batchService';
 
 const columns: Column[] = [
   {
     title: '序号',
-    dataIndex: 'index',
+    dataIndex: 'index'
   },
   {
     title: 'ID',
-    dataIndex: 'index',
+    dataIndex: 'index'
   },
   {
     title: '编辑',
-    dataIndex: 'user',
-  },
-  {
+    dataIndex: 'user'
+  },  {
     title: '待审核数量',
-    dataIndex: 'number',
+    dataIndex: 'number'
   },
   {
     title: '审核通过数量',
-    dataIndex: 'number',
+    dataIndex: 'number'
   },
   {
     title: '审核驳回数量',
-    dataIndex: 'number',
+    dataIndex: 'number'
   },
   {
-    title: '共计',
-  },
+    title: '共计'
+  }
 ];
 
 function Statistic() {
-  const [statisticList, setStatisticList] = useState([]);
+  useDocumentTitle('统计-数据审核统计-VCG内容审核管理平台');
+  const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
+
+  const {
+    data = { list: [], total: 0 },
+    loading,
+    run: refreshData
+  } = useRequest(bacthService.getList, { manual: true });
 
   useEffect(() => {
-    console.log(111);
-  });
+    refreshData(query);
+  }, [query]);
 
-  return <Table columns={columns} dataSource={statisticList} />;
+  const updateQuery = (type, nextQuery = {}) => {
+    setQuery({ ...query, ...nextQuery });
+  };
+
+  const formListOnChange = values => {
+    const nextQuery = { ...values, pageNum: 1 };
+    const result = Object.keys(nextQuery).reduce(
+      (memo, q) => {
+        switch (q) {
+          case 'createdTime':
+            if (nextQuery[q]) {
+              const date = moment(nextQuery[q]).format(config.data.DATE_FORMAT);
+              memo[q] = `${date} 00:00:00,${date} 23:59:59`;
+            } else {
+              Reflect.deleteProperty(memo, q);
+            }
+            break;
+          default:
+            memo[q] = nextQuery[q];
+        }
+        return memo;
+      },
+      { ...query }
+    );
+    setQuery(result);
+  };
+
+  return (
+    <>
+      <Form layout="inline" onValuesChange={formListOnChange} className="formList-list">
+        <Form.Item name="createdTime" className="form-list-item">
+          <DatePicker placeholder="入库时间" />
+        </Form.Item>
+      </Form>
+      <Pagination total={data.total} pageNum={query.pageNum} pageSize={query.pageSize} loadData={updateQuery} />
+      <Table
+        pagination={false}
+        dataSource={data.list.map((l, i) => ({ ...l, ...{ index: i } }))}
+        columns={columns}
+        bordered
+        loading={loading}
+      />
+    </>
+  );
 }
 
-export default Statistic;
+export default memo(Statistic);

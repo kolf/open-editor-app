@@ -20,7 +20,7 @@ import Pagination from 'src/components/Pagination';
 import { useDocumentTitle } from 'src/hooks/useDom';
 
 function VcgImageText() {
-  useDocumentTitle('数据分配-创意类质量审核-VCGa内容审核管理平台');
+  useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {
@@ -97,7 +97,6 @@ function VcgImageText() {
     {
       title: '操作',
       render: (value, tr) => {
-        return <Button type='text' onClick={() => assignData(tr.id)}>分配</Button>;
         return <Button disabled={ tr.assignStatus != BatchAssignStatus.未分配 } type='text' onClick={() => assignData(tr.id)}>分配</Button>;
       }
     }

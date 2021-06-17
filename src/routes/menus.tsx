@@ -16,7 +16,7 @@ export const menus: Menu[] = [
         icon: 'icon-data',
         path: PATH.SOURCE_LIST,
         breadcrumbName: '数据来源管理',
-        hidden: false,
+        hidden: true,
       },
       {
         key: '_SOURCE_VCG_IMAGE',
@@ -40,7 +40,7 @@ export const menus: Menu[] = [
             hasChild: true,
             path: PATH.SOURCE_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false
+            hidden: true
           },
           {
             key: PATH.SOURCE_VCG_IMAGE_SENSITIVE,
@@ -48,7 +48,7 @@ export const menus: Menu[] = [
             hasChild: true,
             path: PATH.SOURCE_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false
+            hidden: true
           },
           {
             key: PATH.SOURCE_CFP_IMAGE_LIST,
@@ -56,7 +56,7 @@ export const menus: Menu[] = [
             hasChild: true,
             path: PATH.SOURCE_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false
+            hidden: true
           }
         ]
       }
@@ -92,7 +92,7 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false
+            hidden: true
           },
           {
             key: PATH.SYSTEM_REVIEW_VCG_IMAGE_SENSITIVE,
@@ -100,7 +100,7 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false
+            hidden: true
           },
           {
             key: PATH.SYSTEM_REVIEW_CFP_IMAGE_LIST,
@@ -108,7 +108,7 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.SYSTEM_REVIEW_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false
+            hidden: true
           }
         ]
       }
@@ -144,7 +144,7 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.USER_REVIEW_VCG_IMAGE_KEYWORD,
             breadcrumbName: '创意类关键词审核',
-            hidden: false
+            hidden: true
           },
           {
             key: PATH.USER_REVIEW_VCG_IMAGE_SENSITIVE,
@@ -152,7 +152,7 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.USER_REVIEW_VCG_IMAGE_SENSITIVE,
             breadcrumbName: '创意类安全审核',
-            hidden: false
+            hidden: true
           },
           {
             key: PATH.USER_REVIEW_CFP_IMAGE_LIST,
@@ -160,7 +160,7 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.USER_REVIEW_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false
+            hidden: true
           }
         ]
       }
