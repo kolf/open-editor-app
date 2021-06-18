@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
-import { Radio, Button, Space, Spin, message } from 'antd';
+import { message } from 'antd';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
@@ -11,7 +11,6 @@ import Loading from 'src/components/common/LoadingBlock';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
-import confirm from 'src/utils/confirm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import commonService from 'src/services/commonService';
 
@@ -147,7 +146,6 @@ function List() {
   return (
     <>
       <FormList onChange={values => {
-        console.log(values)
         setQuery({ ...query, ...values, pageNum: 1 })
       }} />
       <Toolbar

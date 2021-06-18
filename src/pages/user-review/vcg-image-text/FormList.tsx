@@ -26,7 +26,7 @@ const ifHaveReleaseOptions = options.get(IfHaveRelease);
 const exclusiveOptions = options.get(Exclusive);
 
 function filterOption(input, option) {
-  return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
 const levelOptions = Array.from({ length: 10 }, (item, index) => ({

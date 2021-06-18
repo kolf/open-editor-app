@@ -17,7 +17,7 @@ import { useRequest } from 'ahooks';
 const { Option } = Select;
 
 function filterOption(input, option) {
-  return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
+  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
 const FormList = (props: any) => {
@@ -50,13 +50,21 @@ const FormList = (props: any) => {
           <SearchSelect style={{ width: 160 }} placeholder="分配对象" type="editUser" mode="multiple" manual />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="数据来源">
+        <SearchSelect
+            allowClear
+            filterOption={filterOption}
+            showSearch
+            type="provider"
+            style={{ width: 160 }}
+            placeholder="数据来源"
+          />
+          {/* <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="数据来源">
             {providerOptions.map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
             ))}
-          </Select>
+          </Select> */}
         </Form.Item>
         <Form.Item name="assignMode" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配">

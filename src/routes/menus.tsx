@@ -5,7 +5,7 @@ export const menus: Menu[] = [
     key: '_SOURCE',
     name: '数据分配',
     hasChild: true,
-    path: PATH.SOURCE_LIST,
+    path: PATH.SOURCE_VCG_IMAGE_TEXT,
     breadcrumbName: '数据分配',
     hidden: false,
     children: [
