@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
-import { Radio, Button, Space, Spin, message } from 'antd';
+import { message } from 'antd';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
@@ -13,8 +13,6 @@ import imageService from 'src/services/imageService';
 import commonService from 'src/services/commonService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
-import confirm from 'src/utils/confirm';
-
 interface listProps {
   // TODO: 添加图片接口
   list?: any;
@@ -38,8 +36,6 @@ function List() {
     cacheKey: 'category',
     manual: true
   });
-  const { run: review } = useRequest(imageService.qualityReview, { manual: true });
-  const { run: update } = useRequest(imageService.update, { manual: true });
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
   const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
     manual: true,
@@ -55,26 +51,22 @@ function List() {
 
   // 格式化查询参数
   const makeQuery = query => {
-    const result = Object.keys(query).reduce(
-      (result, key) => {
-        const value = query[key];
-        if (/Time$/g.test(key) && value) {
-          const date = value.format(config.data.DATE_FORMAT);
-          result[key] = `${date} 00:00:00,${date} 23:59:59`;
-        } else if (key === 'keyword' && value) {
-          let searchType = '1';
-          result['searchType'] = searchType;
-          result[key] = value;
-        } else if (value && typeof value === 'object') {
-          result[key] = value.key;
-        } else if (value) {
-          result[key] = value;
-        }
-        return result;
-      },
-      {
+    const result = Object.keys(query).reduce((result, key) => {
+      const value = query[key];
+      if (/Time$/g.test(key) && value) {
+        const date = value.format(config.data.DATE_FORMAT);
+        result[key] = `${date} 00:00:00,${date} 23:59:59`;
+      } else if (key === 'keyword' && value) {
+        let searchType = '1';
+        result['searchType'] = searchType;
+        result[key] = value;
+      } else if (value && typeof value === 'object') {
+        result[key] = value.key;
+      } else if (value) {
+        result[key] = value;
       }
-    );
+      return result;
+    }, {});
 
     return result;
   };
@@ -142,6 +134,7 @@ function List() {
   const handleChange = (index, field, value) => {};
 
   const handleSelect = index => {};
+
   const openLicense = async index => {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
