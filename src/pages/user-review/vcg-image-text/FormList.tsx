@@ -63,7 +63,7 @@ export const FormList = (props: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="osiProviderId" className="form-list-item">
-            <SearchSelect allowClear showSearch type="provider" style={{ width: 160 }} placeholder="数据来源" />
+            <SearchSelect type="provider" style={{ width: 160 }} placeholder="数据来源" />
           </Form.Item>
           <Form.Item name="aiQualityScore" className="form-list-item">
             <InputSlider width={120} placeholder="AI质量评分" />

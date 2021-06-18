@@ -23,3 +23,8 @@ declare interface Menu {
   hidden: boolean;
   children?: Menu[];
 }
+
+declare interface AntdOptions {
+  value: string,
+  label: string
+}

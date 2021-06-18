@@ -11,8 +11,17 @@ function filterOption(input, option) {
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
+  optionsBefore?: AntdOptions;
+  optionsAfter?: AntdOptions;
 }
-export default function SearchSelect({ type, manual, ...otherProps }: Props): ReactElement {
+
+export default function SearchSelect({
+  type,
+  manual,
+  optionsBefore,
+  optionsAfter,
+  ...otherProps
+}: Props): ReactElement {
   const [inputValue, setInputValue] = useState('');
   const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
     initialData: [],
@@ -20,6 +29,8 @@ export default function SearchSelect({ type, manual, ...otherProps }: Props): Re
     debounceInterval: 900,
     cacheKey: type
   });
+
+  const options = [optionsBefore, ...data, optionsAfter].filter(o => o);
 
   useEffect(() => {
     if (inputValue) {
@@ -35,7 +46,7 @@ export default function SearchSelect({ type, manual, ...otherProps }: Props): Re
       filterOption={filterOption}
       notFoundContent={loading ? <Spin size="small" /> : null}
       onSearch={setInputValue}
-      options={data}
+      options={options}
       {...otherProps}
     />
   );

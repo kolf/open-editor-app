@@ -29,13 +29,14 @@ function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider',
-    manual: true
+    cacheKey: 'provider'
+    // manual: true
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category',
-    manual: true
+    cacheKey: 'category'
+    // manual: true
   });
+  const { data: allReason } = useRequest(commonService.getImageAllReason);
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
   const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
     manual: true,

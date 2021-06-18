@@ -148,7 +148,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         </Row>
       </GridItemRow>
       <GridItemRow>
-        <Input size="small" placeholder="备注" defaultValue={dataSource.memo} />
+        <Input readOnly size="small" placeholder="备注" defaultValue={dataSource.memo} />
       </GridItemRow>
     </GridItem>
   );

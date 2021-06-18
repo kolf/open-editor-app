@@ -47,10 +47,17 @@ const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="userList" className="form-list-item">
-          <SearchSelect style={{ width: 160 }} placeholder="分配对象" type="editUser" mode="multiple" manual />
+          <SearchSelect
+            style={{ width: 160 }}
+            placeholder="分配对象"
+            type="editUser"
+            mode="multiple"
+            manual
+            optionsBefore={{ value: '-1', label: '全部资源' }}
+          />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
-        <SearchSelect
+          <SearchSelect
             allowClear
             filterOption={filterOption}
             showSearch

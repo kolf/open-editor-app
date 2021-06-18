@@ -42,7 +42,7 @@ function VcgImageText() {
       title: '数据分配',
       content: <AssignForm saveRef={r => (formRef = r)} />,
       onOk,
-      autoIndex: false,
+      autoIndex: false
     });
     async function onOk() {
       const values = await formRef.validateFields();
@@ -97,7 +97,11 @@ function VcgImageText() {
     {
       title: '操作',
       render: (value, tr) => {
-        return <Button disabled={ tr.assignStatus !== BatchAssignStatus.未分配 } type='text' onClick={() => assignData(tr.id)}>分配</Button>;
+        return (
+          <Button disabled={tr.assignStatus !== BatchAssignStatus.未分配} type="text" onClick={() => assignData(tr.id)}>
+            分配
+          </Button>
+        );
       }
     }
   ];
@@ -126,6 +130,9 @@ function VcgImageText() {
             if (nextQuery[q] === AIDetection.AI质量评分) memo['ifAiQualityScore'] = '1';
             if (nextQuery[q] === AIDetection.AI美学评分) memo['ifAiBeautyScore'] = '1';
             if (nextQuery[q] === AIDetection.AI分类) memo['ifAiCategory'] = '1';
+            break;
+          case 'userList':
+            memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');
             break;
           default:
             memo[q] = nextQuery[q];

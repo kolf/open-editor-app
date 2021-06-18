@@ -36,6 +36,7 @@ export const FormList = (props: any) => {
 
   return (
     <div className="formList-root">
+      <div className="formList-list" style={{ height: collapse ? 'auto' : 38 }}>
       <Form
         form={form}
         layout="inline"
@@ -45,8 +46,6 @@ export const FormList = (props: any) => {
             keyword
           });
         }}
-        className="formList-list"
-        style={{ height: collapse ? 'auto' : 38 }}
       >
         <Form.Item name="qualityAuditorId" className="form-list-item">
           <SearchSelect manual style={{ width: 160 }} placeholder="审核人" type="editUser" />
@@ -68,9 +67,6 @@ export const FormList = (props: any) => {
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
           <SearchSelect
-            allowClear
-            filterOption={filterOption}
-            showSearch
             type="provider"
             style={{ width: 160 }}
             placeholder="数据来源"
@@ -110,7 +106,7 @@ export const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="ifSensitveCheck" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="敏感词检测">
+            <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="有无敏感词">
             {ifSensitveCheckOptions.map(o => (
               <Option key={o.value} value={o.value}>
                 {o.label}
@@ -128,7 +124,16 @@ export const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="ifHaveRelease" className="form-list-item">
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="授权">
+            <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="是否授权">
+              {ifHaveReleaseOptions.map(o => (
+                <Option key={o.value} value={o.value}>
+                  {o.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item name="release" className="form-list-item">
+            <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="授权类型">
             {ifHaveReleaseOptions.map(o => (
               <Option key={o.value} value={o.value}>
                 {o.label}
@@ -137,9 +142,10 @@ export const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="category" className="form-list-item">
-          <SearchSelect filterOption={filterOption} style={{ width: 120 }} placeholder="AI分类" type="category" />
+            <SearchSelect style={{ width: 120 }} placeholder="AI分类" type="category" />
         </Form.Item>
       </Form>
+      </div>
       <div className="formList-dropdown">
         {collapse ? (
           <Button type="text" shape="circle" title="收缩" icon={<DownOutlined />} onClick={e => setCollapse(false)} />
