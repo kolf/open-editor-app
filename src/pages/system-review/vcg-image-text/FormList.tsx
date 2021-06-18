@@ -29,19 +29,22 @@ function filterOption(input, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
-const levelOptions = Array.from({ length: 10 }, (item, index) => ({
-  value: index + 1 + '',
-  label: index + 1 + ''
-}));
-
 export const FormList = (props: any) => {
+  const [form] = Form.useForm(null);
+  const [keyword, setKeyword] = useState('');
   const [collapse, setCollapse] = useState(false);
 
   return (
     <div className="formList-root">
       <Form
+        form={form}
         layout="inline"
-        onValuesChange={props.onChange}
+        onValuesChange={values => {
+          props.onChange({
+            ...values,
+            keyword
+          });
+        }}
         className="formList-list"
         style={{ height: collapse ? 'auto' : 38 }}
       >
@@ -149,11 +152,14 @@ export const FormList = (props: any) => {
           allowClear
           placeholder="请输入关键词，多个用逗号隔开"
           enterButton="搜索"
-          onSearch={value =>
+          onSearch={value => {
+            setKeyword(value);
+            const values = form.getFieldsValue();
             props.onChange({
+              ...values,
               keyword: value
-            })
-          }
+            });
+          }}
         />
       </div>
     </div>

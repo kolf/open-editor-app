@@ -10,6 +10,10 @@ export class ImageService {
     let res = await Api.post(`/api/outsourcing/osiImage/getExif?${queryString.stringify(data)}`);
     return res.data.data;
   }
+  async getLicenseList(data: any): Promise<any> {
+    let res = await Api.get(`/api/outsourcing/osiRelease/getImageRelease?${queryString.stringify(data)}`);
+    return res.data.data;
+  }
   async qualityReview(data: any): Promise<any> {
     let res = await Api.post(`/api/outsourcing/osiImage/qualityReview?${queryString.stringify(data.query)}`, data.body);
     return res.data.data

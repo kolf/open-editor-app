@@ -8,12 +8,12 @@ import FormList from './FormList';
 import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
+import { useDocumentTitle } from 'src/hooks/useDom';
 import imageService from 'src/services/imageService';
+import commonService from 'src/services/commonService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
-import { useDocumentTitle } from 'src/hooks/useDom';
-import commonService from 'src/services/commonService';
 
 interface listProps {
   // TODO: 添加图片接口
@@ -31,10 +31,12 @@ function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider'
+    cacheKey: 'provider',
+    manual: true
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category'
+    cacheKey: 'category',
+    manual: true
   });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
@@ -53,18 +55,26 @@ function List() {
 
   // 格式化查询参数
   const makeQuery = query => {
-    const result = Object.keys(query).reduce((result, key) => {
-      const value = query[key];
-      if (/Time$/g.test(key) && value) {
-        const date = value.format(config.data.DATE_FORMAT);
-        result[key] = `${date} 00:00:00,${date} 23:59:59`;
-      } else if (value && typeof value === 'object') {
-        result[key] = value.key;
-      } else if (value) {
-        result[key] = value;
+    const result = Object.keys(query).reduce(
+      (result, key) => {
+        const value = query[key];
+        if (/Time$/g.test(key) && value) {
+          const date = value.format(config.data.DATE_FORMAT);
+          result[key] = `${date} 00:00:00,${date} 23:59:59`;
+        } else if (key === 'keyword' && value) {
+          let searchType = '1';
+          result['searchType'] = searchType;
+          result[key] = value;
+        } else if (value && typeof value === 'object') {
+          result[key] = value.key;
+        } else if (value) {
+          result[key] = value;
+        }
+        return result;
+      },
+      {
       }
-      return result;
-    }, {});
+    );
 
     return result;
   };
@@ -74,36 +84,41 @@ function List() {
     if (!data) {
       return initialData;
     }
-    return {
-      total: data.total,
-      list: data.list.map(item => {
-        const {
-          createdTime,
-          updatedTime,
-          osiImageReview,
-          qualityRank,
-          copyright,
-          licenseType,
-          osiProviderId,
-          category
-        } = item;
-        const categoryList = category.split(',');
-        return {
-          ...item,
-          qualityStatus: osiImageReview.qualityStatus,
-          copyright: copyright + '',
-          qualityRank: qualityRank ? qualityRank + '' : undefined,
-          licenseType: licenseType + '' || undefined,
-          osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
-          categoryNames: categoryOptions
-            .filter((o, index) => categoryList.includes(o.value) && index < 2)
-            .map(o => o.label)
-            .join(','),
-          createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
-          updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
-        };
-      })
-    };
+    try {
+      return {
+        total: data.total,
+        list: data.list.map(item => {
+          const {
+            createdTime,
+            updatedTime,
+            osiImageReview,
+            qualityRank,
+            copyright,
+            licenseType,
+            osiProviderId,
+            category
+          } = item;
+          const categoryList = category.split(',');
+
+          return {
+            ...item,
+            qualityStatus: osiImageReview.qualityStatus,
+            copyright: copyright + '',
+            qualityRank: qualityRank ? qualityRank + '' : undefined,
+            licenseType: licenseType + '' || undefined,
+            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
+            categoryNames: categoryOptions
+              .filter((o, index) => categoryList.includes(o.value) && index < 2)
+              .map(o => o.label)
+              .join(','),
+            createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
+            updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
+          };
+        })
+      };
+    } catch (error) {
+      return data;
+    }
   }
 
   // 点击某一项数据
@@ -115,6 +130,9 @@ function List() {
       case 'cover':
         handleSelect(index);
         break;
+      case 'license':
+        openLicense(index);
+        break;
       default:
         break;
     }
@@ -124,9 +142,13 @@ function List() {
   const handleChange = (index, field, value) => {};
 
   const handleSelect = index => {};
+  const openLicense = async index => {
+    const { id } = list[index];
+    window.open(`/image/license?id=${id}`);
+  };
 
   const showDetails = async index => {
-    const { id, urlSmall } = list[index];
+    const { id, urlSmall, urlYuan } = list[index];
     const mod = modal({
       title: `图片详情`,
       width: 640,
@@ -136,7 +158,7 @@ function List() {
     try {
       const res = await showExifDetails({ id });
       mod.update({
-        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall }} />
+        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall, urlYuan }} />
       });
     } catch (error) {
       message.error(`请求接口出错！`);
@@ -146,10 +168,7 @@ function List() {
 
   return (
     <>
-      <FormList onChange={values => {
-        console.log(values)
-        setQuery({ ...query, ...values, pageNum: 1 })
-      }} />
+      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
       <Toolbar
         onSelectIds={setSelectedIds}
         selectedIds={selectedIds}

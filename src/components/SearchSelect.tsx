@@ -25,6 +25,7 @@ export default function SearchSelect({ type, manual, ...otherProps }: Props): Re
 
   return (
     <Select
+      allowClear
       showSearch
       labelInValue
       filterOption={false}

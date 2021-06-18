@@ -58,4 +58,8 @@ export class PATH {
   static STATISTICAL_LIST = '/statistical/list';
   // 帮助
   static HELP_LIST = '/help/list';
+  // 查看原图
+  static IMAGE_FULL = '/image/full/:imageId';
+  // 查看授权文件
+  static IMAGE_LICENSE = '/image/license';
 }

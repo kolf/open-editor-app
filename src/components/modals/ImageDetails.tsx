@@ -27,11 +27,15 @@ const propsNames = {
   lens: '镜头'
 };
 
+function open(imgUrl: string) {
+  window.open(imgUrl)
+}
+
 export default function ImageDetails({ dataSource }: Props): ReactElement {
   return (
     <Row>
       <Col span={12}>
-        <div style={{ paddingRight: 24, textAlign: 'center' }}>
+        <div style={{ paddingRight: 24, textAlign: 'center' }} onClick={e => open(dataSource.urlYuan)}>
           <img src={dataSource.imgUrl || defaultUrl} style={{ maxWidth: '100%' }} />
         </div>
       </Col>

@@ -4,11 +4,12 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
-import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
+import options, { Quality, LicenseType, CopyrightType, Licence } from 'src/declarations/enums/query';
 const { Option } = Select;
 const licenseTypeOptions = options.get(LicenseType);
+const licenseOptions = options.get(Licence);
 const qualityOptions = options.get(Quality);
-const copyrightTypeOptions = options.get(CopyrightType);
+const copyrightOptions = options.get(CopyrightType);
 
 interface Props {
   dataSource: any;
@@ -37,6 +38,10 @@ function getIndexProps(qualityStatus) {
       color: '#e30e09'
     };
   }
+}
+
+function isLicenseActive(license, copyright: any): boolean {
+  return license === '1' ? ['1', '2', '4'].includes(copyright) : ['2', '3', '5'].includes(copyright);
 }
 
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
@@ -84,8 +89,18 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
             <Space>
-              <span>肖像权文件</span>
-              <span>物权文件</span>
+              {licenseOptions.map(o => {
+                const isActvie = isLicenseActive(o.value, dataSource.copyright);
+                return (
+                  <a
+                    key={o.value}
+                    style={{ color: isActvie ? '' : '#666' }}
+                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
+                  >
+                    {o.label}
+                  </a>
+                );
+              })}
             </Space>
           </Col>
           <Col style={{ textAlign: 'center' }}>
@@ -115,7 +130,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
               ))}
             </Select>
           </Col>
-          <Col style={{ maxWidth: 120 }}>
+          <Col style={{ maxWidth: 150 }}>
             <Select
               size="small"
               value={dataSource.copyright}
@@ -123,7 +138,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
               style={{ width: '100%' }}
               onChange={value => onChange('copyright', value)}
             >
-              {copyrightTypeOptions.map(o => (
+              {copyrightOptions.map(o => (
                 <Option value={o.value} key={o.value}>
                   {o.label}
                 </Option>

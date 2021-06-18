@@ -124,6 +124,11 @@ export enum Exclusive {
   是 = '1'
 }
 
+export enum Licence {
+  肖像权 = '1',
+  物权 = '2'
+}
+
 class Options {
   map(enumObj) {
     return Object.keys(enumObj).reduce((result, key) => {

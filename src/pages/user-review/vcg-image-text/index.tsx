@@ -10,16 +10,16 @@ import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
 import { useDocumentTitle } from 'src/hooks/useDom';
+import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import imageService from 'src/services/imageService';
-import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
+import commonService from 'src/services/commonService';
+import options, { Quality, LicenseType } from 'src/declarations/enums/query';
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
-import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import commonService from 'src/services/commonService';
+
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
-const copyrightTypeOptions = options.get(CopyrightType);
 
 interface listProps {
   // TODO: 添加图片接口
@@ -38,10 +38,12 @@ function List() {
   const [selectedIds, setSelectedIds] = useState([]);
   const { partyId } = useCurrentUser();
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider'
+    cacheKey: 'provider',
+    manual: true
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category'
+    cacheKey: 'category',
+    manual: true
   });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
@@ -66,7 +68,11 @@ function List() {
         if (/Time$/g.test(key) && value) {
           const date = value.format(config.data.DATE_FORMAT);
           result[key] = `${date} 00:00:00,${date} 23:59:59`;
-        } else if (typeof value === 'object') {
+        } else if (key === 'keyword' && value) {
+          let searchType = '1';
+          result['searchType'] = searchType;
+          result[key] = value;
+        } else if (value && typeof value === 'object') {
           result[key] = value.key;
         } else if (value) {
           result[key] = value;
@@ -86,36 +92,41 @@ function List() {
     if (!data) {
       return initialData;
     }
-    return {
-      total: data.total,
-      list: data.list.map(item => {
-        const {
-          createdTime,
-          updatedTime,
-          osiImageReview,
-          qualityRank,
-          copyright,
-          licenseType,
-          osiProviderId,
-          category
-        } = item;
-        const categoryList = category.split(',');
-        return {
-          ...item,
-          qualityStatus: osiImageReview.qualityStatus,
-          copyright: copyright + '',
-          qualityRank: qualityRank ? qualityRank + '' : undefined,
-          licenseType: licenseType + '' || undefined,
-          osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
-          categoryNames: categoryOptions
-            .filter((o, index) => categoryList.includes(o.value) && index < 2)
-            .map(o => o.label)
-            .join(','),
-          createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
-          updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
-        };
-      })
-    };
+    try {
+      return {
+        total: data.total,
+        list: data.list.map(item => {
+          const {
+            createdTime,
+            updatedTime,
+            osiImageReview,
+            qualityRank,
+            copyright,
+            licenseType,
+            osiProviderId,
+            category
+          } = item;
+          const categoryList = category.split(',');
+
+          return {
+            ...item,
+            qualityStatus: osiImageReview.qualityStatus,
+            copyright: copyright + '',
+            qualityRank: qualityRank ? qualityRank + '' : undefined,
+            licenseType: licenseType + '' || undefined,
+            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
+            categoryNames: categoryOptions
+              .filter((o, index) => categoryList.includes(o.value) && index < 2)
+              .map(o => o.label)
+              .join(','),
+            createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
+            updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
+          };
+        })
+      };
+    } catch (error) {
+      return data;
+    }
   }
 
   // 点击某一项数据
@@ -133,8 +144,10 @@ function List() {
       case 'reject':
         setReject(index);
         break;
+      case 'license':
+        openLicense(index);
+        break;
       default:
-        alert(field);
         break;
     }
   };
@@ -170,8 +183,13 @@ function List() {
     return [...selectedIds];
   };
 
+  const openLicense = async index => {
+    const { id } = list[index];
+    window.open(`/image/license?id=${id}`);
+  };
+
   const showDetails = async index => {
-    const { id, urlSmall } = list[index];
+    const { id, urlSmall, urlYuan } = list[index];
     const mod = modal({
       title: `图片详情`,
       width: 640,
@@ -181,7 +199,7 @@ function List() {
     try {
       const res = await showExifDetails({ id });
       mod.update({
-        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall }} />
+        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall, urlYuan }} />
       });
     } catch (error) {
       message.error(`请求接口出错！`);

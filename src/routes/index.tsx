@@ -32,6 +32,8 @@ import ReviewResultCfpImageList from 'src/pages/review-result/cfp-image-list';
 import StatisticalList from 'src/pages/statistical/list';
 // 帮助
 import HelpList from 'src/pages/help/list';
+import ImageFull from 'src/pages/image/image-full';
+import ImageLicense from 'src/pages/image/license';
 
 import { PATH } from './path';
 
@@ -124,6 +126,8 @@ export const RootRouter = React.memo(() => {
       />
       <RouteLayout path={PATH.STATISTICAL_LIST} component={StatisticalList} layout={MainLayout} exact />
       <RouteLayout path={PATH.HELP_LIST} component={HelpList} layout={MainLayout} exact />
+      <RouteLayout path={PATH.IMAGE_FULL} component={ImageFull} layout={GuestLayout} exact />
+      <RouteLayout path={PATH.IMAGE_LICENSE} component={ImageLicense} layout={GuestLayout} exact />
       <RouteLayout path={PATH.PAGE_404} component={PageNotFound} layout={GuestLayout} isPrivate={false} exact />
       <RouteLayout path={PATH.PAGE_500} component={ServerError} layout={GuestLayout} isPrivate={false} exact />
       <RouteLayout path="*" component={PageNotFound} layout={GuestLayout} isPrivate={false} exact />
