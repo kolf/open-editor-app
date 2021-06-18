@@ -97,7 +97,7 @@ function VcgImageText() {
     {
       title: '操作',
       render: (value, tr) => {
-        return <Button disabled={ tr.assignStatus == BatchAssignStatus.未分配 } type='text' onClick={() => assignData(tr.id)}>分配</Button>;
+        return <Button disabled={ tr.assignStatus != BatchAssignStatus.未分配 } type='text' onClick={() => assignData(tr.id)}>分配</Button>;
       }
     }
   ];
