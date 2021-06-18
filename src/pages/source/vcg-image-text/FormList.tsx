@@ -1,30 +1,20 @@
 import React, { FC, memo, useState } from 'react';
-import { Form, Input, Select, DatePicker, Button } from 'antd';
+import { Form, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import options, {
   AIDetection,
-  AssetFamily,
   BatchAssignMode,
   BatchAssignStatus,
   IfSensitveCheck,
   Priority
 } from 'src/declarations/enums/query';
-import commonService from 'src/services/commonService';
 import SearchSelect from 'src/components/SearchSelect';
 import 'src/styles/FormList.scss';
-import { useRequest } from 'ahooks';
 
 const { Option } = Select;
 
-function filterOption(input, option) {
-  return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
-}
-
 const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
-  const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    initialData: []
-  });
 
   return (
     <div className="formList-root">
@@ -47,31 +37,23 @@ const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="userList" className="form-list-item">
-          <SearchSelect
-            style={{ width: 160 }}
-            placeholder="分配对象"
+          <SearchSelect 
+          style={{ width: 160 }}
+           placeholder="分配对象"
             type="editUser"
-            mode="multiple"
-            manual
-            optionsBefore={{ value: '-1', label: '全部资源' }}
-          />
+             mode="multiple"
+              manual
+              optionsBefore={{value: '-1', label: '全部资源'}}
+               />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
-          <SearchSelect
+        <SearchSelect
             allowClear
-            filterOption={filterOption}
             showSearch
             type="provider"
             style={{ width: 160 }}
             placeholder="数据来源"
           />
-          {/* <Select allowClear filterOption={filterOption} showSearch style={{ width: 160 }} placeholder="数据来源">
-            {providerOptions.map(o => (
-              <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
-              </Option>
-            ))}
-          </Select> */}
         </Form.Item>
         <Form.Item name="assignMode" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配">
