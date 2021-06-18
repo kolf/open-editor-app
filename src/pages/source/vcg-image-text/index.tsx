@@ -127,6 +127,9 @@ function VcgImageText() {
             if (nextQuery[q] === AIDetection.AI美学评分) memo['ifAiBeautyScore'] = '1';
             if (nextQuery[q] === AIDetection.AI分类) memo['ifAiCategory'] = '1';
             break;
+            case 'userList':
+              memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');
+              break;
           default:
             memo[q] = nextQuery[q];
         }
