@@ -8,6 +8,7 @@ import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
+import SelectReject from 'src/components/modals/SelectReject';
 import Loading from 'src/components/common/LoadingBlock';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
@@ -38,13 +39,14 @@ function List() {
   const [selectedIds, setSelectedIds] = useState([]);
   const { partyId } = useCurrentUser();
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider',
-    manual: true
+    cacheKey: 'provider'
+    // manual: true
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category',
-    manual: true
+    cacheKey: 'category'
+    // manual: true
   });
+  const { data: allReason } = useRequest(commonService.getImageAllReason);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
@@ -236,23 +238,28 @@ function List() {
   // 设置不通过
   const setReject = async index => {
     let mod = null;
-    let standardReason = '';
+    let standardReason = [];
+    let customReason = '';
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({
+        width: 820,
         title: '设置不通过原因',
+        bodyStyle: { padding: 0 },
         content: (
-          <Radio.Group onChange={e => (standardReason = e.target.value)}>
-            <Space direction="vertical">
-              <Radio value={1}>Option A</Radio>
-              <Radio value={2}>Option B</Radio>
-              <Radio value={3}>Option C</Radio>
-            </Space>
-          </Radio.Group>
+          <div style={{ margin: -24 }}>
+            <SelectReject
+              dataSource={allReason}
+              onChange={(value, otherValue) => {
+                standardReason = value;
+                customReason = otherValue;
+              }}
+            />
+          </div>
         )
       });
 
-      if (!standardReason) {
+      if (standardReason.length === 0 && !customReason) {
         throw `请选择不通过原因！`;
       }
 
@@ -264,10 +271,11 @@ function List() {
           createdTime: undefined,
           updatedTime: undefined
         }));
+
       mod.confirmLoading();
       const res = await review({
         body: imageList,
-        query: { stage: 1, status: 2, standardReason }
+        query: { stage: 1, status: 2, standardReason: standardReason.join(','), customReason }
       });
       mod.close();
       message.success(`设置不通过成功！`);

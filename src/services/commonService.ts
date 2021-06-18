@@ -35,10 +35,9 @@ export class CommonService {
     }
   }
 
-  async getEditors(paramType, assetFamily, searchName): Promise<any> {
-    const token = getToken();
-    const result = await Api.post(`/api/editor/param/pageList?paramType=${paramType}&token=${token}`, { assetFamily, searchName });
-    return result.data;
+  async getImageAllReason(data: any): Promise<any> {
+    let res = await Api.get(`/api/outsourcing/reason`);
+    return res.data.data
   }
 }
 

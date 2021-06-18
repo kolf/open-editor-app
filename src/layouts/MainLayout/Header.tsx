@@ -4,7 +4,7 @@ import React, { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
-import { logOut } from 'src/features/auth/authenticate';
+import { logout } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
 import { menus } from 'src/routes/menus';
 import { RootState } from 'src/store';
@@ -15,7 +15,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const history = useHistory();
 
   const handleLogout = () => {
-    dispatch(logOut());
+    dispatch(logout());
     history.push(PATH.LOGIN);
   };
 

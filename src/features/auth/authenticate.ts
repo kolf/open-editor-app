@@ -37,7 +37,7 @@ export const authenticateSlice = createSlice({
     setUser: (state, action: PayloadAction<any>) => {
       state.user = action.payload;
     },
-    logOut: state => {
+    logout: state => {
       state.token = '';
       state.user = undefined;
       localStorage.removeItem('user');
@@ -88,5 +88,5 @@ export const authenticateSlice = createSlice({
 });
 
 const { actions, reducer } = authenticateSlice;
-export const { setToken, removeToken, setUser, logOut, setLoading } = actions;
+export const { setToken, removeToken, setUser, logout, setLoading } = actions;
 export default reducer;
