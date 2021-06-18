@@ -14,7 +14,17 @@ export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'op
   optionsBefore?: AntdOptions;
   optionsAfter?: AntdOptions;
 }
-
+/**
+ * 
+ * @param {
+ *  type: 筛选项请求类型,
+ *  manual: 是否手动触发请求 true是 false否,
+ *  optionsBefore: 前置筛选项
+ *  optionsAfter: 后置筛选项
+ *  otherProps: antd Select组件属性
+ * }
+ * @returns 
+ */
 export default function SearchSelect({
   type,
   manual,
