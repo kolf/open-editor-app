@@ -17,7 +17,13 @@ export class AuthService {
   async login(user: any) {
     try {
       const res1 = await this.getTGT(user);
+      if (res1.data.status !== '200') {
+        throw res1.data.status;
+      }
       const res2 = await this.getUser(res1.data.TGT);
+      if (res2.data.code !== 200) {
+        throw res1.data.status;
+      }
       return Promise.resolve<any>({
         token: res1.data.TGT,
         user: res2.data.data

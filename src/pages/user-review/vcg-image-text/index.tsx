@@ -45,38 +45,40 @@ function List() {
   const [selectedIds, setSelectedIds] = useState([]);
   const { partyId } = useCurrentUser();
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider',
-    initialData: []
-    // manual: true
+    cacheKey: 'provider'
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category',
-    initialData: []
-    // manual: true
+    cacheKey: 'category'
   });
-  const { data: allReason } = useRequest(commonService.getImageAllReason);
+  const { data: allReason } = useRequest(commonService.getImageAllReason, {
+    cacheKey: 'allReason'
+  });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
-  const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
+  const { run: getExif } = useRequest(imageService.getExif, { manual: true });
   const {
     data: { list, total },
     loading,
     mutate,
     run,
     refresh
-  } = useRequest(imageService.getList, {
-    ready: providerOptions.length && categoryOptions.length && allReason,
-    manual: true,
-    throttleInterval: 600,
-    initialData,
-    onSuccess: async res => {
-      const res1 = await commonService.getSentiveWordByImageIds(res.list.map(item => item.id));
-      return makeData(res);
+  } = useRequest(
+    async () => {
+      const res1 = await imageService.getList(makeQuery(query));
+      console.log(res1, 'res');
+      return res1;
+    },
+    {
+      ready: !!(providerOptions && categoryOptions && allReason),
+      manual: true,
+      throttleInterval: 600,
+      initialData,
+      formatResult
     }
-  });
+  );
 
   useEffect(() => {
-    run(makeQuery(query));
+    run();
     setSelectedIds([]);
   }, [query]);
 
@@ -108,7 +110,7 @@ function List() {
   };
 
   // 格式化返回的数据
-  async function makeData(data: listProps): listProps {
+  function formatResult(data: listProps): listProps {
     if (!data) {
       return initialData;
     }
@@ -229,7 +231,7 @@ function List() {
       footer: null
     });
     try {
-      const res = await showExifDetails({ id });
+      const res = await getExif({ id });
       mod.update({
         content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall, urlYuan }} />
       });

@@ -22,6 +22,10 @@ export class ImageService {
     let res = await Api.post(`/api/outsourcing/osiImage/update?${queryString.stringify(data.query)}`, data.body);
     return res.data.data
   }
+  async getSentiveWordByImageIds(data: any): Promise<any> {
+    let res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);
+    return res.data.data
+  }
 }
 
 const imageService = new ImageService();

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Button, Col, Form, Input, Row, Checkbox } from 'antd';
+import { Button, Col, Form, Input, Row, Checkbox, message } from 'antd';
 import { login } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
 import logoUrl from 'src/assets/img/logo.svg';
@@ -14,6 +14,7 @@ function Login() {
   const history = useHistory();
   const token = useSelector((state: any) => state.user.token);
   const loading = useSelector((state: any) => state.user.loading);
+  const error = useSelector((state: any) => state.user.error);
 
   useEffect(() => {
     if (token) history.push(PATH.HOME);
@@ -22,8 +23,11 @@ function Login() {
   const onFinish = async (values: any) => {
     try {
       await dispatch(login(values));
+      if (error) {
+        message.error(error.message);
+      }
     } catch (error) {
-      console.log(error);
+      message.error(error);
     }
   };
 
