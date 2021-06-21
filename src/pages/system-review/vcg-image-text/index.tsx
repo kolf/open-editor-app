@@ -31,34 +31,37 @@ function List() {
   const [selectedIds, setSelectedIds] = useState([]);
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
     cacheKey: 'provider'
-    // manual: true
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
     cacheKey: 'category'
-    // manual: true
   });
-  const { data: allReason } = useRequest(commonService.getImageAllReason);
-  const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
+  const { data: allReason } = useRequest(commonService.getImageAllReason, {
+    cacheKey: 'allReason'
+  });
+  const { run: getExif } = useRequest(imageService.getExif, { manual: true });
   const {
     data: { list, total },
     loading,
     mutate,
     run,
     refresh
-  } = useRequest(imageService.getList, {
-    manual: true,
-    throttleInterval: 600,
-    initialData,
-    ready: allReason,
-    onSuccess: async res => {
-      const res1 = await commonService.getSentiveWordByImageIds(res.list.map(item => item.id));
-      return makeData(res);
+  } = useRequest(
+    async () => {
+      const res1 = await imageService.getList(makeQuery(query));
+      console.log(res1, 'res');
+      return res1;
+    },
+    {
+      ready: !!(providerOptions && categoryOptions && allReason),
+      manual: true,
+      throttleInterval: 600,
+      initialData,
+      formatResult
     }
-  });
-
+  );
 
   useEffect(() => {
-    run(makeQuery(query));
+    run();
     setSelectedIds([]);
   }, [query]);
 
@@ -85,7 +88,7 @@ function List() {
   };
 
   // 格式化返回的数据
-  function makeData(data: listProps): listProps {
+  function formatResult(data: listProps): listProps {
     if (!data) {
       return initialData;
     }
@@ -138,12 +141,19 @@ function List() {
 
   // 点击某一项数据
   const handleClick = (index, field) => {
+    console.log(field, 'urlYuan');
     switch (field) {
       case 'id':
         showDetails(index);
         break;
       case 'cover':
         handleSelect(index);
+        break;
+      case 'showMiddleImage':
+        showMiddleImage(index);
+        break;
+      case 'openOriginImage':
+        openOriginImage(index);
         break;
       case 'license':
         openLicense(index);
@@ -157,6 +167,25 @@ function List() {
   const handleChange = (index, field, value) => {};
 
   const handleSelect = index => {};
+
+  const showMiddleImage = index => {
+    const { urlYuan } = list[index];
+    const mod = modal({
+      title: `查看中图`,
+      width: 640,
+      content: (
+        <div className="image-max">
+          <img src={urlYuan} />
+        </div>
+      ),
+      footer: null
+    });
+  };
+
+  const openOriginImage = index => {
+    const { urlYuan } = list[index];
+    window.open(urlYuan);
+  };
 
   const openLicense = async index => {
     const { id } = list[index];
@@ -172,7 +201,7 @@ function List() {
       footer: null
     });
     try {
-      const res = await showExifDetails({ id });
+      const res = await getExif({ id });
       mod.update({
         content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall, urlYuan }} />
       });
