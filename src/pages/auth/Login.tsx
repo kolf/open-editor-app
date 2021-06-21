@@ -14,7 +14,6 @@ function Login() {
   const history = useHistory();
   const token = useSelector((state: any) => state.user.token);
   const loading = useSelector((state: any) => state.user.loading);
-  const error = useSelector((state: any) => state.user.error);
 
   useEffect(() => {
     if (token) history.push(PATH.HOME);
@@ -22,12 +21,12 @@ function Login() {
 
   const onFinish = async (values: any) => {
     try {
-      await dispatch(login(values));
-      if (error) {
-        message.error(error.message);
+      const res = await dispatch(login(values));
+      if (res.error) {
+        throw res.error;
       }
     } catch (error) {
-      message.error(error);
+      message.error(error.message);
     }
   };
 

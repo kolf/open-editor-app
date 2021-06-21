@@ -33,12 +33,12 @@ export class AuthService {
     }
   }
 
-  async getTGT(user: any): Promise<any> {
-    return await Api.post('/api/passport/vcglogin/access', user);
+  getTGT(user: any): Promise<any> {
+    return Api.post('/api/passport/vcglogin/access', user);
   }
 
-  async getUser(token: string): Promise<any> {
-    return await Api.get(`/api/editor/user/viewByToken?token=${token}`);
+  getUser(token: string): Promise<any> {
+    return Api.get(`/api/editor/user/viewByToken?token=${token}`);
   }
 }
 
