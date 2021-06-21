@@ -1,6 +1,6 @@
 import Api from './config';
-import queryString from 'querystring';
-import { getToken } from 'src/utils/localStorage';
+import { AxiosResponse } from 'axios';
+import { OsiDbProvider } from 'src/declarations/schemas/OsiDbProvider';
 
 export class CommonService {
   async getOptions(data: any): Promise<any> {
@@ -14,7 +14,7 @@ export class CommonService {
           label: item.categoryName
         }))
       } else if (data.type === 'provider') {
-        const res = await Api.get(`/api/outsourcing/OsiDbProvider/listAll`);
+        const res = await Api.get<AxiosResponse<OsiDbProvider.ListAll[]>>(`/api/outsourcing/OsiDbProvider/listAll`);
         result = res.data.data.map(item => ({
           value: item.id + '',
           label: item.name

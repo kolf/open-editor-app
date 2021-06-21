@@ -21,7 +21,7 @@ function Login() {
 
   const onFinish = async (values: any) => {
     try {
-      const res = await dispatch(login(values));
+      const res: any = await dispatch(login(values));
       if (res.error) {
         throw res.error;
       }
