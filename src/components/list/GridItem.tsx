@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import { Space, Button } from 'antd';
+import { Space, Button, Tag } from 'antd';
 import className from 'classnames';
 
 function loop(e) {}
@@ -20,7 +20,20 @@ const defaultProps = {
   indexProps: {}
 };
 
-function GridItem({ onClick, cover, indexProps, actions, children, height, selected }: Props): ReactElement {
+const TopTag = ({ children, align, color }) => {
+  let style = null;
+  if (align === 'left') {
+    style = { left: 0 };
+  } else if (align === 'right') {
+    style = { right: 0 };
+  }
+  return (
+    <Tag color={color} style={style} className="grid-item-topTag" title={children}>
+      {children}
+    </Tag>
+  );
+};
+const GridItem = ({ onClick, cover, indexProps, actions, children, height, selected }: Props): ReactElement => {
   return (
     <div className={className('grid-item-root', { active: selected })} style={{ height }}>
       <div className="grid-item-header">
@@ -51,10 +64,13 @@ function GridItem({ onClick, cover, indexProps, actions, children, height, selec
           </span>
         </div>
       </div>
+      {}
     </div>
   );
-}
+};
 
 GridItem.defaultProps = defaultProps;
+
+GridItem.TopTag = TopTag;
 
 export default GridItem;

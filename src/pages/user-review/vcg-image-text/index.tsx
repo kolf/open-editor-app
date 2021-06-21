@@ -10,14 +10,20 @@ import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import SelectReject from 'src/components/modals/SelectReject';
 import Loading from 'src/components/common/LoadingBlock';
+
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
+
 import imageService from 'src/services/imageService';
 import commonService from 'src/services/commonService';
+
 import options, { Quality, LicenseType } from 'src/declarations/enums/query';
+
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
+import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
+// import {}
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -39,23 +45,35 @@ function List() {
   const [selectedIds, setSelectedIds] = useState([]);
   const { partyId } = useCurrentUser();
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider'
+    cacheKey: 'provider',
+    initialData: []
     // manual: true
   });
   const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category'
+    cacheKey: 'category',
+    initialData: []
     // manual: true
   });
   const { data: allReason } = useRequest(commonService.getImageAllReason);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
-  const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
+  const {
+    data: { list, total },
+    loading,
+    mutate,
+    run,
+    refresh
+  } = useRequest(imageService.getList, {
+    ready: providerOptions.length && categoryOptions.length && allReason,
     manual: true,
     throttleInterval: 600,
-    initialData
+    initialData,
+    onSuccess: async res => {
+      const res1 = await commonService.getSentiveWordByImageIds(res.list.map(item => item.id));
+      return makeData(res);
+    }
   });
-  const { list, total } = makeData(data);
 
   useEffect(() => {
     run(makeQuery(query));
@@ -90,7 +108,7 @@ function List() {
   };
 
   // 格式化返回的数据
-  function makeData(data: listProps): listProps {
+  async function makeData(data: listProps): listProps {
     if (!data) {
       return initialData;
     }
@@ -106,16 +124,25 @@ function List() {
             copyright,
             licenseType,
             osiProviderId,
-            category
+            category,
+            standardReason,
+            customReason
           } = item;
+          const qualityStatus = osiImageReview.qualityStatus;
           const categoryList = category.split(',');
+          let reasonTitle = '';
+
+          if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
+            reasonTitle = getReasonTitle(reasonDataToMap(allReason), standardReason, customReason);
+          }
 
           return {
             ...item,
-            qualityStatus: osiImageReview.qualityStatus,
+            qualityStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
             licenseType: licenseType + '' || undefined,
+            reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter((o, index) => categoryList.includes(o.value) && index < 2)
@@ -127,6 +154,7 @@ function List() {
         })
       };
     } catch (error) {
+      console.log(error, 'error');
       return data;
     }
   }
@@ -189,6 +217,8 @@ function List() {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
   };
+
+  const getImageRelease = async imageList => {};
 
   const showDetails = async index => {
     const { id, urlSmall, urlYuan } = list[index];

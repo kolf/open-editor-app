@@ -105,8 +105,8 @@ export const FormList = (props: any) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="ifSensitveCheck" className="form-list-item">
-            <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="有无敏感词">
+        <Form.Item name="haveSensitve" className="form-list-item">
+          <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="有无敏感词">
             {ifSensitveCheckOptions.map(o => (
               <Option key={o.value} value={o.value}>
                 {o.label}

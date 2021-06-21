@@ -150,6 +150,11 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow>
         <Input readOnly size="small" placeholder="备注" defaultValue={dataSource.memo} />
       </GridItemRow>
+      {dataSource.reasonTitle && (
+        <GridItem.TopTag align="right" color="#e30e09">
+          {dataSource.reasonTitle}
+        </GridItem.TopTag>
+      )}
     </GridItem>
   );
 }

@@ -39,6 +39,11 @@ export class CommonService {
     let res = await Api.get(`/api/outsourcing/reason`);
     return res.data.data
   }
+
+  async getSentiveWordByImageIds(data: any): Promise<any> {
+    let res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);
+    return res.data.data
+  }
 }
 
 const commonService = new CommonService();

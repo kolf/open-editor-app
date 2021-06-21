@@ -13,6 +13,7 @@ import imageService from 'src/services/imageService';
 import commonService from 'src/services/commonService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
+import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
 interface listProps {
   // TODO: 添加图片接口
   list?: any;
@@ -38,12 +39,23 @@ function List() {
   });
   const { data: allReason } = useRequest(commonService.getImageAllReason);
   const { run: showExifDetails } = useRequest(imageService.getExif, { manual: true });
-  const { data, loading, error, run, refresh } = useRequest(imageService.getList, {
+  const {
+    data: { list, total },
+    loading,
+    mutate,
+    run,
+    refresh
+  } = useRequest(imageService.getList, {
     manual: true,
     throttleInterval: 600,
-    initialData
+    initialData,
+    ready: allReason,
+    onSuccess: async res => {
+      const res1 = await commonService.getSentiveWordByImageIds(res.list.map(item => item.id));
+      return makeData(res);
+    }
   });
-  const { list, total } = makeData(data);
+
 
   useEffect(() => {
     run(makeQuery(query));
@@ -89,16 +101,25 @@ function List() {
             copyright,
             licenseType,
             osiProviderId,
-            category
+            category,
+            standardReason,
+            customReason
           } = item;
+          const qualityStatus = osiImageReview.qualityStatus;
           const categoryList = category.split(',');
+          let reasonTitle = '';
+
+          if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
+            reasonTitle = getReasonTitle(reasonDataToMap(allReason), standardReason, customReason);
+          }
 
           return {
             ...item,
-            qualityStatus: osiImageReview.qualityStatus,
+            qualityStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
             licenseType: licenseType + '' || undefined,
+            reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter((o, index) => categoryList.includes(o.value) && index < 2)
@@ -110,6 +131,7 @@ function List() {
         })
       };
     } catch (error) {
+      console.log(error, 'error');
       return data;
     }
   }
