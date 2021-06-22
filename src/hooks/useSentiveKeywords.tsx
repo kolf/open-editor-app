@@ -89,7 +89,7 @@ export const useSentiveKeywords = dataSource => {
     let data = [];
     try {
       data = await imageService.getSentiveWordDetails(dataSource).then(res =>
-        res.apiResponse.map(item => {
+        res.map(item => {
           if (/^(0|1)$/.test(item.checkType)) {
             return {
               ...item,
@@ -103,11 +103,9 @@ export const useSentiveKeywords = dataSource => {
           }
         })
       );
-    } catch (error) {
-      return;
-    }
+    } catch (error) {}
     modal({
-      width: 840,
+      width: 960,
       title: '查看敏感词',
       content: <Table columns={columns} dataSource={data} rowKey="id" size="small" pagination={false} />,
       footer: null

@@ -45,8 +45,8 @@ export class ImageService {
       return Promise.resolve(keywordsList);
     }
     try {
-      const res = await Api.post(`/api/editor/resImageSensitiveReasonNew/getSentiveWordDetailById`, keywordsList);
-      const data = res.data.data
+      const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordDetailById`, ids);
+      const data = res.data.data;
       return keywordsList.map((item) => {
         const newItem = data.find(
           (d) => d.id === item.elephantSensitiveWordId
