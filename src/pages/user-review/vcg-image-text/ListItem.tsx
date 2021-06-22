@@ -46,6 +46,7 @@ function isLicenseActive(license, copyright: any): boolean {
 }
 
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
+  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList);
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
@@ -154,6 +155,12 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       {dataSource.reasonTitle && (
         <GridItem.TopTag align="right" color="rgb(255, 85, 0)">
           {dataSource.reasonTitle}
+        </GridItem.TopTag>
+      )}
+
+      {dataSource.sensitiveList.length > 0 && (
+        <GridItem.TopTag align="left" color="#333" onClick={showSensitiveDetails}>
+          {sensitiveListTitle}
         </GridItem.TopTag>
       )}
     </GridItem>

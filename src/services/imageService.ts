@@ -37,6 +37,32 @@ export class ImageService {
 
     return res.data.data
   }
+  async getSentiveWordDetails(keywordsList: any): Promise<any> {
+    const ids = keywordsList
+      .map((item) => item.elephantSensitiveWordId)
+      .filter((id) => id);
+    if (ids.length === 0) {
+      return Promise.resolve(keywordsList);
+    }
+    try {
+      const res = await Api.post(`/api/editor/resImageSensitiveReasonNew/getSentiveWordDetailById`, keywordsList);
+      const data = res.data.data
+      return keywordsList.map((item) => {
+        const newItem = data.find(
+          (d) => d.id === item.elephantSensitiveWordId
+        );
+        if (newItem) {
+          return {
+            ...item,
+            ...newItem,
+          };
+        }
+        return item;
+      })
+    } catch (error) {
+      return Promise.resolve(keywordsList);
+    }
+  }
 }
 
 const imageService = new ImageService();

@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Table } from 'antd';
 import modal from 'src/utils/modal';
+import imageService from 'src/services/imageService';
 
 const columns = [
   {
@@ -18,6 +19,10 @@ const columns = [
     width: 210
   },
   {
+    title: '分类',
+    dataIndex: 'category'
+  },
+  {
     title: '备注',
     dataIndex: 'remark'
   },
@@ -28,7 +33,7 @@ const columns = [
   {
     title: '组合词同义词',
     dataIndex: 'second_syno_sensitive',
-    width: 90
+    width: 110
   }
 ];
 
@@ -74,20 +79,40 @@ export function stringify(dataSource) {
       }
       return result;
     }, [])
-    .join('\n\b');
+    .join('，');
 }
 
 export const useSentiveKeywords = dataSource => {
   const text = stringify(dataSource);
 
-  const show = () => {
+  const showDetails = async () => {
+    let data = [];
+    try {
+      data = await imageService.getSentiveWordDetails(dataSource).then(res =>
+        res.apiResponse.map(item => {
+          if (/^(0|1)$/.test(item.checkType)) {
+            return {
+              ...item,
+              category: item.category ? item.category[0].title : ''
+            };
+          } else {
+            return {
+              first_word: item.sensitiveWord,
+              category: item.sensitiveLabelTxt
+            };
+          }
+        })
+      );
+    } catch (error) {
+      return;
+    }
     modal({
       width: 840,
       title: '查看敏感词',
-      content: <Table columns={columns} dataSource={dataSource} rowKey="id" size="small" pagination={false} />,
+      content: <Table columns={columns} dataSource={data} rowKey="id" size="small" pagination={false} />,
       footer: null
     });
   };
   // const [state, setstate] = useState(initialState)
-  return [text, show];
+  return [text, showDetails];
 };

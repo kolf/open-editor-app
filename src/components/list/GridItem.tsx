@@ -34,7 +34,7 @@ const defaultProps = {
   ]
 };
 
-const TopTag = ({ children, align, color }) => {
+const TopTag = ({ children, align, color, onClick }) => {
   let style = null;
   if (align === 'left') {
     style = { left: 0 };
@@ -42,7 +42,7 @@ const TopTag = ({ children, align, color }) => {
     style = { right: -8 };
   }
   return (
-    <Tag color={color} style={style} className="grid-item-topTag" title={children}>
+    <Tag color={color} style={style} className="grid-item-topTag" title={children} onClick={onClick}>
       {children}
     </Tag>
   );
