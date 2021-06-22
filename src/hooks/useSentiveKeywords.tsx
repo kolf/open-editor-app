@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 import { Table } from 'antd';
 import modal from 'src/utils/modal';
 import imageService from 'src/services/imageService';
+import Loading from 'src/components/common/LoadingBlock';
 
 const columns = [
   {
@@ -86,10 +87,16 @@ export const useSentiveKeywords = dataSource => {
   const text = stringify(dataSource);
 
   const showDetails = async () => {
+    const mod = modal({
+      width: 960,
+      title: '查看敏感词',
+      content: <Loading />,
+      footer: null
+    });
     let data = [];
     try {
       data = await imageService.getSentiveWordDetails(dataSource).then(res =>
-        res.apiResponse.map(item => {
+        res.map(item => {
           if (/^(0|1)$/.test(item.checkType)) {
             return {
               ...item,
@@ -103,14 +110,9 @@ export const useSentiveKeywords = dataSource => {
           }
         })
       );
-    } catch (error) {
-      return;
-    }
-    modal({
-      width: 840,
-      title: '查看敏感词',
-      content: <Table columns={columns} dataSource={data} rowKey="id" size="small" pagination={false} />,
-      footer: null
+    } catch (error) {}
+    mod.update({
+      content: <Table columns={columns} dataSource={data} rowKey="id" size="small" pagination={false} />
     });
   };
   // const [state, setstate] = useState(initialState)
