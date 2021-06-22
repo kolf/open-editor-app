@@ -25,6 +25,6 @@ declare interface Menu {
 }
 
 declare interface AntdOptions {
-  value: string,
-  label: string
+  value: string;
+  label: string;
 }

@@ -212,11 +212,11 @@ export const menus: Menu[] = [
             hasChild: false,
             path: PATH.REVIEW_RESULT_CFP_IMAGE_LIST,
             breadcrumbName: '编辑类审核',
-            hidden: false,
-          },
-        ],
-      },
-    ],
+            hidden: false
+          }
+        ]
+      }
+    ]
   },
   {
     key: '_STATISTIC',
@@ -232,9 +232,9 @@ export const menus: Menu[] = [
         hasChild: false,
         path: PATH.STATISTICAL_LIST,
         breadcrumbName: '数据审核统计',
-        hidden: false,
-      },
-    ],
+        hidden: false
+      }
+    ]
   },
   {
     key: '_HELP',

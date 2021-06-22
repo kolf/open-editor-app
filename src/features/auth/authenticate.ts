@@ -48,7 +48,6 @@ export const authenticateSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    console.log(login, 'login')
     builder.addCase(login.pending, state => {
       state.loading = true;
       state.error = null;
