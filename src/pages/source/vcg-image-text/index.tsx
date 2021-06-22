@@ -18,6 +18,8 @@ import FormList from './FormList';
 import AssignForm from './AssignForm';
 import Pagination from 'src/components/Pagination';
 import { useDocumentTitle } from 'src/hooks/useDom';
+import Pager from 'src/components/Pager';
+import Toolbar from 'src/components/list/Toolbar';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -106,10 +108,6 @@ function VcgImageText() {
     }
   ];
 
-  const updateQuery = (type, nextQuery = {}) => {
-    setQuery({ ...query, ...nextQuery });
-  };
-
   const formListOnChange = values => {
     const nextQuery = { ...values, pageNum: 1 };
     const result = Object.keys(nextQuery).reduce(
@@ -147,7 +145,16 @@ function VcgImageText() {
   return (
     <>
       <FormList onChange={formListOnChange} />
-      <Pagination total={data.total} pageNum={query.pageNum} pageSize={query.pageSize} loadData={updateQuery} />
+      <Toolbar
+        pagerProps={{
+          total: data.total,
+          current: query.pageNum,
+          pageSize: query.pageSize,
+          onChange: values => {
+            setQuery({ ...query, ...values });
+          }
+        }}
+      ></Toolbar>
       <Table
         pagination={false}
         dataSource={data.list.map((l, i) => Object.assign(l, { index: i + 1 }))}

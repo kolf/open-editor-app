@@ -2,27 +2,20 @@ import React, { ReactElement } from 'react';
 import { Select, Pagination, Space } from 'antd';
 const { Option } = Select;
 
-interface Props {
+export interface IPagerProps {
   total?: number;
   onChange?: any;
+  current: number;
+  pageSize: number
 }
 
 const pageOptions = [
-  {
-    value: '60',
-    label: '60条/页'
-  },
-  {
-    value: '100',
-    label: '100条/页'
-  },
-  {
-    value: '200',
-    label: '200条/页'
-  }
+  { value: '60', label: '60条/页' },
+  { value: '100', label: '100条/页' },
+  { value: '200', label: '200条/页' }
 ];
 
-function Pager({ onChange, ...otherProps }: Props): ReactElement {
+function Pager({ onChange, ...otherProps }: IPagerProps): ReactElement {
   const pageProps = {
     simple: true,
     ...otherProps,

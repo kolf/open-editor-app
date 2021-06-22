@@ -42,7 +42,7 @@ const initialData = {
 function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { partyId } = useCurrentUser();
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
     cacheKey: 'provider'

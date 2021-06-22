@@ -1,6 +1,8 @@
 import { AssetFamily, AssetType } from "../enums/query";
 
-export namespace OsiDbProvider {
+export namespace OsiDbProviderSchema {
+
+  // 供应商列表
   export interface ListAll {
     name: string; // 名称
     id: number; // id

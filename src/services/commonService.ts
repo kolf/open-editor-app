@@ -1,6 +1,7 @@
 import Api from './config';
 import { AxiosResponse } from 'axios';
-import { OsiDbProvider } from 'src/declarations/schemas/OsiDbProvider';
+import { OsiDbProviderSchema } from 'src/declarations/schemas/OsiDbProviderSchema';
+import { CommonSchema } from 'src/declarations/schemas/CommonSchema';
 
 export class CommonService {
   async getOptions(data: any): Promise<any> {
@@ -14,13 +15,13 @@ export class CommonService {
           label: item.categoryName
         }))
       } else if (data.type === 'provider') {
-        const res = await Api.get<AxiosResponse<OsiDbProvider.ListAll[]>>(`/api/outsourcing/OsiDbProvider/listAll`);
+        const res = await Api.get<AxiosResponse<OsiDbProviderSchema.ListAll[]>>(`/api/outsourcing/OsiDbProvider/listAll`);
         result = res.data.data.map(item => ({
           value: item.id + '',
           label: item.name
         }))
       } else if (data.type === 'editUser') {
-        const res = await Api.post(`/api/editor/param/pageList?paramType=4`, {
+        const res = await Api.post<AxiosResponse<CommonSchema.EditUserList>>(`/api/editor/param/pageList?paramType=4`, {
           assetFamily: 2,
           searchName: data.value
         });

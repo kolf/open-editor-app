@@ -20,10 +20,18 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
 
   axiosInstance.interceptors.response.use(
     response => {
+      const { code, message } = response.data;
+      switch (code) {
+        case 401:
+          window.location.href = PATH.LOGIN;
+          toastMessage('你没有权限！', message, TypeToast.ERROR);
+          localStorage.removeItem('accessToken');
+          break;
+        default:
+      }
       return response;
     },
     error => {
-      console.log(error.response, 'error')
       switch (error.response.status) {
         case 401:
           window.location.href = PATH.LOGIN;

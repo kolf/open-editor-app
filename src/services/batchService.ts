@@ -1,9 +1,11 @@
 import { BatchAssignTarget, Priority } from 'src/declarations/enums/query';
 import Api from './config';
 import queryString from 'querystring';
+import { OsiBatchSchema } from 'src/declarations/schemas/OsiBatchSchema';
+import { CommonSchema } from 'src/declarations/schemas/CommonSchema';
 
 export class BatchService {
-  async getList(data: any): Promise<any> {
+  async getList(data: any): Promise<CommonSchema.TableList<OsiBatchSchema.PageList>> {
     const res = await Api.post(`/api/outsourcing/osiBatch/pageList`, data);
     return res.data.data;
   }

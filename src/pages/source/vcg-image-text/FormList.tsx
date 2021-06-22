@@ -38,22 +38,16 @@ const FormList = (props: any) => {
         </Form.Item>
         <Form.Item name="userList" className="form-list-item">
           <SearchSelect
-          style={{ width: 160 }}
-           placeholder="分配对象"
+            style={{ width: 160 }}
+            placeholder="分配对象"
             type="editUser"
-             mode="multiple"
-              manual
-              optionsBefore={{value: '-1', label: '全部资源'}}
-               />
+            mode="multiple"
+            manual
+            optionsBefore={{ value: '-1', label: '全部资源' }}
+          />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
-        <SearchSelect
-            allowClear
-            showSearch
-            type="provider"
-            style={{ width: 160 }}
-            placeholder="数据来源"
-          />
+          <SearchSelect allowClear showSearch type="provider" style={{ width: 160 }} placeholder="数据来源" />
         </Form.Item>
         <Form.Item name="assignMode" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配">

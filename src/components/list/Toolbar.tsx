@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Affix, Space } from 'antd';
-import Pager from 'src/components/Pager';
+import Pager, { IPagerProps } from 'src/components/Pager';
 import './Toolbar.less';
 
 const selectOptions = ['全选', '反选', '取消'].map((o, i) => ({
@@ -9,18 +9,14 @@ const selectOptions = ['全选', '反选', '取消'].map((o, i) => ({
 }));
 
 interface Props {
-  selectedIds?: any;
-  idList?: any;
-  onSelectIds?: any;
-  children?: any;
-  pagerProps?: any;
+  selectedIds?: number[];
+  idList?: number[];
+  onSelectIds?: (args: number[]) => void;
+  children?: ReactElement;
+  pagerProps?: IPagerProps;
 }
 
-const defaultProps = {
-  selectedIds: 0
-};
-
-function Toolbar({ selectedIds, idList, children, onSelectIds, pagerProps }: Props): ReactElement {
+function Toolbar({ selectedIds = [], idList, children, onSelectIds, pagerProps }: Props): ReactElement {
   const handleClick = key => {
     let nextSelectedIds = [];
     switch (key) {
@@ -57,7 +53,5 @@ function Toolbar({ selectedIds, idList, children, onSelectIds, pagerProps }: Pro
     </Affix>
   );
 }
-
-Toolbar.defaultProps = defaultProps;
 
 export default Toolbar;
