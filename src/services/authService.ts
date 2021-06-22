@@ -40,6 +40,10 @@ export class AuthService {
   getUser(token: string): Promise<any> {
     return Api.get(`/api/editor/user/viewByToken?token=${token}`);
   }
+
+  modifyPassword(data: { ucId: string, newPassword: string }) {
+    return Api.post(`/api/editor/user/modifyPwd`, data);
+  }
 }
 
 const authService = new AuthService();
