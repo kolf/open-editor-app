@@ -4,6 +4,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
+import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
 import options, { Quality, LicenseType, CopyrightType, Licence } from 'src/declarations/enums/query';
 const { Option } = Select;
 const licenseTypeOptions = options.get(LicenseType);
@@ -45,6 +46,7 @@ function isLicenseActive(license, copyright: any): boolean {
 }
 
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
+  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList);
   console.log(dataSource, 'dataSource');
   return (
     <GridItem
@@ -144,7 +146,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
 
       {dataSource.sensitiveList.length > 0 && (
         <GridItem.TopTag align="left" color="#333">
-          敏感词
+          {sensitiveListTitle}
         </GridItem.TopTag>
       )}
     </GridItem>

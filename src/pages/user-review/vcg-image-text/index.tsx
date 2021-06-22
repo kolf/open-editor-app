@@ -85,6 +85,9 @@ function List() {
           result[key] = `${date} 00:00:00,${date} 23:59:59`;
         } else if (key === 'keyword' && value) {
           let searchType = '1';
+          if (/^\d+$/g.test(value)) {
+            searchType = '2';
+          }
           result['searchType'] = searchType;
           result[key] = value;
         } else if (value && typeof value === 'object') {

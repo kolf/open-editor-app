@@ -4,6 +4,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
+import {useSentiveKeywords} from 'src/hooks/useSentiveKeywords'
 import options, { Quality, LicenseType, CopyrightType, Licence } from 'src/declarations/enums/query';
 const { Option } = Select;
 const licenseTypeOptions = options.get(LicenseType);
@@ -151,7 +152,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         <Input readOnly size="small" placeholder="备注" defaultValue={dataSource.memo} />
       </GridItemRow>
       {dataSource.reasonTitle && (
-        <GridItem.TopTag align="right" color="#e30e09">
+        <GridItem.TopTag align="right" color="rgb(255, 85, 0)">
           {dataSource.reasonTitle}
         </GridItem.TopTag>
       )}
