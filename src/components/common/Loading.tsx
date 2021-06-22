@@ -1,6 +1,6 @@
 import { Col, Row, Spin } from 'antd';
 import React from 'react';
-import './styles.scss';
+import './styles.less';
 
 function Loading() {
   return (

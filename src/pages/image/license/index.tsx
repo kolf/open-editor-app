@@ -3,7 +3,7 @@ import { Card, Table } from 'antd';
 import { useRequest } from 'ahooks';
 import { useQuery } from 'src/hooks/useQueryParam';
 import imageService from 'src/services/imageService';
-import './style.scss';
+import './style.less';
 
 interface Props {}
 

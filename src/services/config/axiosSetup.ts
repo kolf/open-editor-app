@@ -11,7 +11,7 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
     config => {
       const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
-        config.headers.common['Authorization'] = `Bearer ${accessToken}`;
+        config.headers.common['Authorization'] = `${accessToken}`;
       }
       return config;
     },

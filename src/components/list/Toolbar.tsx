@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Affix, Space } from 'antd';
 import Pager from 'src/components/Pager';
-import './Toolbar.scss';
+import './Toolbar.less';
 
 const selectOptions = ['全选', '反选', '取消'].map((o, i) => ({
   value: i + '',

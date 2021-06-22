@@ -9,7 +9,7 @@ import options, {
   Priority
 } from 'src/declarations/enums/query';
 import SearchSelect from 'src/components/SearchSelect';
-import 'src/styles/FormList.scss';
+import 'src/styles/FormList.less';
 
 const { Option } = Select;
 
@@ -37,7 +37,7 @@ const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="userList" className="form-list-item">
-          <SearchSelect 
+          <SearchSelect
           style={{ width: 160 }}
            placeholder="分配对象"
             type="editUser"

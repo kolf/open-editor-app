@@ -13,7 +13,7 @@ import options, {
   IfSensitveCheck,
   Exclusive
 } from 'src/declarations/enums/query';
-import 'src/styles/FormList.scss';
+import 'src/styles/FormList.less';
 
 const { Option } = Select;
 const { Search } = Input;

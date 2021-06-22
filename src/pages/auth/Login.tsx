@@ -5,7 +5,7 @@ import { Button, Col, Form, Input, Row, Checkbox, message } from 'antd';
 import { login } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
 import logoUrl from 'src/assets/img/logo.svg';
-import './styles.scss';
+import './styles.less';
 
 Login.propTypes = {};
 

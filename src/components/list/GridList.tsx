@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Spin, Row, Col, Empty } from 'antd';
-import './GridList.scss';
+import './GridList.less';
 
 const layout = {
   xs: 24,

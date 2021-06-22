@@ -1,6 +1,6 @@
 import { Spin } from 'antd';
 import React, { Suspense } from 'react';
-import './App.scss';
+import './App.less';
 import { RootRouter } from './routes/index';
 
 function App() {

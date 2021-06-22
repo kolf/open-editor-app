@@ -2,7 +2,7 @@ import { Button, Result } from 'antd';
 import React from 'react';
 import { useHistory } from 'react-router';
 import { PATH } from 'src/routes/path';
-import './styles.scss';
+import './styles.less';
 
 function ServerError() {
   const history = useHistory();
