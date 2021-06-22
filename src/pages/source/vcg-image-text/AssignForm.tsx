@@ -1,12 +1,9 @@
 import React, { ReactElement, useEffect } from 'react';
-import { Form, Input, Radio, Select } from 'antd';
+import { Form, Radio } from 'antd';
 import { memo } from 'react';
-import options, { AssetFamily, BatchAssignTarget, Priority } from 'src/declarations/enums/query';
-import commonService from 'src/services/commonService';
-import { toastMessage } from 'src/components/common/ToastMessage';
+import options, { BatchAssignTarget, Priority } from 'src/declarations/enums/query';
 import { useState } from 'react';
 import SearchSelect from 'src/components/SearchSelect';
-const { Option } = Select;
 
 interface Props {
   saveRef?: any;

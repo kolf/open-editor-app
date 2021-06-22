@@ -17,6 +17,17 @@ interface IMod {
   wrapClassName?: string;
 }
 
+interface IModalConfig {
+  width?: number,
+  title: string,
+  content: React.ReactNode,
+  onOk: (args: any|never) => Promise<any> | void,
+  autoIndex?: boolean,
+  afterClose?: (...args: any[]) => void,
+  onCancel?: (...args: any[]) => void,
+}
+
+
 class Mod extends React.Component<IMod> {
   container: any;
   header: any;
@@ -157,7 +168,7 @@ class Mod extends React.Component<IMod> {
   }
 }
 
-export default function modal(config) {
+export default function modal(config: IModalConfig) {
   const div = document.createElement('div');
   document.body.appendChild(div);
   let currentConfig = {

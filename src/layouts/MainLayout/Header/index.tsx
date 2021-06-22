@@ -1,5 +1,5 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu } from 'antd';
+import { Avatar, Dropdown, Menu, message } from 'antd';
 import React, { memo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
@@ -8,6 +8,9 @@ import { logout } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
 import { menus } from 'src/routes/menus';
 import { RootState } from 'src/store';
+import modal from 'src/utils/modal';
+import UpdatePasswordModal from './UpdatePasswordModal';
+import authService from 'src/services/authService';
 
 export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const user = useSelector((state: RootState) => state.user.user);
@@ -19,10 +22,42 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
     history.push(PATH.LOGIN);
   };
 
+  const updatePassword = () => {
+    let formRef = null;
+    const mod = modal({
+      width: 500,
+      title: '修改密码',
+      content: <UpdatePasswordModal saveRef={r => formRef = r}/>,
+      onOk,
+      autoIndex: false
+    });
+    async function onOk() {
+      const values = await formRef.validateFields();
+      if (values.errorFields) return;
+
+      try {
+        const modifyPasswordResult =  await authService.modifyPassword({
+          ucId: user.ucId,
+          newPassword: values.password
+        });      
+        if (modifyPasswordResult.data.status !== '200') {
+          throw modifyPasswordResult.data.msg
+        } else {
+          mod && mod.close();
+          handleLogout();
+        }
+      } catch(e) {
+        mod && mod.close();
+        message.error(e);
+      }
+    }
+  }
+
+
   const menu = (
     <Menu>
       <Menu.Item>
-        <Link to={PATH.PROFILE}>个人信息</Link>
+        <div onClick={updatePassword}>修改密码</div>
       </Menu.Item>
       <Menu.Item danger onClick={handleLogout}>
         退出

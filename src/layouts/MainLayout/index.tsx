@@ -6,8 +6,8 @@ import { getMe } from 'src/features/auth/authenticate';
 import { setIsCollapsed } from 'src/features/collapsedMenu/collapsedMenu';
 import { RootState } from 'src/store';
 import { menus } from 'src/routes/menus';
-import AppHeader from './Header';
 import MenuLink from './MenuLink';
+import AppHeader from './Header';
 
 const { Header, Content, Sider } = Layout;
 type Props = {
