@@ -2,7 +2,7 @@ import { useRequest } from 'ahooks';
 import { DatePicker, Form, Table } from 'antd';
 import moment from 'moment';
 import React, { useEffect, useState, memo } from 'react';
-import Pagination from 'src/components/Pagination';
+import Toolbar from 'src/components/list/Toolbar';
 import config from 'src/config';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import bacthService from 'src/services/batchService';
@@ -50,10 +50,6 @@ function Statistic() {
     refreshData(query);
   }, [query]);
 
-  const updateQuery = (type, nextQuery = {}) => {
-    setQuery({ ...query, ...nextQuery });
-  };
-
   const formListOnChange = values => {
     const nextQuery = { ...values, pageNum: 1 };
     const result = Object.keys(nextQuery).reduce(
@@ -84,7 +80,16 @@ function Statistic() {
           <DatePicker placeholder="入库时间" />
         </Form.Item>
       </Form>
-      <Pagination total={data.total} pageNum={query.pageNum} pageSize={query.pageSize} loadData={updateQuery} />
+      <Toolbar
+        pagerProps={{
+          total: data.total,
+          current: query.pageNum,
+          pageSize: query.pageSize,
+          onChange: values => {
+            setQuery({ ...query, ...values });
+          }
+        }}
+      ></Toolbar>
       <Table
         pagination={false}
         dataSource={data.list.map((l, i) => ({ ...l, ...{ index: i } }))}

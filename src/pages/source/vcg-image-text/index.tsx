@@ -16,7 +16,6 @@ import bacthService from 'src/services/batchService';
 import modal from 'src/utils/modal';
 import FormList from './FormList';
 import AssignForm from './AssignForm';
-import Pagination from 'src/components/Pagination';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Pager from 'src/components/Pager';
 import Toolbar from 'src/components/list/Toolbar';
