@@ -45,20 +45,13 @@ function List() {
     mutate,
     run,
     refresh
-  } = useRequest(
-    async () => {
-      const res1 = await imageService.getList(makeQuery(query));
-      console.log(res1, 'res');
-      return res1;
-    },
-    {
-      ready: !!(providerOptions && categoryOptions && allReason),
-      manual: true,
-      throttleInterval: 600,
-      initialData,
-      formatResult
-    }
-  );
+  } = useRequest(() => imageService.getList(formatQuery(query)), {
+    ready: !!(providerOptions && categoryOptions && allReason),
+    manual: true,
+    throttleInterval: 600,
+    initialData,
+    formatResult
+  });
 
   useEffect(() => {
     run();
@@ -66,7 +59,7 @@ function List() {
   }, [query]);
 
   // 格式化查询参数
-  const makeQuery = query => {
+  const formatQuery = query => {
     const result = Object.keys(query).reduce((result, key) => {
       const value = query[key];
       if (/Time$/g.test(key) && value) {
@@ -141,7 +134,6 @@ function List() {
 
   // 点击某一项数据
   const handleClick = (index, field) => {
-    console.log(field, 'urlYuan');
     switch (field) {
       case 'id':
         showDetails(index);
@@ -172,7 +164,7 @@ function List() {
     const { urlYuan } = list[index];
     const mod = modal({
       title: `查看中图`,
-      width: 640,
+      width: 960,
       content: (
         <div className="image-max">
           <img src={urlYuan} />
@@ -215,10 +207,14 @@ function List() {
     <>
       <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
       <Toolbar
-        onSelectIds={setSelectedIds}
-        selectedIds={selectedIds}
-        idList={list.map(item => item.id)}
-        dataTotal={total}
+        pagerProps={{
+          total,
+          current: query.pageNum,
+          pageSize: query.pageSize,
+          onChange: values => {
+            setQuery({ ...query, ...values });
+          }
+        }}
       ></Toolbar>
       <GridList
         loading={loading}

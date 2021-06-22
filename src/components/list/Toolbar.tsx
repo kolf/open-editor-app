@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Affix, Space } from 'antd';
+import Pager from 'src/components/Pager';
 import './Toolbar.scss';
 
 const selectOptions = ['全选', '反选', '取消'].map((o, i) => ({
@@ -8,20 +9,18 @@ const selectOptions = ['全选', '反选', '取消'].map((o, i) => ({
 }));
 
 interface Props {
-  selectedIds: any;
-  idList: any;
-  dataTotal: any;
+  selectedIds?: any;
+  idList?: any;
   onSelectIds?: any;
-  onPagerChange?: any;
   children?: any;
+  pagerProps?: any;
 }
 
 const defaultProps = {
-  dataTotal: 0,
-  onSelectIds() {}
+  selectedIds: 0
 };
 
-function Toolbar({ selectedIds, idList, children, onPagerChange, onSelectIds, dataTotal }: Props): ReactElement {
+function Toolbar({ selectedIds, idList, children, onSelectIds, pagerProps }: Props): ReactElement {
   const handleClick = key => {
     let nextSelectedIds = [];
     switch (key) {
@@ -39,17 +38,21 @@ function Toolbar({ selectedIds, idList, children, onPagerChange, onSelectIds, da
     <Affix>
       <div className="toolbar-root">
         <div className="toolbar-left">
-          <Space>
-            {selectOptions.map(o => (
-              <a key={o.value} onClick={e => handleClick(o.value)}>
-                {o.label}
-              </a>
-            ))}
-            <span>已选中{selectedIds.length}个</span>
-          </Space>
+          {onSelectIds && (
+            <Space>
+              {selectOptions.map(o => (
+                <a key={o.value} onClick={e => handleClick(o.value)}>
+                  {o.label}
+                </a>
+              ))}
+              <span>已选中{selectedIds.length}个</span>
+            </Space>
+          )}
         </div>
         <div className="toolbar-content">{children}</div>
-        <div className="toolbar-right"></div>
+        <div className="toolbar-right">
+          <Pager {...pagerProps} />
+        </div>
       </div>
     </Affix>
   );

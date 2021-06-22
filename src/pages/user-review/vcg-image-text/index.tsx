@@ -62,20 +62,13 @@ function List() {
     mutate,
     run,
     refresh
-  } = useRequest(
-    async () => {
-      const res1 = await imageService.getList(makeQuery(query));
-      console.log(res1, 'res');
-      return res1;
-    },
-    {
-      ready: !!(providerOptions && categoryOptions && allReason),
-      manual: true,
-      throttleInterval: 600,
-      initialData,
-      formatResult
-    }
-  );
+  } = useRequest(() => imageService.getList(formatQuery(query)), {
+    ready: !!(providerOptions && categoryOptions && allReason),
+    manual: true,
+    throttleInterval: 600,
+    initialData,
+    formatResult
+  });
 
   useEffect(() => {
     run();
@@ -83,7 +76,7 @@ function List() {
   }, [query]);
 
   // 格式化查询参数
-  const makeQuery = query => {
+  const formatQuery = query => {
     const result = Object.keys(query).reduce(
       (result, key) => {
         const value = query[key];
@@ -170,6 +163,11 @@ function List() {
       case 'cover':
         handleSelect(index);
         break;
+      case 'showMiddleImage':
+        showMiddleImage(index);
+        break;
+      case 'openOriginImage':
+        openOriginImage(index);
       case 'resolve':
         setResolve(index);
         break;
@@ -215,12 +213,28 @@ function List() {
     return [...selectedIds];
   };
 
+  const showMiddleImage = index => {
+    const { urlYuan } = list[index];
+    const mod = modal({
+      title: `查看中图`,
+      width: 960,
+      content: (
+        <div className="image-max">
+          <img src={urlYuan} />
+        </div>
+      ),
+      footer: null
+    });
+  };
+
+  const openOriginImage = index => {
+    const { urlYuan } = list[index];
+    window.open(urlYuan);
+  };
   const openLicense = async index => {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
   };
-
-  const getImageRelease = async imageList => {};
 
   const showDetails = async index => {
     const { id, urlSmall, urlYuan } = list[index];
@@ -379,7 +393,14 @@ function List() {
         onSelectIds={setSelectedIds}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
-        dataTotal={total}
+        pagerProps={{
+          total,
+          current: query.pageNum,
+          pageSize: query.pageSize,
+          onChange: values => {
+            setQuery({ ...query, ...values });
+          }
+        }}
       >
         <Space>
           <Button type="text" style={{ marginLeft: 8 }}>

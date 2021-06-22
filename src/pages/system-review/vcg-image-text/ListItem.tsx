@@ -45,6 +45,7 @@ function isLicenseActive(license, copyright: any): boolean {
 }
 
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
+  console.log(dataSource, 'dataSource');
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
@@ -138,6 +139,12 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       {dataSource.reasonTitle && (
         <GridItem.TopTag align="right" color="#e30e09">
           {dataSource.reasonTitle}
+        </GridItem.TopTag>
+      )}
+
+      {dataSource.sensitiveList.length > 0 && (
+        <GridItem.TopTag align="left" color="#333">
+          敏感词
         </GridItem.TopTag>
       )}
     </GridItem>

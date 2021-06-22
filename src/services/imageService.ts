@@ -4,9 +4,17 @@ import queryString from 'querystring'
 export class ImageService {
   async getList(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImage/pageList`, data);
-    const res1 =await this.getSentiveWordByImageIds(res.data.data.list.map(item => item.id));
-    console.log(res1, 'res')
-    return res.data.data;
+    const { list: imageList, total } = res.data.data
+    const res1 = await this.getSentiveWordByImageIds(imageList.map(item => item.id));
+    return {
+      total,
+      list: imageList.map(item => {
+        return {
+          ...item,
+          sensitiveList: res1[item.id] || []
+        }
+      })
+    };
   }
   async getExif(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImage/getExif?${queryString.stringify(data)}`);
@@ -26,6 +34,7 @@ export class ImageService {
   }
   async getSentiveWordByImageIds(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);
+
     return res.data.data
   }
 }
