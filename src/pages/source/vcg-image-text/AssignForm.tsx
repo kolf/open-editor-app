@@ -27,10 +27,12 @@ const AssignForm = ({ saveRef }: Props): ReactElement => {
   }
 
   return (
-    <Form form={form} size="small" onValuesChange={valueChange}>
+    <Form form={form} size="small" onValuesChange={valueChange} initialValues={{
+      priority: formData.priority
+    }}>
       <div style={{ display: 'flex' }}>
         <Form.Item label="分配对象" name="assignType" rules={[{ required: true, message: '请选择/输入分配对象!' }]}>
-          <Radio.Group value={formData.assignType}>
+          <Radio.Group>
             {options.get(BatchAssignTarget).map((t, i) => (
               <Radio value={t.value} key={`${t.label}${i}`}>
                 {t.label}
@@ -45,7 +47,7 @@ const AssignForm = ({ saveRef }: Props): ReactElement => {
         )}
       </div>
       <Form.Item label="优先级" name="priority" rules={[{ required: true, message: '请选择优先级!' }]}>
-        <Radio.Group value={formData.priority}>
+        <Radio.Group>
           {options.get(Priority).map((t, i) => (
             <Radio value={t.value} key={`${t.label}${i}`}>
               {t.label}
