@@ -93,10 +93,15 @@ function VcgImageText() {
       render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
     },
     { title: '分配状态', dataIndex: 'assignStatus', render: value => options.map(BatchAssignStatus)[value] },
-    { title: '分配对象', dataIndex: 'auditorName' },
+    { title: '分配对象', dataIndex: 'auditorName', render: value => {
+      return value.split(',').map(name => (<>
+        <div>{name}</div>
+      </>))
+    } },
     { title: '分配人', dataIndex: 'assignerName' },
     {
       title: '操作',
+      fixed: 'right',
       render: (value, tr) => {
         return (
           <Button disabled={tr.assignStatus !== BatchAssignStatus.未分配} type="text" onClick={() => assignData(tr.id)}>
@@ -105,7 +110,10 @@ function VcgImageText() {
         );
       }
     }
-  ];
+  ].map<Column>(c => {
+    c.align = 'center';
+    return c;
+  });
 
   const formListOnChange = values => {
     const nextQuery = { ...values, pageNum: 1 };
@@ -130,6 +138,9 @@ function VcgImageText() {
             break;
           case 'userList':
             memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');
+            break;
+          case 'osiProviderId':
+            memo[q] = nextQuery[q] && nextQuery[q].value;
             break;
           default:
             memo[q] = nextQuery[q];
@@ -160,6 +171,8 @@ function VcgImageText() {
         columns={columns}
         bordered
         loading={loading}
+        size='small'
+        scroll={{ x: 'max-content' }}
       />
     </>
   );

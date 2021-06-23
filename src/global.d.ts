@@ -10,6 +10,8 @@ declare interface Column {
   title: string;
   dataIndex?: string;
   width?: number;
+  fixed?: 'left' | 'right' | boolean;
+  align?: 'left' | 'center' | 'right';
   render?: (value: any, tr: any) => React.ReactNode;
 }
 
