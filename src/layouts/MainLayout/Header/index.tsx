@@ -39,7 +39,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
         const modifyPasswordResult =  await authService.modifyPassword({
           ucId: user.ucId,
           newPassword: values.password
-        });      
+        });
         if (modifyPasswordResult.data.status !== '200') {
           throw modifyPasswordResult.data.msg
         } else {
@@ -67,7 +67,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
 
   return (
     <div className="header">
-      <h1 className="header-logo">VCG内容审核管理平台</h1>
+      <h1 className="header-logo">内容审核管理平台</h1>
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
           {menus.filter(menu => !menu.hidden).map(menu => (

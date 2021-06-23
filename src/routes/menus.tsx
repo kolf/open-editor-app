@@ -220,10 +220,10 @@ export const menus: Menu[] = [
   },
   {
     key: '_STATISTIC',
-    name: '统计',
+    name: '数据统计',
     hasChild: true,
     path: PATH.STATISTICAL_LIST,
-    breadcrumbName: '统计',
+    breadcrumbName: '数据统计',
     hidden: false,
     children: [
       {

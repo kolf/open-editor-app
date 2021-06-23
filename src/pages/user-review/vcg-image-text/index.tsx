@@ -81,8 +81,12 @@ function List() {
       (result, key) => {
         const value = query[key];
         if (/Time$/g.test(key) && value) {
-          const date = value.format(config.data.DATE_FORMAT);
-          result[key] = `${date} 00:00:00,${date} 23:59:59`;
+          const [start, end] = value;
+          result[key] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
+            config.data.DATE_FORMAT
+          )} 23:59:59`;
+          // const date = value.format(config.data.DATE_FORMAT);
+          // result[key] = `${date} 00:00:00,${date} 23:59:59`;
         } else if (key === 'keyword' && value) {
           let searchType = '1';
           if (/^\d+$/g.test(value)) {
@@ -234,6 +238,7 @@ function List() {
     const { urlYuan } = list[index];
     window.open(urlYuan);
   };
+
   const openLicense = async index => {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);

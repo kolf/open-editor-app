@@ -60,25 +60,33 @@ function List() {
 
   // 格式化查询参数
   const formatQuery = query => {
-    const result = Object.keys(query).reduce((result, key) => {
-      const value = query[key];
-      if (/Time$/g.test(key) && value) {
-        const date = value.format(config.data.DATE_FORMAT);
-        result[key] = `${date} 00:00:00,${date} 23:59:59`;
-      } else if (key === 'keyword' && value) {
-        let searchType = '1';
-        if (/^\d+$/g.test(value)) {
-          searchType = '2';
+    const result = Object.keys(query).reduce(
+      (result, key) => {
+        const value = query[key];
+        if (/Time$/g.test(key) && value) {
+          const [start, end] = value;
+          result[key] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
+            config.data.DATE_FORMAT
+          )} 23:59:59`;
+          // const date = value.format(config.data.DATE_FORMAT);
+          // result[key] = `${date} 00:00:00,${date} 23:59:59`;
+        } else if (key === 'keyword' && value) {
+          let searchType = '1';
+          if (/^\d+$/g.test(value)) {
+            searchType = '2';
+          }
+          result['searchType'] = searchType;
+          result[key] = value;
+        } else if (value && typeof value === 'object') {
+          result[key] = value.key;
+        } else if (value) {
+          result[key] = value;
         }
-        result['searchType'] = searchType;
-        result[key] = value;
-      } else if (value && typeof value === 'object') {
-        result[key] = value.key;
-      } else if (value) {
-        result[key] = value;
+        return result;
+      },
+      {
       }
-      return result;
-    }, {});
+    );
 
     return result;
   };
@@ -218,7 +226,7 @@ function List() {
             setQuery({ ...query, ...values });
           }
         }}
-      ></Toolbar>
+      />
       <GridList
         loading={loading}
         dataSource={list}

@@ -16,7 +16,7 @@ function Login() {
   const loading = useSelector((state: any) => state.user.loading);
 
   useEffect(() => {
-    if (token) history.push(PATH.SOURCE_VCG_IMAGE_TEXT);
+    if (token) history.push(PATH.USER_REVIEW_VCG_IMAGE_TEXT);
   }, [token]);
 
   const onFinish = async (values: any) => {
@@ -41,7 +41,7 @@ function Login() {
     >
       <div className="login-form">
         <div className="login-brand">
-          <img src={logoUrl} title="视觉中国" />
+          <h1>内容审核管理平台</h1>
         </div>
         <Form initialValues={{ remember: true }} onFinish={onFinish}>
           <Form.Item name="userName" rules={[{ required: true, message: '请输入用户名！' }]}>
@@ -52,7 +52,7 @@ function Login() {
           </Form.Item>
           <Form.Item>
             <Button size="large" type="primary" htmlType="submit" loading={loading} block>
-              登陆
+              登录
             </Button>
           </Form.Item>
           <Form.Item name="remember" valuePropName="checked">

@@ -39,6 +39,11 @@
     lodash "^4.17.21"
     resize-observer-polyfill "^1.5.0"
 
+"@antv/f2-context@^0.0.1":
+  version "0.0.1"
+  resolved "https://registry.nlark.com/@antv/f2-context/download/@antv/f2-context-0.0.1.tgz#e42287fbcdc2ce3985d6d30b9f52ca8dbacea234"
+  integrity sha1-5CKH+83CzjmF1tMLn1LKjbrOojQ=
+
 "@babel/code-frame@7.10.4":
   version "7.10.4"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.10.4.tgz"
@@ -1601,6 +1606,11 @@
     js-yaml "^3.13.1"
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
+
+"@gcanvas/core@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.npm.taobao.org/@gcanvas/core/download/@gcanvas/core-1.0.0.tgz#3ef43a084d8a309b90a2eebca553ecb82a0cf77e"
+  integrity sha1-PvQ6CE2KMJuQou68pVPsuCoM934=
 
 "@hapi/address@2.x.x":
   version "2.1.4"
@@ -9697,6 +9707,11 @@ react-is@^16.12.0, react-is@^16.13.1, react-is@^16.6.0, react-is@^16.7.0, react-
 react-is@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz"
+
+react-native-gcanvas@^0.0.7-dev:
+  version "0.0.7-dev"
+  resolved "https://registry.nlark.com/react-native-gcanvas/download/react-native-gcanvas-0.0.7-dev.tgz#8a8cd9434737ef12666d58b72f6d88e36b033cfb"
+  integrity sha1-iozZQ0c37xJmbVi3L22I42sDPPs=
 
 react-redux@^7.2.4:
   version "7.2.4"

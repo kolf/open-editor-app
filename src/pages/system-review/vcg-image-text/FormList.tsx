@@ -17,6 +17,7 @@ import 'src/styles/FormList.less';
 
 const { Option } = Select;
 const { Search } = Input;
+const { RangePicker } = DatePicker;
 const qualityStatusOptions = options.get(QualityStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
@@ -51,10 +52,10 @@ export const FormList = (props: any) => {
           <SearchSelect manual style={{ width: 160 }} placeholder="审核人" type="editUser" />
         </Form.Item>
         <Form.Item name="createdTime" className="form-list-item">
-          <DatePicker placeholder="入库时间" />
+            <RangePicker style={{ width: 200 }} />
         </Form.Item>
         <Form.Item name="qualityEditTime" className="form-list-item">
-          <DatePicker placeholder="审核时间" />
+            <RangePicker style={{ width: 200 }} />
         </Form.Item>
         <Form.Item name="qualityStatus" className="form-list-item">
           <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="审核状态">
