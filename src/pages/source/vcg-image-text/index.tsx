@@ -68,7 +68,7 @@ function VcgImageText() {
   const columns: Column[] = [
     { title: '序号', dataIndex: 'index' },
     { title: 'ID', dataIndex: 'id' },
-    { title: '入库时间', dataIndex: 'createdTime', render: value => moment(value).format(config.data.SECOND_FORMAT) },
+    { title: '入库时间', width: 100, dataIndex: 'createdTime', render: value => moment(value).format(config.data.SECOND_FORMAT) },
     { title: '名称', dataIndex: 'name' },
     { title: '审核类型', dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
     { title: '分配', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
@@ -89,12 +89,13 @@ function VcgImageText() {
     { title: '数量', dataIndex: 'quantity' },
     {
       title: '分配时间',
+      width: 100,
       dataIndex: 'assignTime',
       render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
     },
     { title: '分配状态', dataIndex: 'assignStatus', render: value => options.map(BatchAssignStatus)[value] },
     { title: '分配对象', dataIndex: 'auditorName', render: value => {
-      return value.split(',').map(name => (<>
+      return value && value.split(',').map(name => (<>
         <div>{name}</div>
       </>))
     } },
@@ -104,7 +105,7 @@ function VcgImageText() {
       fixed: 'right',
       render: (value, tr) => {
         return (
-          <Button disabled={tr.assignStatus !== BatchAssignStatus.未分配} type="text" onClick={() => assignData(tr.id)}>
+          <Button disabled={tr.assignStatus != BatchAssignStatus.未分配} type="text" onClick={() => assignData(tr.id)}>
             分配
           </Button>
         );
