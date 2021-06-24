@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
@@ -65,10 +66,10 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
           </Col>
         </Row>
       </GridItemRow>
-      <GridItemRow label="ID:">
+      <GridItemRow label={<IconFont type='icon-ic_image'/>}>
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>
-      <GridItemRow label="供应商:">{dataSource.osiProviderName}</GridItemRow>
+      <GridItemRow label={<IconFont type='icon-wode'/>}>{dataSource.osiProviderName}</GridItemRow>
       <GridItemRow>
         <Space>
           <span>LAI</span>

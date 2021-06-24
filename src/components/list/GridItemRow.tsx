@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react';
 import { Space } from 'antd';
 interface Props {
-  label?: string;
+  label?: any;
   children?: any;
 }
 
