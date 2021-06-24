@@ -33,8 +33,8 @@ export enum Priority {
 
 // 敏感检测
 export enum IfSensitveCheck {
-  无 = '0',
-  有 = '1'
+  未命中敏感词 = '0',
+  命中敏感词 = '1'
 }
 
 // AI检测
