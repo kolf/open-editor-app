@@ -109,7 +109,7 @@ export enum BatchAssignTarget {
 }
 
 export enum QualityStatus {
-  '未编审' = '14',
+  '待编审' = '14',
   '已通过' = '24',
   '不通过' = '34'
 }
@@ -120,11 +120,11 @@ export enum IfHaveRelease {
 }
 
 export enum Exclusive {
-  否 = '0',
-  是 = '1'
+  非独家 = '0',
+  独家 = '1'
 }
 
-export enum Licence {
+export enum License {
   肖像权 = '1',
   物权 = '2'
 }

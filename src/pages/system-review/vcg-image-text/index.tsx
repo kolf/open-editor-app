@@ -61,26 +61,22 @@ function List() {
   }, [query, keywords]);
   // 格式化查询参数
   const formatQuery = query => {
-    let result = Object.keys(query).reduce(
-      (result, key) => {
-        const value = query[key];
-        if (/Time$/g.test(key) && value) {
-          const [start, end] = value;
-          result[key] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
-            config.data.DATE_FORMAT
-          )} 23:59:59`;
-          // const date = value.format(config.data.DATE_FORMAT);
-          // result[key] = `${date} 00:00:00,${date} 23:59:59`;
-        } else if (value && typeof value === 'object') {
-          result[key] = value.key;
-        } else if (value) {
-          result[key] = value;
-        }
-        return result;
-      },
-      {
+    let result = Object.keys(query).reduce((result, key) => {
+      const value = query[key];
+      if (/Time$/g.test(key) && value) {
+        const [start, end] = value;
+        result[key] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
+          config.data.DATE_FORMAT
+        )} 23:59:59`;
+        // const date = value.format(config.data.DATE_FORMAT);
+        // result[key] = `${date} 00:00:00,${date} 23:59:59`;
+      } else if (value && typeof value === 'object') {
+        result[key] = value.key;
+      } else if (value) {
+        result[key] = value;
       }
-    );
+      return result;
+    }, {});
 
     result['keyword'] = keywords;
     result['searchType'] = '1';
@@ -110,7 +106,7 @@ function List() {
             customReason
           } = item;
           const qualityStatus = osiImageReview.qualityStatus;
-          const categoryList = category.split(',');
+          const categoryList = (category || '').split(',');
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {

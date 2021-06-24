@@ -5,10 +5,10 @@ import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
-import options, { Quality, LicenseType, CopyrightType, Licence } from 'src/declarations/enums/query';
+import options, { Quality, LicenseType, CopyrightType, License } from 'src/declarations/enums/query';
 const { Option } = Select;
 const licenseTypeOptions = options.get(LicenseType);
-const licenseOptions = options.get(Licence);
+const licenseOptions = options.get(License);
 const qualityOptions = options.get(Quality);
 const copyrightOptions = options.get(CopyrightType);
 
@@ -23,7 +23,7 @@ interface Props {
 function getIndexProps(qualityStatus) {
   if (/^1/.test(qualityStatus)) {
     return {
-      title: `未编审`,
+      title: `待编审`,
       color: '#666666'
     };
   }
@@ -72,8 +72,8 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow>
         <Space>
           <span>LAI</span>
-          <span>{dataSource.aiBeautyScore}</span>
-          <span>{dataSource.aiQualityScore}</span>
+          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
+          <span title="AI质量评分">{dataSource.aiQualityScore}</span>
           <span>{dataSource.categoryNames}</span>
         </Space>
       </GridItemRow>
@@ -86,7 +86,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow>
         <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
-            <Space>
+            <Space style={{ paddingRight: 24, paddingTop: 2 }}>
               {licenseOptions.map(o => {
                 const isActvie = isLicenseActive(o.value, dataSource.copyright);
                 return (
@@ -100,15 +100,13 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
                 );
               })}
             </Space>
+            <RadioText
+              options={licenseTypeOptions}
+              value={dataSource.licenseType}
+              onChange={value => onChange('licenseType', value)}
+            />
           </Col>
           <Col style={{ textAlign: 'center' }}>
-            <RadioText options={licenseTypeOptions} value={dataSource.licenseType} />
-          </Col>
-        </Row>
-      </GridItemRow>
-      <GridItemRow>
-        <Row>
-          <Col flex="auto">
             <Select size="small" value={dataSource.qualityRank} placeholder="等级">
               {qualityOptions.map(o => (
                 <Option value={o.value} key={o.value}>
@@ -117,22 +115,22 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
               ))}
             </Select>
           </Col>
-          <Col style={{ maxWidth: 150 }}>
-            <Select
-              size="small"
-              value={dataSource.copyright}
-              placeholder="授权"
-              style={{ width: '100%' }}
-              onChange={value => onChange('copyright', value)}
-            >
-              {copyrightOptions.map(o => (
-                <Option value={o.value} key={o.value}>
-                  {o.label}
-                </Option>
-              ))}
-            </Select>
-          </Col>
         </Row>
+      </GridItemRow>
+      <GridItemRow>
+        <Select
+          size="small"
+          value={dataSource.copyright}
+          placeholder="授权"
+          style={{ width: '100%' }}
+          onChange={value => onChange('copyright', value)}
+        >
+          {copyrightOptions.map(o => (
+            <Option value={o.value} key={o.value}>
+              {o.label}
+            </Option>
+          ))}
+        </Select>
       </GridItemRow>
       <GridItemRow>
         <Input readOnly size="small" placeholder="备注" defaultValue={dataSource.memo} />

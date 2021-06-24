@@ -7,8 +7,8 @@ import InputSlider from 'src/components/InputSlider';
 import options, {
   Priority,
   Quality,
+  License,
   LicenseType,
-  IfHaveRelease,
   QualityStatus,
   IfSensitveCheck,
   Exclusive
@@ -21,9 +21,9 @@ const { RangePicker } = DatePicker;
 const qualityStatusOptions = options.get(QualityStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
-const licenseTypeOptions = options.get(LicenseType);
+const licenseOptions = options.get(License);
 const ifSensitveCheckOptions = options.get(IfSensitveCheck);
-const ifHaveReleaseOptions = options.get(IfHaveRelease);
+const LicenseTypeOptions = options.get(LicenseType);
 const exclusiveOptions = options.get(Exclusive);
 
 function filterOption(input, option) {
@@ -68,10 +68,10 @@ export const FormList = ({ initialValues, onChange }: any) => {
             <SearchSelect type="provider" style={{ width: 160 }} placeholder="数据来源" />
           </Form.Item>
           <Form.Item name="aiQualityScore" className="form-list-item">
-            <InputSlider width={120} placeholder="AI质量评分" />
+            <InputSlider width={106} placeholder="AI质量评分" />
           </Form.Item>
           <Form.Item name="aiBeautyScore" className="form-list-item">
-            <InputSlider width={120} placeholder="AI美学评分" />
+            <InputSlider width={106} placeholder="AI美学评分" />
           </Form.Item>
           <Form.Item name="qualityRank" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="质量等级">
@@ -91,9 +91,9 @@ export const FormList = ({ initialValues, onChange }: any) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="licenseType" className="form-list-item">
+          <Form.Item name="license" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="授权文件">
-              {licenseTypeOptions.map(o => (
+              {licenseOptions.map(o => (
                 <Option key={o.value} value={o.value}>
                   {o.label}
                 </Option>
@@ -118,18 +118,9 @@ export const FormList = ({ initialValues, onChange }: any) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="ifHaveRelease" className="form-list-item">
-            <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="是否授权">
-              {ifHaveReleaseOptions.map(o => (
-                <Option key={o.value} value={o.value}>
-                  {o.label}
-                </Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item name="release" className="form-list-item">
-            <Select allowClear filterOption={filterOption} showSearch style={{ width: 120 }} placeholder="授权类型">
-              {ifHaveReleaseOptions.map(o => (
+          <Form.Item name="licenseType" className="form-list-item">
+            <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="授权">
+              {LicenseTypeOptions.map(o => (
                 <Option key={o.value} value={o.value}>
                   {o.label}
                 </Option>
@@ -143,9 +134,9 @@ export const FormList = ({ initialValues, onChange }: any) => {
       </div>
       <div className="formList-dropdown">
         {collapse ? (
-          <Button type="text" shape="circle" title="收缩" icon={<DownOutlined />} onClick={e => setCollapse(false)} />
+          <Button type="text" shape="circle" title="收缩" icon={<UpOutlined />} onClick={e => setCollapse(false)} />
         ) : (
-          <Button type="text" shape="circle" title="展开" icon={<UpOutlined />} onClick={e => setCollapse(true)} />
+          <Button type="text" shape="circle" title="展开" icon={<DownOutlined />} onClick={e => setCollapse(true)} />
         )}
       </div>
       {/* <div className="formList-search">
