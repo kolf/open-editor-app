@@ -3,6 +3,7 @@ import { useRequest } from 'ahooks';
 import moment from 'moment';
 import { Radio, Button, Space, Spin, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import Iconfont from 'src/components/Iconfont';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
@@ -375,12 +376,14 @@ function List() {
       error && message.error(error);
     }
   };
+
+  // const
   // 设置授权
   const setCopyright = async (index, value) => {
     let mod = null;
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
+      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权吗?` });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '3', value } });
       mod.close();
@@ -391,6 +394,10 @@ function List() {
       mod && mod.close();
       error && message.error(error);
     }
+  };
+
+  const setMemo = async (index, value) => {
+    // setMemo
   };
 
   return (
@@ -429,6 +436,19 @@ function List() {
               {o.label}
             </Button>
           ))}
+          <Button
+            size="small"
+            title="设置授权"
+            onClick={e => setCopyright(-1)}
+            icon={<Iconfont type="icon-shouquanweituoshu" />}
+          />
+          <Button size="small" title="修改备注" onClick={e => setMemo(-1)} icon={<Iconfont type="icon-beizhu" />} />
+          <Button
+            size="small"
+            title="批量打开大图"
+            onClick={e => openOriginImage(-1)}
+            icon={<Iconfont type="icon-tu" />}
+          />
         </Space>
       </Toolbar>
       <GridList
