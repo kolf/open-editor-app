@@ -29,7 +29,7 @@ function Pager({ onChange, ...otherProps }: IPagerProps): ReactElement {
     <Space>
       <span>共{otherProps.total}条数据</span>
       <Pagination {...pageProps} />
-      <Select defaultValue={pageOptions[0].value} onChange={pageSize => onChange({ pageSize: pageSize * 1 })}>
+      <Select size='small' defaultValue={pageOptions[0].value} onChange={pageSize => onChange({ pageSize: pageSize * 1 })}>
         {pageOptions.map(o => (
           <Option key={o.value} value={o.value}>
             {o.label}
