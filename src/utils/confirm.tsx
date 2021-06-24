@@ -14,11 +14,9 @@ export default function confirm(config: ModalFuncProps): Promise<any> {
       ...config,
       content,
       onOk() {
-        // mod.confirmLoading();
         resolve(mod);
       },
       onCancel() {
-        mod.close();
         reject();
       }
     });

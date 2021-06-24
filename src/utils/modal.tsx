@@ -18,16 +18,15 @@ interface IMod {
 }
 
 interface IModalConfig {
-  width?: number,
-  title: string,
-  content: React.ReactNode,
-  footer?: React.ReactNode,
-  onOk?: (args: any|never) => Promise<any> | void,
-  autoIndex?: boolean,
-  afterClose?: (...args: any[]) => void,
-  onCancel?: (...args: any[]) => void,
+  width?: number;
+  title: string;
+  content: React.ReactNode;
+  footer?: React.ReactNode;
+  onOk?: (args: any | never) => Promise<any> | void;
+  autoIndex?: boolean;
+  afterClose?: (...args: any[]) => void;
+  onCancel?: (...args: any[]) => void;
 }
-
 
 class Mod extends React.Component<IMod> {
   container: any;
@@ -174,7 +173,10 @@ export default function modal(config: IModalConfig) {
   document.body.appendChild(div);
   let currentConfig = {
     ...config,
-    onCancel: close,
+    onCancel() {
+      close();
+      config.onCancel && config.onCancel();
+    },
     visible: true
   };
 

@@ -129,7 +129,8 @@ function List() {
             osiProviderId,
             category,
             standardReason,
-            customReason
+            customReason,
+            memo
           } = item;
           const qualityStatus = osiImageReview.qualityStatus;
           const categoryList = category.split(',');
@@ -140,6 +141,9 @@ function List() {
           }
 
           return {
+            tempData: {
+              memo
+            },
             ...item,
             qualityStatus,
             copyright: copyright + '',
@@ -191,7 +195,7 @@ function List() {
   };
 
   // 改变数据某一项的值
-  const handleChange = (index, field, value) => {
+  const handleForceChange = (index, field, value) => {
     switch (field) {
       case 'qualityRank':
         setQuality(index, value);
@@ -202,10 +206,29 @@ function List() {
       case 'copyright':
         setCopyright(index, value);
         break;
+      case 'memo':
+        setMemo(index, value);
+        break;
       default:
         alert(field);
         break;
     }
+  };
+
+  const setList = (ids, props) => {
+    const nextList = list.map(item => {
+      if (ids.includes(item.id)) {
+        return {
+          ...item,
+          ...props
+        };
+      }
+      return item;
+    });
+    mutate({
+      total,
+      list: nextList
+    });
   };
 
   const handleSelect = index => {
@@ -423,6 +446,9 @@ function List() {
           </Radio.Group>
         )
       });
+      if (!copyright) {
+        throw `请选择授权！`;
+      }
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '3', value: copyright } });
       mod.close();
@@ -435,7 +461,42 @@ function List() {
     }
   };
 
+  // 设置授权
   const setMemo = async (index, value) => {
+    const { id, memo, tempData } = list[index];
+    let mod = null;
+    try {
+      mod = await confirm({ title: '设置备注', content: `请确认是否修改备注?` });
+    } catch (error) {
+      mutate({
+        total,
+        list: list.map(item => {
+          if (item.id === id) {
+            const { tempData } = item;
+            return {
+              ...item,
+              ...tempData
+            };
+          }
+          return item;
+        })
+      });
+      return;
+    }
+    try {
+      mod.confirmLoading();
+      const res = await update({ body: [id], query: { type: '4', value } });
+      mod.close();
+      message.success(`设置备注成功！`);
+      setSelectedIds([]);
+      refresh();
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
+    }
+  };
+
+  const setMemoList = async (index, value) => {
     // setMemo
     let mod = null;
     try {
@@ -445,6 +506,9 @@ function List() {
         title: '设置备注',
         content: <Input placeholder="请输入备注信息" onChange={e => (memo = e.target.value)} />
       });
+      if (!memo) {
+        throw `请输入备注信息！`;
+      }
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '4', value: memo } });
       mod.close();
@@ -499,7 +563,7 @@ function List() {
             onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />
-          <Button size="small" title="修改备注" onClick={e => setMemo(-1)} icon={<Iconfont type="icon-beizhu" />} />
+          <Button size="small" title="修改备注" onClick={e => setMemoList(-1)} icon={<Iconfont type="icon-beizhu" />} />
           <Button
             size="small"
             title="批量打开大图"
@@ -517,7 +581,10 @@ function List() {
             dataSource={item}
             index={index}
             onClick={field => handleClick(index, field)}
-            onChange={(field, value) => handleChange(index, field, value)}
+            onForceChange={(field, value) => handleForceChange(index, field, value)}
+            onChange={(field, value) => {
+              setList([item.id], { [field]: value });
+            }}
           />
         )}
       />

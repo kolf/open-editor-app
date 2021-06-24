@@ -21,6 +21,9 @@ function Login() {
   }, [token]);
 
   const onFinish = async (values: any) => {
+    if (forgot) {
+      localStorage.setItem('userName', values.userName);
+    }
     try {
       const res: any = await dispatch(login(values));
       if (res.error) {
@@ -44,7 +47,7 @@ function Login() {
         <div className="login-brand">
           <h1>内容审核管理平台</h1>
         </div>
-        <Form initialValues={{ remember: localStorage.getItem('userName') }} onFinish={onFinish}>
+        <Form initialValues={{ userName: localStorage.getItem('userName') }} onFinish={onFinish}>
           <Form.Item name="userName" rules={[{ required: true, message: '请输入用户名！' }]}>
             <Input size="large" placeholder="请输入用户名" />
           </Form.Item>

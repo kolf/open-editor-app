@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useState } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import IconFont from 'src/components/Iconfont';
@@ -18,6 +18,7 @@ interface Props {
   index: number;
   onClick: any;
   onChange: any;
+  onForceChange: any;
   selected: boolean;
 }
 
@@ -46,7 +47,14 @@ function isLicenseActive(license, copyright: any): boolean {
   return license === '1' ? ['1', '2', '4'].includes(copyright) : ['2', '3', '5'].includes(copyright);
 }
 
-export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
+export default function ListItem({
+  dataSource,
+  selected,
+  index,
+  onClick,
+  onChange,
+  onForceChange
+}: Props): ReactElement {
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList);
   return (
     <GridItem
@@ -70,10 +78,10 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
           </Col>
         </Row>
       </GridItemRow>
-      <GridItemRow label={<IconFont type='icon-ic_image'/>}>
+      <GridItemRow label={<IconFont type="icon-ic_image" />}>
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>
-      <GridItemRow label={<IconFont type='icon-wode'/>}>{dataSource.osiProviderName}</GridItemRow>
+      <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
       <GridItemRow>
         <Space>
           <span>LAI</span>
@@ -108,7 +116,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
             <RadioText
               options={licenseTypeOptions}
               value={dataSource.licenseType}
-              onChange={value => onChange('licenseType', value)}
+              onChange={value => onForceChange('licenseType', value)}
             />
           </Col>
           <Col>
@@ -117,7 +125,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
               value={dataSource.qualityRank}
               placeholder="等级"
               onChange={o => {
-                onChange('qualityRank', o);
+                onForceChange('qualityRank', o);
               }}
             >
               {qualityOptions.map(o => (
@@ -135,7 +143,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
           value={dataSource.copyright}
           placeholder="授权"
           style={{ width: '100%' }}
-          onChange={value => onChange('copyright', value)}
+          onChange={value => onForceChange('copyright', value)}
         >
           {copyrightOptions.map(o => (
             <Option value={o.value} key={o.value}>
@@ -145,7 +153,17 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         </Select>
       </GridItemRow>
       <GridItemRow>
-        <Input readOnly size="small" placeholder="备注" defaultValue={dataSource.memo} />
+        <Input
+          size="small"
+          placeholder="备注"
+          value={dataSource.memo}
+          onChange={e => {
+            onChange('memo', e.target.value);
+          }}
+          onBlur={e => {
+            onForceChange('memo', dataSource.memo);
+          }}
+        />
       </GridItemRow>
       {dataSource.reasonTitle && (
         <GridItem.TopTag align="right" color="rgb(255, 85, 0)">
