@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
-import { Radio, Button, Space, Spin, message } from 'antd';
+import { Radio, Button, Space, Input, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Iconfont from 'src/components/Iconfont';
 import GridList from 'src/components/list/GridList';
@@ -19,7 +19,7 @@ import { useKeywords } from 'src/hooks/useKeywords';
 import imageService from 'src/services/imageService';
 import commonService from 'src/services/commonService';
 
-import options, { Quality, LicenseType } from 'src/declarations/enums/query';
+import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 
 import config from 'src/config';
 import modal from 'src/utils/modal';
@@ -29,6 +29,7 @@ import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
+const copyrightOptions = options.get(CopyrightType);
 
 interface listProps {
   // TODO: 添加图片接口
@@ -234,9 +235,12 @@ function List() {
     });
   };
 
-  const openOriginImage = index => {
-    const { urlYuan } = list[index];
-    window.open(urlYuan);
+  const openOriginImage = async index => {
+    const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+    idList.forEach(id => {
+      const { urlYuan } = list.find(item => item.id === id);
+      window.open(urlYuan);
+    });
   };
 
   const openLicense = async index => {
@@ -396,8 +400,61 @@ function List() {
     }
   };
 
+  const setCopyrightList = async (index, value) => {
+    let mod = null;
+    try {
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+      let copyright = value || '';
+      mod = await confirm({
+        title: '设置授权',
+        content: (
+          <Radio.Group
+            onChange={e => {
+              copyright = e.target.value;
+            }}
+          >
+            <Space direction="vertical">
+              {copyrightOptions.map(o => (
+                <Radio value={o.value} key={o.value}>
+                  {o.label}
+                </Radio>
+              ))}
+            </Space>
+          </Radio.Group>
+        )
+      });
+      mod.confirmLoading();
+      const res = await update({ body: idList, query: { type: '3', value: copyright } });
+      mod.close();
+      message.success(`设置授权成功！`);
+      setSelectedIds([]);
+      refresh();
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
+    }
+  };
+
   const setMemo = async (index, value) => {
     // setMemo
+    let mod = null;
+    try {
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+      let memo = value || '';
+      mod = await confirm({
+        title: '设置备注',
+        content: <Input placeholder="请输入备注信息" onChange={e => (memo = e.target.value)} />
+      });
+      mod.confirmLoading();
+      const res = await update({ body: idList, query: { type: '4', value: memo } });
+      mod.close();
+      message.success(`设置授权成功！`);
+      setSelectedIds([]);
+      refresh();
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
+    }
   };
 
   return (
@@ -439,7 +496,7 @@ function List() {
           <Button
             size="small"
             title="设置授权"
-            onClick={e => setCopyright(-1)}
+            onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />
           <Button size="small" title="修改备注" onClick={e => setMemo(-1)} icon={<Iconfont type="icon-beizhu" />} />
