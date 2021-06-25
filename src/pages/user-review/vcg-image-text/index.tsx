@@ -559,7 +559,7 @@ function List() {
           ))}
           <Button
             size="small"
-            title="设置授权"
+            title="设置授权文件说明"
             onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />

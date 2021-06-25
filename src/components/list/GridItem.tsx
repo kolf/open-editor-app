@@ -85,7 +85,7 @@ const GridItem = ({
             <Space>
               {actions.map(action => (
                 <Button
-                  title={action.title}
+                  title={action.label}
                   key={action.value}
                   size="small"
                   icon={action.icon}

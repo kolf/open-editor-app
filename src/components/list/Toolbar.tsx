@@ -31,24 +31,26 @@ function Toolbar({ selectedIds = [], idList, children, onSelectIds, pagerProps }
     onSelectIds(nextSelectedIds);
   };
   return (
-    <div className="toolbar-root">
-      <div className="toolbar-left">
-        {onSelectIds && (
-          <Space>
-            {selectOptions.map(o => (
-              <a key={o.value} onClick={e => handleClick(o.value)}>
-                {o.label}
-              </a>
-            ))}
-            <span>已选中{selectedIds.length}个</span>
-          </Space>
-        )}
+    <Affix offsetTop={64}>
+      <div className="toolbar-root">
+        <div className="toolbar-left">
+          {onSelectIds && (
+            <Space>
+              {selectOptions.map(o => (
+                <a key={o.value} onClick={e => handleClick(o.value)}>
+                  {o.label}
+                </a>
+              ))}
+              <span>已选中{selectedIds.length}个</span>
+            </Space>
+          )}
+        </div>
+        <div className="toolbar-content">{children}</div>
+        <div className="toolbar-right">
+          <Pager {...pagerProps} />
+        </div>
       </div>
-      <div className="toolbar-content">{children}</div>
-      <div className="toolbar-right">
-        <Pager {...pagerProps} />
-      </div>
-    </div>
+    </Affix>
   );
 }
 

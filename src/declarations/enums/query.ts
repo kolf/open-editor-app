@@ -126,8 +126,8 @@ export enum Exclusive {
 }
 
 export enum License {
-  肖像权 = '1',
-  物权 = '2'
+  肖像权文件 = '1',
+  物权文件 = '2'
 }
 
 class Options {

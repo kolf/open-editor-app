@@ -65,7 +65,7 @@ function Login() {
                 setForgot(e.target.checked);
               }}
             >
-              记住我
+              记住用户名
             </Checkbox>
           </Form.Item>
         </Form>

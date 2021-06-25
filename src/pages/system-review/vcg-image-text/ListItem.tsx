@@ -52,7 +52,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={440}
+      height={460}
       onClick={onClick}
       selected={selected}
     >
@@ -66,10 +66,10 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
           </Col>
         </Row>
       </GridItemRow>
-      <GridItemRow label={<IconFont type='icon-ic_image'/>}>
+      <GridItemRow label={<IconFont type="icon-ic_image" />}>
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
       </GridItemRow>
-      <GridItemRow label={<IconFont type='icon-wode'/>}>{dataSource.osiProviderName}</GridItemRow>
+      <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
       <GridItemRow>
         <Space>
           <span>LAI</span>
@@ -87,7 +87,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow>
         <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
-            <Space style={{ paddingRight: 24, paddingTop: 2 }}>
+            <Space style={{ paddingRight: 24, paddingTop: 6 }}>
               {licenseOptions.map(o => {
                 const isActvie = isLicenseActive(o.value, dataSource.copyright);
                 return (
@@ -108,7 +108,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
             />
           </Col>
           <Col style={{ textAlign: 'center' }}>
-            <Select size="small" value={dataSource.qualityRank} placeholder="等级">
+            <Select value={dataSource.qualityRank} placeholder="等级">
               {qualityOptions.map(o => (
                 <Option value={o.value} key={o.value}>
                   {o.label}
@@ -120,7 +120,6 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       </GridItemRow>
       <GridItemRow>
         <Select
-          size="small"
           value={dataSource.copyright}
           placeholder="授权"
           style={{ width: '100%' }}
@@ -134,7 +133,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         </Select>
       </GridItemRow>
       <GridItemRow>
-        <Input readOnly size="small" placeholder="备注" defaultValue={dataSource.memo} />
+        <Input readOnly placeholder="备注" defaultValue={dataSource.memo} />
       </GridItemRow>
       {dataSource.reasonTitle && (
         <GridItem.TopTag align="right" color="rgb(255, 85, 0)">

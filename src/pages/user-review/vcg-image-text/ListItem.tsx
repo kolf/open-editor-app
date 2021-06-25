@@ -60,7 +60,7 @@ export default function ListItem({
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={440}
+      height={470}
       onClick={onClick}
       selected={selected}
       actions={[
@@ -99,7 +99,7 @@ export default function ListItem({
       <GridItemRow>
         <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
-            <Space style={{ paddingRight: 24, paddingTop: 2 }}>
+            <Space style={{ paddingRight: 24, paddingTop: 6 }}>
               {licenseOptions.map(o => {
                 const isActvie = isLicenseActive(o.value, dataSource.copyright);
                 return (
@@ -121,7 +121,6 @@ export default function ListItem({
           </Col>
           <Col>
             <Select
-              size="small"
               value={dataSource.qualityRank}
               placeholder="等级"
               onChange={o => {
@@ -139,7 +138,6 @@ export default function ListItem({
       </GridItemRow>
       <GridItemRow>
         <Select
-          size="small"
           value={dataSource.copyright}
           placeholder="授权"
           style={{ width: '100%' }}
@@ -154,7 +152,6 @@ export default function ListItem({
       </GridItemRow>
       <GridItemRow>
         <Input
-          size="small"
           placeholder="备注"
           value={dataSource.memo}
           onChange={e => {
