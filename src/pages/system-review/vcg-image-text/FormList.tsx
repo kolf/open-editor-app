@@ -154,7 +154,7 @@ export const FormList = (props: any) => {
           <Button type="text" shape="circle" title="展开" icon={<UpOutlined />} onClick={e => setCollapse(true)} />
         )}
       </div>
-      <div className="formList-search">
+      {/* <div className="formList-search">
         <Search
           allowClear
           placeholder="请输入关键词，多个用逗号隔开"
@@ -168,7 +168,7 @@ export const FormList = (props: any) => {
             });
           }}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

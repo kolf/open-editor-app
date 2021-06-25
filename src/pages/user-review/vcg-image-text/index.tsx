@@ -13,6 +13,7 @@ import Loading from 'src/components/common/LoadingBlock';
 
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
+import { useKeywords } from 'src/hooks/useKeywords';
 
 import imageService from 'src/services/imageService';
 import commonService from 'src/services/commonService';
@@ -41,9 +42,12 @@ const initialData = {
 
 function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
-  const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { partyId } = useCurrentUser();
+  const [keywords] = useKeywords(true);
+
+  const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
     cacheKey: 'provider'
   });
@@ -73,11 +77,10 @@ function List() {
   useEffect(() => {
     run();
     setSelectedIds([]);
-  }, [query]);
-
+  }, [query, keywords]);
   // 格式化查询参数
   const formatQuery = query => {
-    const result = Object.keys(query).reduce(
+    let result = Object.keys(query).reduce(
       (result, key) => {
         const value = query[key];
         if (/Time$/g.test(key) && value) {
@@ -87,13 +90,6 @@ function List() {
           )} 23:59:59`;
           // const date = value.format(config.data.DATE_FORMAT);
           // result[key] = `${date} 00:00:00,${date} 23:59:59`;
-        } else if (key === 'keyword' && value) {
-          let searchType = '1';
-          if (/^\d+$/g.test(value)) {
-            searchType = '2';
-          }
-          result['searchType'] = searchType;
-          result[key] = value;
         } else if (value && typeof value === 'object') {
           result[key] = value.key;
         } else if (value) {
@@ -105,6 +101,9 @@ function List() {
         qualityAuditorId: partyId
       }
     );
+
+    result['keyword'] = keywords;
+    result['searchType'] = '1';
 
     return result;
   };
@@ -396,7 +395,7 @@ function List() {
 
   return (
     <>
-      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
+      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} initialValues={query} />
       <Toolbar
         onSelectIds={setSelectedIds}
         selectedIds={selectedIds}
@@ -411,22 +410,22 @@ function List() {
         }}
       >
         <Space>
-          <Button type="text" style={{ marginLeft: 8 }}>
+          <Button size="small" type="text" style={{ marginLeft: 8 }}>
             审核
           </Button>
-          <Button title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
-          <Button title="不通过" onClick={e => setReject(-1)} icon={<CloseOutlined />} />
-          <Button type="text" style={{ marginLeft: 8 }}>
+          <Button size="small" title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
+          <Button size="small" title="不通过" onClick={e => setReject(-1)} icon={<CloseOutlined />} />
+          <Button size="small" type="text" style={{ marginLeft: 8 }}>
             编辑
           </Button>
           {licenseTypeOptions.map(o => (
-            <Button title={`设置${o.label}`} onClick={e => setLicenseType(-1, o.value)}>
+            <Button size="small" title={`设置${o.label}`} onClick={e => setLicenseType(-1, o.value)}>
               {o.label}
             </Button>
           ))}
 
           {qualityOptions.map(o => (
-            <Button title={`设置等级${o.label}`} key={o.value} onClick={e => setQuality(-1, o.value)}>
+            <Button size="small" title={`设置等级${o.label}`} key={o.value} onClick={e => setQuality(-1, o.value)}>
               {o.label}
             </Button>
           ))}

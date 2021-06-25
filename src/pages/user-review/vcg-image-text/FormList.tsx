@@ -30,7 +30,7 @@ function filterOption(input, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
-export const FormList = (props: any) => {
+export const FormList = ({ initialValues, onChange }: any) => {
   const [form] = Form.useForm(null);
   const [keyword, setKeyword] = useState('');
   const [collapse, setCollapse] = useState(false);
@@ -41,8 +41,9 @@ export const FormList = (props: any) => {
         <Form
           form={form}
           layout="inline"
+          initialValues={initialValues}
           onValuesChange={values => {
-            props.onChange({
+            onChange({
               ...values,
               keyword
             });
@@ -147,7 +148,7 @@ export const FormList = (props: any) => {
           <Button type="text" shape="circle" title="展开" icon={<UpOutlined />} onClick={e => setCollapse(true)} />
         )}
       </div>
-      <div className="formList-search">
+      {/* <div className="formList-search">
         <Search
           allowClear
           placeholder="请输入关键词，多个用逗号隔开"
@@ -155,13 +156,13 @@ export const FormList = (props: any) => {
           onSearch={value => {
             setKeyword(value);
             const values = form.getFieldsValue();
-            props.onChange({
+            onChange({
               ...values,
               keyword: value
             });
           }}
         />
-      </div>
+      </div> */}
     </div>
   );
 };

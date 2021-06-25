@@ -51,7 +51,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={450}
+      height={436}
       onClick={onClick}
       selected={selected}
       actions={[

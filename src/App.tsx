@@ -1,7 +1,8 @@
-import { Spin } from 'antd';
 import React, { Suspense } from 'react';
-import './App.less';
+import { Spin } from 'antd';
 import { RootRouter } from './routes/index';
+
+import './App.less';
 
 function App() {
   return (

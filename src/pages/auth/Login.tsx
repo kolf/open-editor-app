@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Button, Col, Form, Input, Row, Checkbox, message } from 'antd';
@@ -12,6 +12,7 @@ Login.propTypes = {};
 function Login() {
   const dispatch = useDispatch();
   const history = useHistory();
+  const [forgot, setForgot] = useState(true);
   const token = useSelector((state: any) => state.user.token);
   const loading = useSelector((state: any) => state.user.loading);
 
@@ -43,7 +44,7 @@ function Login() {
         <div className="login-brand">
           <h1>内容审核管理平台</h1>
         </div>
-        <Form initialValues={{ remember: true }} onFinish={onFinish}>
+        <Form initialValues={{ remember: localStorage.getItem('userName') }} onFinish={onFinish}>
           <Form.Item name="userName" rules={[{ required: true, message: '请输入用户名！' }]}>
             <Input size="large" placeholder="请输入用户名" />
           </Form.Item>
@@ -56,7 +57,13 @@ function Login() {
             </Button>
           </Form.Item>
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox>记住我</Checkbox>
+            <Checkbox
+              onChange={e => {
+                setForgot(e.target.checked);
+              }}
+            >
+              记住我
+            </Checkbox>
           </Form.Item>
         </Form>
       </div>

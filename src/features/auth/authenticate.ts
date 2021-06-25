@@ -48,7 +48,7 @@ export const authenticateSlice = createSlice({
     }
   },
   extraReducers: builder => {
-    builder.addCase(login.pending, state => {
+    builder.addCase(login.pending, (state, action) => {
       state.loading = true;
       state.error = null;
     });
@@ -62,12 +62,15 @@ export const authenticateSlice = createSlice({
     });
 
     builder.addCase(login.fulfilled, (state, action) => {
-      console.log(action, 'success');
+      const { remember, userName } = action.meta.arg
       state.loading = false;
       state.user = action.payload.user;
       state.token = action.payload.token;
       localStorage.setItem('accessToken', action.payload.token);
       localStorage.setItem('user', JSON.stringify(action.payload.user));
+      if (remember) {
+        localStorage.setItem('userName', userName);
+      }
     });
 
     builder.addCase(getMe.pending, state => {

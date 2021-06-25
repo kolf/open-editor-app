@@ -15,44 +15,45 @@ type Props = {
 };
 
 function getMenukey(menus) {
-  let rootKey = "", secondKey = "";
- 
+  let rootKey = '',
+    secondKey = '';
+
   function getKey(menu, rootK, secondK) {
     if (!menu.hasChild) {
       if (menu.path === window.location.pathname) {
         rootKey = rootK;
         secondKey = secondK;
-      } 
+      }
     } else {
       menu.children.forEach(menu => {
         if (menu.path === window.location.pathname) {
           rootKey = rootK;
           secondKey = secondK;
-        } 
-        if (menu.children) {
-          getKey(menu.children, rootK, secondK)
         }
-      })
+        if (menu.children) {
+          getKey(menu.children, rootK, secondK);
+        }
+      });
     }
-    
   }
   menus.forEach(menu => {
-    if (menu.hasChild) menu.children.forEach(m => getKey(m, menu.key, m.key))
-  })
-  return rootKey ? {
-    rootKey,
-    secondKey
-  } : {
-    rootKey: menus[0].key,
-    secondKey: menus[0]?.children[0]?.key
-  };
+    if (menu.hasChild) menu.children.forEach(m => getKey(m, menu.key, m.key));
+  });
+  return rootKey
+    ? {
+        rootKey,
+        secondKey
+      }
+    : {
+        rootKey: menus[0].key,
+        secondKey: menus[0]?.children[0]?.key
+      };
 }
 
 const MainLayout: FC<Props> = props => {
   const collapsed = useSelector((state: RootState) => state.collapsed.isCollapsed);
   const user = useSelector((state: RootState) => state.user.user);
   const [menuKey, setMenuKey] = useState(getMenukey(menus));
-
 
   const loading = useSelector((state: RootState) => state.user.loading);
   const dispatch = useDispatch();
@@ -79,11 +80,17 @@ const MainLayout: FC<Props> = props => {
       <Header className="site-layout-header site-layout-background">
         <AppHeader menuKey={menuKey.rootKey} onChange={handleMenuChange} />
       </Header>
-      <Layout>
-        <Sider className="site-layout-sidebar" collapsible collapsed={collapsed} onCollapse={handleCollapse}>
-          <MenuLink menuKey={menuKey.rootKey} siderbarKey={ menuKey.secondKey } />
+      <Layout style={{ paddingTop: 64 }}>
+        <Sider
+          className="site-layout-sidebar"
+          theme="light"
+          collapsible
+          collapsed={collapsed}
+          onCollapse={handleCollapse}
+        >
+          <MenuLink menuKey={menuKey.rootKey} siderbarKey={menuKey.secondKey} />
         </Sider>
-        <Content style={{ margin: '16px' }}>
+        <Content style={{ margin: `16px 16px 0 ${collapsed ? 96 : 216}px` }}>
           <div className="site-layout-background site-layout-content">{props.children}</div>
         </Content>
         <BackTop />

@@ -13,16 +13,21 @@
 .site-layout {
   &-header {
     padding: 0px;
+    position: fixed;
+    z-index: 1;
+    width: 100%;
   }
   &-background {
-    background: #fff;
+    background: #fff !important;
   }
   &-content {
     padding: 24px;
     min-height: 90vh;
   }
   &-sidebar {
+    position: fixed !important;
     background: #fff;
+    height: 100%;
     .ant-layout-sider-trigger {
       background-color: #fff;
       color: #333;
@@ -49,6 +54,11 @@
     margin-bottom: 0;
     padding-left: 24px;
     padding-right: 12px;
+  }
+
+  &-search {
+    padding-top: 32px;
+    padding-right: 16px;
   }
 
   & .userName {

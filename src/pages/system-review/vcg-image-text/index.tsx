@@ -9,6 +9,7 @@ import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
 import { useDocumentTitle } from 'src/hooks/useDom';
+import { useKeywords } from 'src/hooks/useKeywords';
 import imageService from 'src/services/imageService';
 import commonService from 'src/services/commonService';
 import config from 'src/config';
@@ -27,6 +28,7 @@ const initialData = {
 
 function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
+  const [keywords] = useKeywords(true);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState([]);
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
@@ -56,11 +58,10 @@ function List() {
   useEffect(() => {
     run();
     setSelectedIds([]);
-  }, [query]);
-
+  }, [query, keywords]);
   // 格式化查询参数
   const formatQuery = query => {
-    const result = Object.keys(query).reduce(
+    let result = Object.keys(query).reduce(
       (result, key) => {
         const value = query[key];
         if (/Time$/g.test(key) && value) {
@@ -70,13 +71,6 @@ function List() {
           )} 23:59:59`;
           // const date = value.format(config.data.DATE_FORMAT);
           // result[key] = `${date} 00:00:00,${date} 23:59:59`;
-        } else if (key === 'keyword' && value) {
-          let searchType = '1';
-          if (/^\d+$/g.test(value)) {
-            searchType = '2';
-          }
-          result['searchType'] = searchType;
-          result[key] = value;
         } else if (value && typeof value === 'object') {
           result[key] = value.key;
         } else if (value) {
@@ -87,6 +81,9 @@ function List() {
       {
       }
     );
+
+    result['keyword'] = keywords;
+    result['searchType'] = '1';
 
     return result;
   };
