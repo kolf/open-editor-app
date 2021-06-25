@@ -34,6 +34,9 @@ export const FormList = ({ initialValues, onChange }: any) => {
   const [form] = Form.useForm(null);
   const [keyword, setKeyword] = useState('');
   const [collapse, setCollapse] = useState(false);
+  const values = form.getFieldsValue();
+
+  console.log(values, 'value');
 
   return (
     <div className="formList-root">
@@ -50,10 +53,15 @@ export const FormList = ({ initialValues, onChange }: any) => {
           }}
         >
           <Form.Item name="createdTime" className="form-list-item">
-            <RangePicker style={{ width: 200 }} />
+            <RangePicker
+              inputReadOnly
+              style={{ width: 190 }}
+              separator={values.createdTime ? '~' : ''}
+              placeholder={['入库时间']}
+            />
           </Form.Item>
           <Form.Item name="qualityEditTime" className="form-list-item">
-            <RangePicker style={{ width: 200 }} />
+            <RangePicker style={{ width: 190 }} separator={values.qualityEditTime ? '~' : ''} placeholder={['审核时间']} />
           </Form.Item>
           <Form.Item name="qualityStatus" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="审核状态">

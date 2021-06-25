@@ -17,12 +17,14 @@ import bacthService from 'src/services/batchService';
 import modal from 'src/utils/modal';
 import FormList from './FormList';
 import AssignForm from './AssignForm';
+import { useKeywords } from 'src/hooks/useKeywords';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Pager from 'src/components/Pager';
 import Toolbar from 'src/components/list/Toolbar';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
+  const [keywords] = useKeywords(true);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {
@@ -69,7 +71,12 @@ function VcgImageText() {
   const columns: Column[] = [
     { title: '序号', dataIndex: 'index' },
     { title: 'ID', dataIndex: 'id' },
-    { title: '入库时间', width: 100, dataIndex: 'createdTime', render: value => moment(value).format(config.data.SECOND_FORMAT) },
+    {
+      title: '入库时间',
+      width: 100,
+      dataIndex: 'createdTime',
+      render: value => moment(value).format(config.data.SECOND_FORMAT)
+    },
     { title: '名称', dataIndex: 'name' },
     { title: '审核类型', dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
     { title: '分配', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
@@ -95,11 +102,20 @@ function VcgImageText() {
       render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
     },
     { title: '分配状态', dataIndex: 'assignStatus', render: value => options.map(BatchAssignStatus)[value] },
-    { title: '分配对象', dataIndex: 'auditorName', render: value => {
-      return value && value.split(',').map(name => (<>
-        <div>{name}</div>
-      </>))
-    } },
+    {
+      title: '分配对象',
+      dataIndex: 'auditorName',
+      render: value => {
+        return (
+          value &&
+          value.split(',').map(name => (
+            <>
+              <div>{name}</div>
+            </>
+          ))
+        );
+      }
+    },
     { title: '分配人', dataIndex: 'assignerName' },
     {
       title: '操作',
@@ -107,7 +123,11 @@ function VcgImageText() {
       render: (value, tr) => {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
-          <Button disabled={tr.assignStatus != BatchAssignStatus.未分配 || tr.status == BatchStatus.入库中} type="text" onClick={() => assignData(tr.id)}>
+          <Button
+            disabled={tr.assignStatus != BatchAssignStatus.未分配 || tr.status == BatchStatus.入库中}
+            type="text"
+            onClick={() => assignData(tr.id)}
+          >
             分配
           </Button>
         );
@@ -174,7 +194,7 @@ function VcgImageText() {
         columns={columns}
         bordered
         loading={loading}
-        size='small'
+        size="small"
         scroll={{ x: 'max-content' }}
       />
     </>

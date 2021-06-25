@@ -463,7 +463,7 @@ function List() {
 
   // 设置授权
   const setMemo = async (index, value) => {
-    const { id, memo, tempData } = list[index];
+    const { id } = list[index];
     let mod = null;
     try {
       mod = await confirm({ title: '设置备注', content: `请确认是否修改备注?` });
@@ -485,7 +485,7 @@ function List() {
     }
     try {
       mod.confirmLoading();
-      const res = await update({ body: [id], query: { type: '4', value } });
+      const res = await update({ body: [id], query: { type: '4', memo: value } });
       mod.close();
       message.success(`设置备注成功！`);
       setSelectedIds([]);
@@ -510,7 +510,7 @@ function List() {
         throw `请输入备注信息！`;
       }
       mod.confirmLoading();
-      const res = await update({ body: idList, query: { type: '4', value: memo } });
+      const res = await update({ body: idList, query: { type: '4', memo } });
       mod.close();
       message.success(`设置授权成功！`);
       setSelectedIds([]);
