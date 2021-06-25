@@ -6,18 +6,6 @@ export enum InStorageTime {
   昨天 = '2',
   近一周 = '3'
 }
-// 分配状态
-export enum DistributeState {
-  未分配,
-  分配中,
-  分配完成
-}
-
-// 数据来源
-export enum DataSource {
-  '500px.me',
-  '500px.com'
-}
 
 // 分配模式
 export enum AssignType {
@@ -70,11 +58,13 @@ export enum BatchAssignStatus {
   分配完成 = '3'
 }
 
+// 授权文件
 export enum LicenseType {
   RM = '1',
   RF = '2'
 }
 
+// 质量等级
 export enum Quality {
   A = '1',
   B = '2',
@@ -82,6 +72,7 @@ export enum Quality {
   D = '4'
 }
 
+// 授权
 export enum CopyrightType {
   未取得物权授权 = '7',
   已取得肖像权授权 = '1',
@@ -108,6 +99,16 @@ export enum BatchAssignTarget {
   编辑 = '2'
 }
 
+// 批次入库状态
+export enum BatchStatus {
+  入库中 = '1',
+  入库完成 = '2',
+  审核中 = '3',
+  审核完成 = '4',
+  回调完成 = '5'
+}
+
+// 审核状态
 export enum QualityStatus {
   '待编审' = '14',
   '已通过' = '24',

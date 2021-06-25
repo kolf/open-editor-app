@@ -9,6 +9,7 @@ import options, {
   BatchAssignMode,
   BatchAssignStatus,
   BatchAuditType,
+  BatchStatus,
   IfSensitveCheck,
   Priority
 } from 'src/declarations/enums/query';
@@ -104,8 +105,9 @@ function VcgImageText() {
       title: '操作',
       fixed: 'right',
       render: (value, tr) => {
+        // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
-          <Button disabled={tr.assignStatus != BatchAssignStatus.未分配} type="text" onClick={() => assignData(tr.id)}>
+          <Button disabled={tr.assignStatus != BatchAssignStatus.未分配 || tr.status == BatchStatus.入库中} type="text" onClick={() => assignData(tr.id)}>
             分配
           </Button>
         );
