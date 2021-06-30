@@ -6,13 +6,13 @@ declare module '*.gif';
 declare module '*.bmp';
 declare module '*.tiff';
 
-declare interface Column {
+declare interface Column<T = any> {
   title: string;
   dataIndex?: string;
   width?: number;
   fixed?: 'left' | 'right' | boolean;
   align?: 'left' | 'center' | 'right';
-  render?: (value: any, tr: any) => React.ReactNode;
+  render?: (value: any, tr: T) => React.ReactNode;
 }
 
 declare interface Menu {
