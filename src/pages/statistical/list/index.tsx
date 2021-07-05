@@ -1,64 +1,59 @@
 import { useRequest } from 'ahooks';
 import { DatePicker, Form, Table } from 'antd';
-import moment from 'moment';
-import React, { useEffect, useState, memo } from 'react';
-import Toolbar from 'src/components/list/Toolbar';
+import React, { useState, memo } from 'react';
 import config from 'src/config';
+import { StatisticJobSchema } from 'src/declarations/schemas/StatisticJobSchema';
 import { useDocumentTitle } from 'src/hooks/useDom';
-import bacthService from 'src/services/batchService';
+import statisticJobService from 'src/services/statisticJobService';
 
-const columns: Column[] = [
+const columns: Column<StatisticJobSchema.ListALl>[] = [
   {
     title: '序号',
-    dataIndex: 'index'
-  },
-  {
-    title: 'ID',
-    dataIndex: 'index'
+    dataIndex: 'index',
   },
   {
     title: '编辑',
-    dataIndex: 'user'
-  },  {
-    title: '待审核数量',
-    dataIndex: 'number'
+    dataIndex: 'userName'
   },
+  // {
+  //   title: '待审核数量',
+  //   dataIndex: '---',
+  //   render: () => '---'
+  // },
   {
     title: '审核通过数量',
-    dataIndex: 'number'
+    dataIndex: 'passTotal'
   },
   {
     title: '审核驳回数量',
-    dataIndex: 'number'
+    dataIndex: 'dismissTotal'
   },
   {
-    title: '共计'
-  }
+    title: '共计',
+    dataIndex: 'total',
+    render: (value, tr) =>  tr.passTotal + tr.dismissTotal
+  },
 ];
+// .map<Column>(c => ({...c, align: 'center'}));
 
 function Statistic() {
   useDocumentTitle('统计-数据审核统计-VCG内容审核管理平台');
-  const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
+  const [query, setQuery] = useState({ createdTime: null });
 
-  const {
-    data = { list: [], total: 0 },
-    loading,
-    run: refreshData
-  } = useRequest(bacthService.getList, { manual: true });
-
-  useEffect(() => {
-    refreshData(query);
-  }, [query]);
+  const { data = [], loading, run: refreshData } = useRequest(statisticJobService.getList, { manual: true });
 
   const formListOnChange = values => {
-    const nextQuery = { ...values, pageNum: 1 };
+    const nextQuery = { ...values };
     const result = Object.keys(nextQuery).reduce(
       (memo, q) => {
         switch (q) {
           case 'createdTime':
             if (nextQuery[q]) {
-              const date = moment(nextQuery[q]).format(config.data.DATE_FORMAT);
-              memo[q] = `${date} 00:00:00,${date} 23:59:59`;
+              const [start, end] = nextQuery[q];
+              memo[q] = {
+                from: start.format(config.data.SECOND_FORMAT),
+                to: end.format(config.data.SECOND_FORMAT)
+              }
             } else {
               Reflect.deleteProperty(memo, q);
             }
@@ -71,28 +66,22 @@ function Statistic() {
       { ...query }
     );
     setQuery(result);
+
+    if (result.createdTime) {
+      refreshData(result.createdTime);
+    }
   };
 
   return (
     <>
       <Form layout="inline" onValuesChange={formListOnChange} className="formList-list">
         <Form.Item name="createdTime" className="form-list-item">
-          <DatePicker placeholder="入库时间" />
+          <DatePicker.RangePicker placeholder={['审核时间', '']} separator={query.createdTime ? '~' : ''} />
         </Form.Item>
       </Form>
-      <Toolbar
-        pagerProps={{
-          total: data.total,
-          current: query.pageNum,
-          pageSize: query.pageSize,
-          onChange: values => {
-            setQuery({ ...query, ...values });
-          }
-        }}
-      ></Toolbar>
       <Table
         pagination={false}
-        dataSource={data.list.map((l, i) => ({ ...l, ...{ index: i } }))}
+        dataSource={data.map((l, i) => ({ ...l, ...{ index: i + 1 } }))}
         columns={columns}
         bordered
         loading={loading}

@@ -17,14 +17,11 @@ import bacthService from 'src/services/batchService';
 import modal from 'src/utils/modal';
 import FormList from './FormList';
 import AssignForm from './AssignForm';
-import { useKeywords } from 'src/hooks/useKeywords';
 import { useDocumentTitle } from 'src/hooks/useDom';
-import Pager from 'src/components/Pager';
 import Toolbar from 'src/components/list/Toolbar';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
-  const [keywords] = useKeywords(true);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {
@@ -77,13 +74,14 @@ function VcgImageText() {
       dataIndex: 'createdTime',
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
-    { title: '名称', dataIndex: 'name' },
-    { title: '审核类型', dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
+    { title: '名称', width:140, dataIndex: 'name' },
+    { title: '审核类型', width: document.documentElement.clientWidth < 1400 && 120, dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
     { title: '分配', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
     { title: '优先级', dataIndex: 'priority', render: value => options.map(Priority)[value] },
-    { title: '敏感检测', dataIndex: 'ifSensitveCheck', render: value => options.map(IfSensitveCheck)[value] },
+    { title: '敏感检测', width: 80, dataIndex: 'ifSensitveCheck', render: value => options.map(IfSensitveCheck)[value] },
     {
       title: 'AI检测',
+      width: 80,
       render: (value, tr) => {
         return (
           <>
