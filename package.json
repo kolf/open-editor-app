@@ -29,7 +29,7 @@
     "test": "craco test",
     "eject": "craco eject",
     "lint": "tsc --pretty && eslint . --ext ts --ext tsx --ext js",
-    "format": "prettier --write **/*.{js,ts,tsx}"
+    "format": "prettier --write './**/*.{ts,tsx,js,html,json}'"
   },
   "eslintConfig": {
     "extends": [
