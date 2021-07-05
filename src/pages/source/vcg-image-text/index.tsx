@@ -10,7 +10,7 @@ import options, {
   BatchAssignStatus,
   BatchAuditType,
   BatchStatus,
-  IfSensitveCheck,
+  IfSensitveCheckBool,
   Priority
 } from 'src/declarations/enums/query';
 import bacthService from 'src/services/batchService';
@@ -78,7 +78,7 @@ function VcgImageText() {
     { title: '审核类型', width: document.documentElement.clientWidth < 1400 && 120, dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
     { title: '分配', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
     { title: '优先级', dataIndex: 'priority', render: value => options.map(Priority)[value] },
-    { title: '敏感检测', width: 80, dataIndex: 'ifSensitveCheck', render: value => options.map(IfSensitveCheck)[value] },
+    { title: '敏感检测', width: 80, dataIndex: 'ifSensitveCheck', render: value => options.map(IfSensitveCheckBool)[value] },
     {
       title: 'AI检测',
       width: 80,
