@@ -6,14 +6,9 @@ export const useKeywords = (visible) => {
   const dispatch = useDispatch();
   const { keywords, show, fire } = useSelector((state: any) => state.search);
   const [value, setValue] = useState('')
+
   useEffect(() => {
-
     dispatch(setShow(visible))
-
-
-    return () => {
-      console.log('un')
-    }
   }, [visible])
 
   useEffect(() => {
@@ -22,6 +17,7 @@ export const useKeywords = (visible) => {
       dispatch(openFire(false))
     }
   }, [fire])
+
 
   return [value]
 }

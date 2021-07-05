@@ -68,13 +68,19 @@ function List() {
     mutate,
     run,
     refresh
-  } = useRequest(() => imageService.getList(formatQuery(query)), {
-    ready: !!(providerOptions && categoryOptions && allReason),
-    manual: true,
-    throttleInterval: 600,
-    initialData,
-    formatResult
-  });
+  } = useRequest(
+    async () => {
+      const res = await imageService.getList(formatQuery(query));
+      return res;
+    },
+    {
+      ready: !!(providerOptions && categoryOptions && allReason),
+      manual: true,
+      throttleInterval: 600,
+      initialData,
+      formatResult
+    }
+  );
 
   useEffect(() => {
     run();
@@ -133,7 +139,7 @@ function List() {
             memo
           } = item;
           const qualityStatus = osiImageReview.qualityStatus;
-          const categoryList = category.split(',');
+          const categoryList = (category ||'').split(',');
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {

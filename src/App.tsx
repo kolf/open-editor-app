@@ -1,4 +1,5 @@
 import React, { Suspense } from 'react';
+
 import { Spin } from 'antd';
 import { RootRouter } from './routes/index';
 

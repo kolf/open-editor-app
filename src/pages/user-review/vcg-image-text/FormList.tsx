@@ -35,9 +35,6 @@ export const FormList = ({ initialValues, onChange }: any) => {
   const [keyword, setKeyword] = useState('');
   const [collapse, setCollapse] = useState(false);
   const values = form.getFieldsValue();
-
-  console.log(values, 'value');
-
   return (
     <div className="formList-root">
       <div className="formList-list" style={{ height: collapse ? 'auto' : 38 }}>
