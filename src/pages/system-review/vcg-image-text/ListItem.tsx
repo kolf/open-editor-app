@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, CalendarOutlined } from '@ant-design/icons';
 import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
@@ -52,9 +52,12 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={460}
+      height={470}
       onClick={onClick}
       selected={selected}
+      actions={[
+        { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
+      ]}
     >
       <GridItemRow>
         <Row>
@@ -144,6 +147,12 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       {dataSource.sensitiveList.length > 0 && (
         <GridItem.TopTag align="left" color="#333" onClick={showSensitiveDetails}>
           {sensitiveListTitle}
+        </GridItem.TopTag>
+      )}
+
+      {dataSource.priority === 2 && (
+        <GridItem.TopTag align="left" color="#ff5500">
+          加急
         </GridItem.TopTag>
       )}
     </GridItem>

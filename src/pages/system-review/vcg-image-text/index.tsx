@@ -7,11 +7,11 @@ import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
+import ImageLogs from 'src/components/modals/ImageLogs';
 import Loading from 'src/components/common/LoadingBlock';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useKeywords } from 'src/hooks/useKeywords';
-import { useOptions } from 'src/hooks/useOptions';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
@@ -99,7 +99,7 @@ function List() {
             standardReason,
             customReason
           } = item;
-          const qualityStatus = osiImageReview.qualityStatus;
+          const { qualityStatus, priority } = osiImageReview;
           const categoryList = (category || '').split(',');
           let reasonTitle = '';
 
@@ -109,6 +109,7 @@ function List() {
 
           return {
             ...item,
+            priority,
             qualityStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
@@ -144,6 +145,9 @@ function List() {
         break;
       case 'openOriginImage':
         openOriginImage(index);
+	break;
+      case 'logs':
+        showLogs(index);
         break;
       case 'license':
         openLicense(index);
@@ -174,15 +178,30 @@ function List() {
   };
 
   //  打开原图
-  const openOriginImage = index => {
-    const { urlYuan } = list[index];
-    window.open(urlYuan);
+  const openOriginImage = async index => {
+    const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+    idList.forEach(id => {
+      const { urlYuan } = list.find(item => item.id === id);
+      window.open(urlYuan);
+    });
   };
 
   // 打开授权文件
   const openLicense = async index => {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
+  };
+  // 操作日志
+  const showLogs = async index => {
+    const { id } = list[index];
+    const res = await imageService.getLogList([id]);
+    console.log(res, 'res');
+    const mod = modal({
+      title: `操作日志`,
+      width: 640,
+      content: <ImageLogs dataSource={res} />,
+      footer: null
+    });
   };
 
   // 显示详情
