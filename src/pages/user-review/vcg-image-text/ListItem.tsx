@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
-import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, CalendarOutlined } from '@ant-design/icons';
 import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
@@ -65,7 +65,8 @@ export default function ListItem({
       selected={selected}
       actions={[
         { icon: <CheckOutlined />, value: 'resolve', label: '通过' },
-        { icon: <CloseOutlined />, value: 'reject', label: '不通过' }
+        { icon: <CloseOutlined />, value: 'reject', label: '不通过' },
+        { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
       ]}
     >
       <GridItemRow>
@@ -169,8 +170,14 @@ export default function ListItem({
       )}
 
       {dataSource.sensitiveList.length > 0 && (
-        <GridItem.TopTag align="left" color="#333" onClick={showSensitiveDetails}>
+        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
           {sensitiveListTitle}
+        </GridItem.TopTag>
+      )}
+
+      {dataSource.priority === 2 && (
+        <GridItem.TopTag align="left" color="#ff5500">
+          加急
         </GridItem.TopTag>
       )}
     </GridItem>

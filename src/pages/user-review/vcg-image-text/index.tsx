@@ -10,12 +10,12 @@ import FormList from './FormList';
 import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import SelectReject from 'src/components/modals/SelectReject';
+import ImageLogs from 'src/components/modals/ImageLogs';
 import Loading from 'src/components/common/LoadingBlock';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import { useKeywords } from 'src/hooks/useKeywords';
-import { useOptions } from 'src/hooks/useOptions';
 import imageService from 'src/services/imageService';
 
 import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
@@ -24,7 +24,6 @@ import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
 import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
-
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -128,7 +127,7 @@ function List() {
             customReason,
             memo
           } = item;
-          const qualityStatus = osiImageReview.qualityStatus;
+          const { qualityStatus, priority } = osiImageReview;
           const categoryList = (category || '').split(',');
           let reasonTitle = '';
 
@@ -141,6 +140,7 @@ function List() {
               memo
             },
             ...item,
+            priority,
             qualityStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
@@ -176,11 +176,15 @@ function List() {
         break;
       case 'openOriginImage':
         openOriginImage(index);
+        break;
       case 'resolve':
         setResolve(index);
         break;
       case 'reject':
         setReject(index);
+        break;
+      case 'logs':
+        showLogs(index);
         break;
       case 'license':
         openLicense(index);
@@ -270,6 +274,19 @@ function List() {
     window.open(`/image/license?id=${id}`);
   };
 
+  // 操作日志
+  const showLogs = async index => {
+    const { id } = list[index];
+    const res = await imageService.getLogList([id]);
+    console.log(res, 'res');
+    const mod = modal({
+      title: `操作日志`,
+      width: 640,
+      content: <ImageLogs dataSource={res} />,
+      footer: null
+    });
+  };
+
   // 显示详情
   const showDetails = async index => {
     const { id, urlSmall, urlYuan } = list[index];
@@ -322,7 +339,7 @@ function List() {
     let standardReason = [];
     let customReason = '';
 
-    console.log(allReason,'allReason')
+    console.log(allReason, 'allReason');
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({

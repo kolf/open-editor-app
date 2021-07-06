@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Collapse, Checkbox, Input } from 'antd';
 const { Panel } = Collapse;
 
@@ -13,6 +13,7 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
 
   const handleChange = e => {
     const { checked, value: newValue } = e.target;
+    setOtherValue('')
     let nextValue = [];
     if (checked) {
       nextValue = [...value, newValue];
@@ -66,6 +67,7 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
           onChange={e => {
             const propsValue = value.filter(v => v !== 'other');
             const otherValue = e.target.value;
+            setValue([])
             setOtherValue(otherValue);
             onChange && onChange(propsValue, otherValue);
           }}
