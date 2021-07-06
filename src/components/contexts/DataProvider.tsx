@@ -1,8 +1,14 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { createContext } from 'react';
 import { useRequest } from 'ahooks';
 import commonService from 'src/services/commonService';
 
-export const DataContext = createContext({});
+interface IDataContextInitValue {
+  providerOptions?: any,
+  categoryOptions?: any,
+  allReason?: any
+}
+
+export const DataContext = createContext<IDataContextInitValue>({});
 
 export const DataProvider = ({ children }) => {
   const { data, loading } = useRequest(

@@ -1,7 +1,7 @@
 import { useRequest } from 'ahooks';
 import { Table, Button, message } from 'antd';
 import moment from 'moment';
-import React from 'react';
+import React, { useContext } from 'react';
 import { useEffect, useState, useRef } from 'react';
 import config from 'src/config';
 import options, {
@@ -19,17 +19,22 @@ import FormList from './FormList';
 import AssignForm from './AssignForm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Toolbar from 'src/components/list/Toolbar';
+import { DataContext } from 'src/components/contexts/DataProvider';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
+  const { providerOptions } = useContext(DataContext);
 
   const {
     data = { list: [], total: 0 },
     loading,
     run: fetchData,
     refresh
-  } = useRequest(bacthService.getList, { manual: true });
+  } = useRequest(bacthService.getList, { 
+    manual: true,
+    ready: !!providerOptions
+   });
 
   useEffect(() => {
     fetchData(query);
@@ -65,6 +70,11 @@ function VcgImageText() {
     }
   }
 
+  const providerMap = providerOptions && providerOptions.reduce((memo, provider) => {
+    memo[provider.value] = provider.label;
+    return memo;
+  }, {});
+
   const columns: Column[] = [
     { title: '序号', dataIndex: 'index' },
     { title: 'ID', dataIndex: 'id' },
@@ -74,7 +84,7 @@ function VcgImageText() {
       dataIndex: 'createdTime',
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
-    { title: '名称', width:140, dataIndex: 'name' },
+    { title: '名称', width:140, dataIndex: 'osiDbProviderId', render: value => providerMap[value] },
     { title: '审核类型', width: document.documentElement.clientWidth < 1400 && 120, dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
     { title: '分配', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
     { title: '优先级', dataIndex: 'priority', render: value => options.map(Priority)[value] },

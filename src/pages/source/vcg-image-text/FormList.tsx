@@ -10,11 +10,14 @@ import options, {
 } from 'src/declarations/enums/query';
 import SearchSelect from 'src/components/SearchSelect';
 import 'src/styles/FormList.less';
+import { useContext } from 'react';
+import { DataContext } from 'src/components/contexts/DataProvider';
 
 const { Option } = Select;
 
 const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
+  const { providerOptions } = useContext(DataContext);
 
   return (
     <div className="formList-root">
@@ -47,7 +50,15 @@ const FormList = (props: any) => {
           />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
-          <SearchSelect allowClear showSearch type="provider" style={{ width: 160 }} placeholder="数据来源" />
+          <SearchSelect
+            allowClear
+            showSearch
+            type="provider"
+            style={{ width: 160 }}
+            placeholder="数据来源"
+            options={providerOptions}
+            manual
+          />
         </Form.Item>
         <Form.Item name="assignMode" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配">
