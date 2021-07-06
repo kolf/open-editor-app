@@ -321,6 +321,8 @@ function List() {
     let mod = null;
     let standardReason = [];
     let customReason = '';
+
+    console.log(allReason,'allReason')
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({
