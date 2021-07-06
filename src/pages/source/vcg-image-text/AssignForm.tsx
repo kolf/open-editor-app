@@ -12,7 +12,7 @@ interface Props {
 const AssignForm = ({ saveRef }: Props): ReactElement => {
   const [form] = Form.useForm();
   const [formData, setFormData] = useState({
-    assignType: BatchAssignTarget.全部资源,
+    assignType: BatchAssignTarget.编辑,
     priority: Priority.正常
   });
 
@@ -28,13 +28,14 @@ const AssignForm = ({ saveRef }: Props): ReactElement => {
 
   return (
     <Form form={form} size="small" onValuesChange={valueChange} initialValues={{
-      priority: formData.priority
+      priority: formData.priority,
+      assignType: formData.assignType
     }}>
       <div style={{ display: 'flex' }}>
         <Form.Item label="分配对象" name="assignType" rules={[{ required: true, message: '请选择/输入分配对象!' }]}>
           <Radio.Group>
             {options.get(BatchAssignTarget).map((t, i) => (
-              <Radio value={t.value} key={`${t.label}${i}`}>
+              <Radio value={t.value} key={`${t.label}${i}`} disabled={t.value === BatchAssignTarget.全部资源}>
                 {t.label}
               </Radio>
             ))}

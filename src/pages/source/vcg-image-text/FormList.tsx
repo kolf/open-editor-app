@@ -5,7 +5,7 @@ import options, {
   AIDetection,
   BatchAssignMode,
   BatchAssignStatus,
-  IfSensitveCheck,
+  IfSensitveCheckBool,
   Priority
 } from 'src/declarations/enums/query';
 import SearchSelect from 'src/components/SearchSelect';
@@ -69,7 +69,7 @@ const FormList = (props: any) => {
         </Form.Item>
         <Form.Item name="ifSensitveCheck" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="敏感检测">
-            {options.get(IfSensitveCheck).map(o => (
+            {options.get(IfSensitveCheckBool).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>

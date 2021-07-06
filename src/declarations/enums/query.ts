@@ -25,6 +25,12 @@ export enum IfSensitveCheck {
   命中敏感词 = '1'
 }
 
+// 是否敏感检测
+export enum IfSensitveCheckBool {
+  否 = '0',
+  是 = '1'
+}
+
 // AI检测
 export enum AIDetection {
   AI质量评分 = '0',
