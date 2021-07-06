@@ -82,7 +82,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
         <div className="header-search">
           <Search
             allowClear
-            placeholder="请输入关键词，多个用逗号隔开"
+            placeholder="请输入关键词或ID，多个用逗号隔开"
             onChange={e => {
               dispatch(setKeywords(e.target.value));
             }}
