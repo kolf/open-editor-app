@@ -11,39 +11,30 @@ function filterOption(input, option) {
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
-  optionsBefore?: AntdOptions;
-  optionsAfter?: AntdOptions;
+  options?: any;
+  fixedOptions?: any;
 }
 /**
- * 
+ *
  * @param {
  *  type: 筛选项请求类型,
  *  manual: 是否手动触发请求 true是 false否,
- *  optionsBefore: 前置筛选项
- *  optionsAfter: 后置筛选项
  *  otherProps: antd Select组件属性
  * }
- * @returns 
+ * @returns
  */
-export default function SearchSelect({
-  type,
-  manual,
-  optionsBefore,
-  optionsAfter,
-  ...otherProps
-}: Props): ReactElement {
+export default function SearchSelect({ type, manual, fixedOptions, options, ...otherProps }: Props): ReactElement {
+  console.log(options,'options')
   const [inputValue, setInputValue] = useState('');
   const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
-    initialData: [],
+    initialData: options || [],
     manual,
     debounceInterval: 900,
     cacheKey: type
   });
 
-  const options = [optionsBefore, ...data, optionsAfter].filter(o => o);
-
   useEffect(() => {
-    if (inputValue) {
+    if (inputValue && !options) {
       run();
     }
   }, [inputValue]);
@@ -56,7 +47,7 @@ export default function SearchSelect({
       filterOption={filterOption}
       notFoundContent={loading ? <Spin size="small" /> : null}
       onSearch={setInputValue}
-      options={options}
+      options={fixedOptions ? [...fixedOptions, ...data] : data}
       {...otherProps}
     />
   );

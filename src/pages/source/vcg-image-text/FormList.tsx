@@ -43,7 +43,7 @@ const FormList = (props: any) => {
             type="editUser"
             mode="multiple"
             manual
-            optionsBefore={{ value: '-1', label: '全部资源' }}
+            fixedOptions={[{ value: '-1', label: '全部资源' }]}
           />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">

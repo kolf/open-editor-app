@@ -1,9 +1,10 @@
-import React, { FC, memo, useState } from 'react';
+import React, { FC, memo, useState, useContext } from 'react';
 import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import SearchSelect from 'src/components/SearchSelect';
 import InputSlider from 'src/components/InputSlider';
+import { DataContext } from 'src/components/contexts/DataProvider';
 import options, {
   Priority,
   Quality,
@@ -14,6 +15,7 @@ import options, {
   Exclusive
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
+import { useOptions } from 'src/hooks/useOptions';
 
 const { Option } = Select;
 const { Search } = Input;
@@ -34,7 +36,9 @@ export const FormList = ({ initialValues, onChange }: any) => {
   const [form] = Form.useForm(null);
   const [keyword, setKeyword] = useState('');
   const [collapse, setCollapse] = useState(false);
+  const { providerOptions, categoryOptions } = useContext(DataContext);
   const values = form.getFieldsValue();
+
   return (
     <div className="formList-root">
       <div className="formList-list" style={{ height: collapse ? 'auto' : 38 }}>
@@ -58,7 +62,11 @@ export const FormList = ({ initialValues, onChange }: any) => {
             />
           </Form.Item>
           <Form.Item name="qualityEditTime" className="form-list-item">
-            <RangePicker style={{ width: 190 }} separator={values.qualityEditTime ? '~' : ''} placeholder={['审核时间']} />
+            <RangePicker
+              style={{ width: 190 }}
+              separator={values.qualityEditTime ? '~' : ''}
+              placeholder={['审核时间']}
+            />
           </Form.Item>
           <Form.Item name="qualityStatus" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="审核状态">
@@ -70,7 +78,7 @@ export const FormList = ({ initialValues, onChange }: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="osiProviderId" className="form-list-item">
-            <SearchSelect type="provider" style={{ width: 160 }} placeholder="数据来源" />
+            <SearchSelect type="provider" manual options={providerOptions} style={{ width: 160 }} placeholder="数据来源" />
           </Form.Item>
           <Form.Item name="aiQualityScore" className="form-list-item">
             <InputSlider width={106} placeholder="AI质量评分" />
@@ -133,7 +141,7 @@ export const FormList = ({ initialValues, onChange }: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="category" className="form-list-item">
-            <SearchSelect style={{ width: 120 }} placeholder="AI分类" type="category" />
+            <SearchSelect style={{ width: 120 }} manual options={categoryOptions} placeholder="AI分类" type="category" />
           </Form.Item>
         </Form>
       </div>

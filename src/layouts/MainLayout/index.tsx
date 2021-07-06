@@ -2,6 +2,7 @@ import { BackTop, Col, Layout, Row } from 'antd';
 import React, { FC, memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Loading from 'src/components/common/Loading';
+import { DataProvider } from 'src/components/contexts/DataProvider';
 import { getMe } from 'src/features/auth/authenticate';
 import { setIsCollapsed } from 'src/features/collapsedMenu/collapsedMenu';
 import { RootState } from 'src/store';
@@ -76,26 +77,28 @@ const MainLayout: FC<Props> = props => {
   if (loading || !user) return <Loading />;
 
   return (
-    <Layout style={{ minHeight: '100vh' }}>
-      <Header className="site-layout-header site-layout-background">
-        <AppHeader menuKey={menuKey.rootKey} onChange={handleMenuChange} />
-      </Header>
-      <Layout style={{ paddingTop: 64 }}>
-        <Sider
-          className="site-layout-sidebar"
-          theme="light"
-          collapsible
-          collapsed={collapsed}
-          onCollapse={handleCollapse}
-        >
-          <MenuLink menuKey={menuKey.rootKey} siderbarKey={menuKey.secondKey} />
-        </Sider>
-        <Content style={{ margin: `16px 16px 0 ${collapsed ? 96 : 216}px` }}>
-          <div className="site-layout-background site-layout-content">{props.children}</div>
-        </Content>
-        <BackTop />
+    <DataProvider>
+      <Layout style={{ minHeight: '100vh' }}>
+        <Header className="site-layout-header site-layout-background">
+          <AppHeader menuKey={menuKey.rootKey} onChange={handleMenuChange} />
+        </Header>
+        <Layout style={{ paddingTop: 64 }}>
+          <Sider
+            className="site-layout-sidebar"
+            theme="light"
+            collapsible
+            collapsed={collapsed}
+            onCollapse={handleCollapse}
+          >
+            <MenuLink menuKey={menuKey.rootKey} siderbarKey={menuKey.secondKey} />
+          </Sider>
+          <Content style={{ margin: `16px 16px 0 ${collapsed ? 96 : 216}px` }}>
+            <div className="site-layout-background site-layout-content">{props.children}</div>
+          </Content>
+          <BackTop />
+        </Layout>
       </Layout>
-    </Layout>
+    </DataProvider>
   );
 };
 

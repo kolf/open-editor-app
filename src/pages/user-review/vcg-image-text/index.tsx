@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
 import { Radio, Button, Space, Input, message } from 'antd';
@@ -11,13 +11,12 @@ import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import SelectReject from 'src/components/modals/SelectReject';
 import Loading from 'src/components/common/LoadingBlock';
-
+import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import { useKeywords } from 'src/hooks/useKeywords';
-
+import { useOptions } from 'src/hooks/useOptions';
 import imageService from 'src/services/imageService';
-import commonService from 'src/services/commonService';
 
 import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 
@@ -25,7 +24,7 @@ import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
 import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
-// import {}
+
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -46,19 +45,10 @@ function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
   const [keywords] = useKeywords(true);
+  const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
 
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-
-  const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider'
-  });
-  const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category'
-  });
-  const { data: allReason } = useRequest(commonService.getImageAllReason, {
-    cacheKey: 'allReason'
-  });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
   const { run: update } = useRequest(imageService.update, { manual: true });
   const { run: getExif } = useRequest(imageService.getExif, { manual: true });
@@ -139,7 +129,7 @@ function List() {
             memo
           } = item;
           const qualityStatus = osiImageReview.qualityStatus;
-          const categoryList = (category ||'').split(',');
+          const categoryList = (category || '').split(',');
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {

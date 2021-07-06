@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { useRequest } from 'ahooks';
 import moment from 'moment';
 import { message } from 'antd';
@@ -8,10 +8,11 @@ import FormList from './FormList';
 import ListItem from './ListItem';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
+import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useKeywords } from 'src/hooks/useKeywords';
+import { useOptions } from 'src/hooks/useOptions';
 import imageService from 'src/services/imageService';
-import commonService from 'src/services/commonService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
@@ -29,17 +30,9 @@ const initialData = {
 function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
   const [keywords] = useKeywords(true);
+  const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider'
-  });
-  const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category'
-  });
-  const { data: allReason } = useRequest(commonService.getImageAllReason, {
-    cacheKey: 'allReason'
-  });
   const { run: getExif } = useRequest(imageService.getExif, { manual: true });
   const {
     data: { list, total },
