@@ -72,8 +72,10 @@ function List() {
       return result;
     }, {});
 
-    result['keyword'] = keywords;
-    result['searchType'] = '1';
+    if (keywords) {
+      result['keyword'] = keywords;
+      result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
+    }
 
     return result;
   };

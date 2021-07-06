@@ -15,7 +15,7 @@ import options, {
   Exclusive
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
-import { useOptions } from 'src/hooks/useOptions';
+
 
 const { Option } = Select;
 const { Search } = Input;
