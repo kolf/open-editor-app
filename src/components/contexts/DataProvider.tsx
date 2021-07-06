@@ -5,17 +5,23 @@ import commonService from 'src/services/commonService';
 export const DataContext = createContext({});
 
 export const DataProvider = ({ children }) => {
-  const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
-    cacheKey: 'provider'
-  });
-  const { data: categoryOptions } = useRequest(() => commonService.getOptions({ type: 'category' }), {
-    cacheKey: 'category'
-  });
-  const { data: allReason } = useRequest(commonService.getImageAllReason, {
-    cacheKey: 'allReason'
-  });
-
-  return (
-    <DataContext.Provider value={{ providerOptions, categoryOptions, allReason }}>{children}</DataContext.Provider>
+  const { data, loading } = useRequest(
+    async () => {
+      const [providerOptions, categoryOptions, allReason] = await Promise.all([
+        commonService.getOptions({ type: 'provider' }),
+        commonService.getOptions({ type: 'category' }),
+        commonService.getOptions({ type: 'allReason' })
+      ]);
+      return {
+        providerOptions,
+        categoryOptions,
+        allReason
+      };
+    },
+    {
+      initialData: {}
+    }
   );
+
+  return <DataContext.Provider value={data}>{children}</DataContext.Provider>;
 };
