@@ -29,7 +29,7 @@ const initialData = {
 
 function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
-  const [keywords] = useKeywords(true);
+  const [keywords] = useKeywords();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);

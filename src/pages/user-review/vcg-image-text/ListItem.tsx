@@ -1,6 +1,6 @@
 import React, { ReactElement, useState } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
-import { CheckOutlined, CloseOutlined, CalendarOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, CalendarOutlined, StarOutlined } from '@ant-design/icons';
 import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
@@ -81,6 +81,9 @@ export default function ListItem({
       </GridItemRow>
       <GridItemRow label={<IconFont type="icon-ic_image" />}>
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
+        {dataSource.priority === 2 && (
+          <IconFont type="icon-xing" style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }} />
+        )}
       </GridItemRow>
       <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
       <GridItemRow>
@@ -172,12 +175,6 @@ export default function ListItem({
       {dataSource.sensitiveList.length > 0 && (
         <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
           {sensitiveListTitle}
-        </GridItem.TopTag>
-      )}
-
-      {dataSource.priority === 2 && (
-        <GridItem.TopTag align="left" color="#ff5500">
-          加急
         </GridItem.TopTag>
       )}
     </GridItem>

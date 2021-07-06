@@ -2,14 +2,14 @@ import React, { useEffect, useState } from "react"
 import { useDispatch, useSelector } from 'react-redux';
 import { setShow, openFire } from 'src/features/search/search';
 
-export const useKeywords = (visible) => {
+export const useKeywords = (config) => {
   const dispatch = useDispatch();
   const { keywords, show, fire } = useSelector((state: any) => state.search);
   const [value, setValue] = useState('')
 
   useEffect(() => {
-    dispatch(setShow(visible))
-  }, [visible])
+    dispatch(setShow(true))
+  }, [])
 
   useEffect(() => {
     if (fire) {

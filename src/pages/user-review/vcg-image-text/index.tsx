@@ -43,7 +43,7 @@ const initialData = {
 function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
-  const [keywords] = useKeywords(true);
+  const [keywords] = useKeywords();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
 
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
