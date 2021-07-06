@@ -72,7 +72,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow label={<IconFont type="icon-ic_image" />}>
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
         {dataSource.priority === 2 && (
-          <IconFont type="icon-xing" style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }} />
+          <IconFont title='加急' type="icon-xing" style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }} />
         )}
       </GridItemRow>
       <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
@@ -148,7 +148,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       )}
 
       {dataSource.sensitiveList.length > 0 && (
-        <GridItem.TopTag align="left" color="#333" onClick={showSensitiveDetails}>
+        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
           {sensitiveListTitle}
         </GridItem.TopTag>
       )}
