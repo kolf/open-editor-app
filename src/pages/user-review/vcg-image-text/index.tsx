@@ -250,6 +250,7 @@ function List() {
     return [...selectedIds];
   };
 
+  // 显示中图
   const showMiddleImage = index => {
     const { urlYuan } = list[index];
     const mod = modal({
@@ -264,6 +265,7 @@ function List() {
     });
   };
 
+  //  打开原图
   const openOriginImage = async index => {
     const idList = index === -1 ? checkSelectedIds() : [list[index].id];
     idList.forEach(id => {
@@ -272,11 +274,13 @@ function List() {
     });
   };
 
+  // 打开授权文件
   const openLicense = async index => {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
   };
 
+  // 显示详情
   const showDetails = async index => {
     const { id, urlSmall, urlYuan } = list[index];
     const mod = modal({

@@ -87,7 +87,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow>
         <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
-            <Space style={{ paddingRight: 24, paddingTop: 6 }}>
+            <Space style={{ paddingRight: 12, paddingTop: 6 }}>
               {licenseOptions.map(o => {
                 const isActvie = isLicenseActive(o.value, dataSource.copyright);
                 return (

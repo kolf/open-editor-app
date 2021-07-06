@@ -30,7 +30,7 @@ function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
   const [keywords] = useKeywords(true);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
-  const [selectedIds, setSelectedIds] = useState([]);
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { data: providerOptions } = useRequest(() => commonService.getOptions({ type: 'provider' }), {
     cacheKey: 'provider'
   });
@@ -59,6 +59,7 @@ function List() {
     run();
     setSelectedIds([]);
   }, [query, keywords]);
+
   // 格式化查询参数
   const formatQuery = query => {
     let result = Object.keys(query).reduce((result, key) => {
@@ -164,6 +165,7 @@ function List() {
 
   const handleSelect = index => {};
 
+  // 显示中图
   const showMiddleImage = index => {
     const { urlYuan } = list[index];
     const mod = modal({
@@ -178,16 +180,19 @@ function List() {
     });
   };
 
+  //  打开原图
   const openOriginImage = index => {
     const { urlYuan } = list[index];
     window.open(urlYuan);
   };
 
+  // 打开授权文件
   const openLicense = async index => {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
   };
 
+  // 显示详情
   const showDetails = async index => {
     const { id, urlSmall, urlYuan } = list[index];
     const mod = modal({
