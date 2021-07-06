@@ -31,10 +31,10 @@ function VcgImageText() {
     loading,
     run: fetchData,
     refresh
-  } = useRequest(bacthService.getList, { 
+  } = useRequest(bacthService.getList, {
     manual: true,
     ready: !!providerOptions
-   });
+  });
 
   useEffect(() => {
     fetchData(query);
@@ -70,28 +70,44 @@ function VcgImageText() {
     }
   }
 
-  const providerMap = providerOptions && providerOptions.reduce((memo, provider) => {
-    memo[provider.value] = provider.label;
-    return memo;
-  }, {});
+  const providerMap =
+    providerOptions &&
+    providerOptions.reduce((memo, provider) => {
+      memo[provider.value] = provider.label;
+      return memo;
+    }, {});
 
   const columns: Column[] = [
-    { title: '序号', dataIndex: 'index' },
-    { title: 'ID', dataIndex: 'id' },
+    { title: '序号', align: 'center', dataIndex: 'index' },
+    { title: 'ID', align: 'center', dataIndex: 'id' },
     {
       title: '入库时间',
       width: 100,
+      align: 'center',
       dataIndex: 'createdTime',
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
-    { title: '名称', width:140, dataIndex: 'osiDbProviderId', render: value => providerMap[value] },
-    { title: '审核类型', width: document.documentElement.clientWidth < 1400 && 120, dataIndex: 'auditFlow', render: value => options.map(BatchAuditType)[value] },
-    { title: '分配', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
-    { title: '优先级', dataIndex: 'priority', render: value => options.map(Priority)[value] },
-    { title: '敏感检测', width: 80, dataIndex: 'ifSensitveCheck', render: value => options.map(IfSensitveCheckBool)[value] },
+    { title: '名称', width: 140, align: 'center', dataIndex: 'osiDbProviderId', render: value => providerMap[value] },
+    {
+      title: '审核类型',
+      width: document.documentElement.clientWidth < 1400 && 120,
+      align: 'center',
+      dataIndex: 'auditFlow',
+      render: value => options.map(BatchAuditType)[value]
+    },
+    { title: '分配', align: 'center', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
+    { title: '优先级', align: 'center', dataIndex: 'priority', render: value => options.map(Priority)[value] },
+    {
+      title: '敏感检测',
+      width: 80,
+      align: 'center',
+      dataIndex: 'ifSensitveCheck',
+      render: value => options.map(IfSensitveCheckBool)[value]
+    },
     {
       title: 'AI检测',
       width: 80,
+      align: 'center',
       render: (value, tr) => {
         return (
           <>
@@ -102,16 +118,23 @@ function VcgImageText() {
         );
       }
     },
-    { title: '数量', dataIndex: 'quantity' },
+    { title: '数量', align: 'center', dataIndex: 'quantity' },
     {
       title: '分配时间',
       width: 100,
+      align: 'center',
       dataIndex: 'assignTime',
       render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
     },
-    { title: '分配状态', dataIndex: 'assignStatus', render: value => options.map(BatchAssignStatus)[value] },
+    {
+      title: '分配状态',
+      align: 'center',
+      dataIndex: 'assignStatus',
+      render: value => options.map(BatchAssignStatus)[value]
+    },
     {
       title: '分配对象',
+      align: 'center',
       dataIndex: 'auditorName',
       render: value => {
         return (
@@ -124,9 +147,10 @@ function VcgImageText() {
         );
       }
     },
-    { title: '分配人', dataIndex: 'assignerName' },
+    { title: '分配人', align: 'center', dataIndex: 'assignerName' },
     {
       title: '操作',
+      align: 'center',
       fixed: 'right',
       render: (value, tr) => {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
@@ -141,10 +165,7 @@ function VcgImageText() {
         );
       }
     }
-  ].map<Column>(c => {
-    c.align = 'center';
-    return c;
-  });
+  ];
 
   const formListOnChange = values => {
     const nextQuery = { ...values, pageNum: 1 };

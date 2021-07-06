@@ -6,12 +6,15 @@ declare module '*.gif';
 declare module '*.bmp';
 declare module '*.tiff';
 
+declare type AlignType = 'left' | 'center' | 'right';
+declare type FixedType = 'left' | 'right' | boolean;
+
 declare interface Column<T = any> {
   title: string;
   dataIndex?: string;
   width?: number;
-  fixed?: 'left' | 'right' | boolean;
-  align?: 'left' | 'center' | 'right';
+  fixed?: FixedType;
+  align?: AlignType;
   render?: (value: any, tr: T) => React.ReactNode;
 }
 
