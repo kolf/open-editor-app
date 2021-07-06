@@ -10,7 +10,7 @@ export const DataProvider = ({ children }) => {
       const [providerOptions, categoryOptions, allReason] = await Promise.all([
         commonService.getOptions({ type: 'provider' }),
         commonService.getOptions({ type: 'category' }),
-        commonService.getOptions({ type: 'allReason' })
+        commonService.getImageAllReason()
       ]);
       return {
         providerOptions,
