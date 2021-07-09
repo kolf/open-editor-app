@@ -1,5 +1,5 @@
 import React from 'react';
-import { Switch } from 'react-router-dom';
+import { Switch, Redirect } from 'react-router-dom';
 import GuestLayout from 'src/layouts/GuestLayout';
 import MainLayout from 'src/layouts/MainLayout';
 import Login from 'src/pages/auth/Login';
@@ -40,8 +40,8 @@ import { PATH } from './path';
 export const RootRouter = React.memo(() => {
   return (
     <Switch>
+      <Redirect path="/" to={PATH.SOURCE_VCG_IMAGE_TEXT} exact />
       <RouteLayout path={PATH.LOGIN} component={Login} layout={GuestLayout} isPrivate={false} exact />
-      <RouteLayout path={PATH.HOME} component={Home} layout={MainLayout} exact />
       <RouteLayout path={PATH.SOURCE_LIST} component={SouceList} layout={MainLayout} exact />
       <RouteLayout path={PATH.SOURCE_VCG_IMAGE_TEXT} component={SourceVcgImageText} layout={MainLayout} exact />
       <RouteLayout path={PATH.SOURCE_VCG_IMAGE_KEYWORD} component={SourceVcgImageKeyword} layout={MainLayout} exact />

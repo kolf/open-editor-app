@@ -122,7 +122,7 @@ export const FormList = ({ initialValues, onChange }: any) => {
               ))}
             </Select>
           </Form.Item>
-          <Form.Item name="exclusive" className="form-list-item">
+          {/* <Form.Item name="exclusive" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="独家性">
               {exclusiveOptions.map(o => (
                 <Option key={o.value} value={o.value}>
@@ -130,7 +130,7 @@ export const FormList = ({ initialValues, onChange }: any) => {
                 </Option>
               ))}
             </Select>
-          </Form.Item>
+          </Form.Item> */}
           <Form.Item name="licenseType" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="授权">
               {LicenseTypeOptions.map(o => (
