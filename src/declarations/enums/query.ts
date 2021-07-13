@@ -133,7 +133,8 @@ export enum Exclusive {
 
 export enum License {
   肖像权文件 = '1',
-  物权文件 = '2'
+  物权文件 = '2',
+  拍摄许可文件 = '3'
 }
 
 class Options {

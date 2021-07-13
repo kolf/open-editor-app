@@ -42,8 +42,11 @@ function getIndexProps(qualityStatus) {
   }
 }
 
-function isLicenseActive(license, copyright: any): boolean {
-  return license === '1' ? ['1', '2', '4'].includes(copyright) : ['2', '3', '5'].includes(copyright);
+function isLicenseActive(releases: any, value: string): boolean {
+  if (!releases || releases.length === 0) {
+    return false;
+  }
+  return !!releases.find(o => o.type + '' === value);
 }
 
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
@@ -94,18 +97,20 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         <Row style={{ paddingBottom: 6 }}>
           <Col flex="auto">
             <Space style={{ paddingRight: 12, paddingTop: 6 }}>
-              {licenseOptions.map(o => {
-                const isActvie = isLicenseActive(o.value, dataSource.copyright);
-                return (
-                  <a
-                    key={o.value}
-                    style={{ color: isActvie ? '' : '#666' }}
-                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
-                  >
-                    {o.label}
-                  </a>
-                );
-              })}
+              {licenseOptions
+                .filter(o => o.value !== '3')
+                .map(o => {
+                  const isActvie = isLicenseActive(dataSource.releases, o.value);
+                  return (
+                    <a
+                      key={o.value}
+                      style={{ color: isActvie ? '' : '#666' }}
+                      onClick={e => (isActvie ? onClick('license', o.value) : null)}
+                    >
+                      {o.label}
+                    </a>
+                  );
+                })}
             </Space>
             <RadioText
               options={licenseTypeOptions}

@@ -6,6 +6,25 @@
     background-color: #eee;
     height: 100%;
     width: 100%;
+    .ant-table-cell {
+      position: relative;
+      .click-row {
+        position: absolute;
+        padding: 16px;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+      }
+    }
+    .ant-table-row.isActive {
+      background-color: #ccc;
+      &:hover {
+        & > td {
+          background-color: #ccc;
+        }
+      }
+    }
   }
   &-inner {
     display: flex;
@@ -15,10 +34,14 @@
     padding-right: 24px;
     border-right: 1px solid #e9e9e9;
     min-height: 640px;
+    height: 80vh;
   }
   &-main {
     flex: 1;
     padding-left: 24px;
     text-align: center;
+    & > img {
+      max-width: 100%;
+    }
   }
 }
