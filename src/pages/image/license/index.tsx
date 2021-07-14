@@ -52,7 +52,7 @@ export default function LicenseType({}: Props): ReactElement {
     if (!data || data.length === 0) {
       return;
     }
-    if (index === -1) {
+    if (index === -1 && i===0) {
       return 'isActive';
     }
     return i === index ? 'isActive' : '';
