@@ -2,6 +2,7 @@ import React, { ReactElement, useState } from 'react';
 import { Card, Table } from 'antd';
 import { useRequest } from 'ahooks';
 import { useQuery } from 'src/hooks/useQueryParam';
+import { useDocumentTitle } from 'src/hooks/useDom';
 import imageService from 'src/services/imageService';
 import './style.less';
 
@@ -15,6 +16,7 @@ function makeData(data: any) {
 }
 
 export default function LicenseType({}: Props): ReactElement {
+  useDocumentTitle(`版权文件-VCG内容审核管理平台`);
   const { id } = useQuery();
   const { data, loading, error } = useRequest(() => imageService.getLicenseList({ imageId: id }), { initialData: [] });
   const [index, setIndex] = useState(-1);
@@ -28,7 +30,11 @@ export default function LicenseType({}: Props): ReactElement {
     {
       title: '文件名',
       dataIndex: 'name',
-      render: (text, creds) => <div className='click-row' onClick={e => handleRowClick(creds)}>{text}</div>
+      render: (text, creds) => (
+        <div className="click-row" onClick={e => handleRowClick(creds)}>
+          {text}
+        </div>
+      )
     },
     {
       title: '操作',
@@ -52,7 +58,7 @@ export default function LicenseType({}: Props): ReactElement {
     if (!data || data.length === 0) {
       return;
     }
-    if (index === -1 && i===0) {
+    if (index === -1 && i === 0) {
       return 'isActive';
     }
     return i === index ? 'isActive' : '';
