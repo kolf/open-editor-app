@@ -85,7 +85,8 @@ const GridItem = ({
             <Space>
               {actions.map(action => (
                 <Button
-                  title={action.label}
+                  disabled={action.disabled}
+                  title={action.disabled ? '等待社区审核中' :action.label}
                   key={action.value}
                   size="small"
                   icon={action.icon}

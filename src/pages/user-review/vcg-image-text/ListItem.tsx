@@ -67,8 +67,8 @@ export default function ListItem({
       onClick={onClick}
       selected={selected}
       actions={[
-        { icon: <CheckOutlined />, value: 'resolve', label: '通过' },
-        { icon: <CloseOutlined />, value: 'reject', label: '不通过' },
+        { icon: <CheckOutlined />, value: 'resolve', label: '通过', disabled: dataSource.callbackStatus === 2 },
+        { icon: <CloseOutlined />, value: 'reject', label: '不通过', disabled: dataSource.callbackStatus === 2 },
         { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
       ]}
     >

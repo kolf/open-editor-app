@@ -129,7 +129,7 @@ function List() {
             customReason,
             memo
           } = item;
-          const { qualityStatus, priority } = osiImageReview;
+          const { qualityStatus, priority,callbackStatus } = osiImageReview;
           const categoryList = (category || '').split(',');
           let reasonTitle = '';
 
@@ -144,6 +144,7 @@ function List() {
             ...item,
             priority,
             qualityStatus,
+            callbackStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
             licenseType: licenseType + '' || undefined,
