@@ -23,7 +23,11 @@ import { DataContext } from 'src/components/contexts/DataProvider';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
-  const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
+  const [query, setQuery] = useState({ 
+    pageNum: 1, 
+    pageSize: 60,
+    assignStatus: BatchAssignStatus.未分配
+  });
   const { providerOptions } = useContext(DataContext);
 
   const {
@@ -168,14 +172,18 @@ function VcgImageText() {
   ];
 
   const formListOnChange = values => {
+    console.log(values, 1111);
     const nextQuery = { ...values, pageNum: 1 };
     const result = Object.keys(nextQuery).reduce(
       (memo, q) => {
         switch (q) {
           case 'createdTime':
             if (nextQuery[q]) {
-              const date = moment(nextQuery[q]).format(config.data.DATE_FORMAT);
-              memo[q] = `${date} 00:00:00,${date} 23:59:59`;
+              const [start, end] = nextQuery[q];
+
+              memo[q] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
+                config.data.DATE_FORMAT
+              )} 23:59:59`;
             } else {
               Reflect.deleteProperty(memo, q);
             }
@@ -206,7 +214,7 @@ function VcgImageText() {
 
   return (
     <>
-      <FormList onChange={formListOnChange} />
+      <FormList onChange={formListOnChange} {...query}/>
       <Toolbar
         pagerProps={{
           total: data.total,

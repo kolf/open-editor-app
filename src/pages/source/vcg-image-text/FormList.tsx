@@ -26,9 +26,16 @@ const FormList = (props: any) => {
         onValuesChange={props.onChange}
         className="formList-list"
         style={{ height: collapse ? 'auto' : 38 }}
+        initialValues={{
+          assignStatus: props.assignStatus
+        }}
       >
         <Form.Item name="createdTime" className="form-list-item">
-          <DatePicker placeholder="入库时间" />
+          <DatePicker.RangePicker
+              style={{ width: 220 }}
+              separator={props.createdTime ? '~' : ''}
+              placeholder={['入库时间']}
+            />
         </Form.Item>
         <Form.Item name="assignStatus" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="分配状态">
