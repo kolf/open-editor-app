@@ -145,9 +145,7 @@ function List() {
       case 'showMiddleImage':
         showMiddleImage(index);
         break;
-      case 'openOriginImage':
-        openOriginImage(index);
-	break;
+        break;
       case 'logs':
         showLogs(index);
         break;
@@ -166,25 +164,16 @@ function List() {
 
   // 显示中图
   const showMiddleImage = index => {
-    const { urlYuan } = list[index];
+    const { urlSmall } = list[index];
     const mod = modal({
       title: `查看中图`,
-      width: 960,
+      width: 640,
       content: (
         <div className="image-max">
-          <img src={urlYuan} />
+          <img src={urlSmall} style={{ width: '100%' }} />
         </div>
       ),
       footer: null
-    });
-  };
-
-  //  打开原图
-  const openOriginImage = async index => {
-    const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-    idList.forEach(id => {
-      const { urlYuan } = list.find(item => item.id === id);
-      window.open(urlYuan);
     });
   };
 

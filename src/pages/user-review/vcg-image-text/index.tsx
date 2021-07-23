@@ -249,13 +249,13 @@ function List() {
 
   // 显示中图
   const showMiddleImage = index => {
-    const { urlYuan } = list[index];
+    const { urlSmall } = list[index];
     const mod = modal({
       title: `查看中图`,
-      width: 960,
+      width: 640,
       content: (
         <div className="image-max">
-          <img src={urlYuan} />
+          <img src={urlSmall} style={{ width: '100%' }} />
         </div>
       ),
       footer: null
