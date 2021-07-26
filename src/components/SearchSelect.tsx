@@ -18,8 +18,7 @@ export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'op
  *
  * @param {
  *  type: 筛选项请求类型,
- *  manual: 是否手动触发请求 true是 false否,
- *  otherProps: antd Select组件属性
+ *  manual: 是否手动触发请求 true是 false否
  * }
  * @returns
  */
