@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Collapse, Checkbox, Input } from 'antd';
 const { Panel } = Collapse;
 
@@ -13,7 +13,7 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
 
   const handleChange = e => {
     const { checked, value: newValue } = e.target;
-    setOtherValue('')
+    setOtherValue('');
     let nextValue = [];
     if (checked) {
       nextValue = [...value, newValue];
@@ -28,9 +28,10 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
   const renderCheckboxGroup = data => {
     return data.map(item => {
       if (!item.childNodes) {
+        const key = item.id + '';
         return (
           <div key={item.id}>
-            <Checkbox value={item.id} onChange={handleChange} checked={value.includes(item.id)}>
+            <Checkbox value={key} onChange={handleChange} checked={value.includes(key)}>
               {item.desc}
             </Checkbox>
           </div>
@@ -39,13 +40,16 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
       return (
         <div key={item.id}>
           <h4 style={{ paddingTop: 6, fontWeight: 700 }}>{item.desc}</h4>
-          {item.childNodes.map(c => (
-            <div key={c.id}>
-              <Checkbox value={c.id} onChange={handleChange} checked={value.includes(c.id)}>
-                {c.desc}
-              </Checkbox>
-            </div>
-          ))}
+          {item.childNodes.map(c => {
+            const key = c.id + '';
+            return (
+              <div key={c.id}>
+                <Checkbox value={key} onChange={handleChange} checked={value.includes(key)}>
+                  {c.desc}
+                </Checkbox>
+              </div>
+            );
+          })}
         </div>
       );
     });
@@ -67,7 +71,7 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
           onChange={e => {
             const propsValue = value.filter(v => v !== 'other');
             const otherValue = e.target.value;
-            setValue([])
+            setValue([]);
             setOtherValue(otherValue);
             onChange && onChange(propsValue, otherValue);
           }}

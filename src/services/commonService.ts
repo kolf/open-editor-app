@@ -37,7 +37,7 @@ export class CommonService {
   }
 
   async getImageAllReason(data?: any): Promise<any> {
-    let res = await Api.get(`/api/outsourcing/reason`);
+    const res = await Api.get(`/api/outsourcing/reason`);
     return res.data.data
   }
 }

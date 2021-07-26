@@ -10,7 +10,7 @@ export const getReasonTitle = (map, value, otherValue?: string): string => {
   return result.join(',');
 };
 
-export const reasonDataToMap = treeData => {
+export const getReasonMap = treeData => {
   let result = new Map();
   const loop = data => {
     data.forEach(item => {
@@ -21,6 +21,9 @@ export const reasonDataToMap = treeData => {
       }
     });
   };
-  loop(treeData);
+  if (treeData) {
+    loop(treeData);
+  }
+
   return result;
 };

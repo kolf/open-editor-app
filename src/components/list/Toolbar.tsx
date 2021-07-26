@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
-import { Affix, Space } from 'antd';
+import { Affix, Space, Button } from 'antd';
+import { ReloadOutlined } from '@ant-design/icons';
 import Pager, { IPagerProps } from 'src/components/Pager';
 import './Toolbar.less';
 
@@ -12,11 +13,12 @@ interface Props {
   selectedIds?: number[];
   idList?: number[];
   onSelectIds?: (args: number[]) => void;
+  onRefresh?: Function;
   children?: ReactElement;
   pagerProps?: IPagerProps;
 }
 
-function Toolbar({ selectedIds = [], idList, children, onSelectIds, pagerProps }: Props): ReactElement {
+function Toolbar({ selectedIds = [], idList, children, onSelectIds, onRefresh, pagerProps }: Props): ReactElement {
   const handleClick = key => {
     let nextSelectedIds = [];
     switch (key) {
@@ -35,7 +37,7 @@ function Toolbar({ selectedIds = [], idList, children, onSelectIds, pagerProps }
       <div className="toolbar-root">
         <div className="toolbar-left">
           {onSelectIds && (
-            <Space>
+            <Space style={{paddingRight:6}}>
               {selectOptions.map(o => (
                 <a key={o.value} onClick={e => handleClick(o.value)}>
                   {o.label}
@@ -43,6 +45,14 @@ function Toolbar({ selectedIds = [], idList, children, onSelectIds, pagerProps }
               ))}
               <span>已选中{selectedIds.length}个</span>
             </Space>
+          )}
+          {onRefresh && (
+            <Button
+              style={{ backgroundColor: '#eee'}}
+              size="small"
+              icon={<ReloadOutlined />}
+              onClick={onRefresh}
+            />
           )}
         </div>
         <div className="toolbar-content">{children}</div>

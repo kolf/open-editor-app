@@ -15,7 +15,7 @@ import { useKeywords } from 'src/hooks/useKeywords';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
 import modal from 'src/utils/modal';
-import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
+import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
 interface listProps {
   // TODO: 添加图片接口
   list?: any;
@@ -37,7 +37,6 @@ function List() {
   const {
     data: { list, total },
     loading,
-    mutate,
     run,
     refresh
   } = useRequest(() => imageService.getList(formatQuery(query)), {
@@ -106,7 +105,7 @@ function List() {
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
-            reasonTitle = getReasonTitle(reasonDataToMap(allReason), standardReason, customReason);
+            reasonTitle = getReasonTitle(getReasonMap(allReason), standardReason, customReason);
           }
 
           return {
@@ -219,6 +218,7 @@ function List() {
     <>
       <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
       <Toolbar
+        onRefresh={refresh}
         pagerProps={{
           total,
           current: query.pageNum,

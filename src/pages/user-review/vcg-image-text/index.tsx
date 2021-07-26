@@ -23,7 +23,7 @@ import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/e
 import config from 'src/config';
 import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
-import { getReasonTitle, reasonDataToMap } from 'src/utils/getReasonTitle';
+import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -45,7 +45,7 @@ function List() {
   const { partyId } = useCurrentUser();
   const [keywords] = useKeywords();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
-
+  const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true });
@@ -129,12 +129,12 @@ function List() {
             customReason,
             memo
           } = item;
-          const { qualityStatus, priority,callbackStatus } = osiImageReview;
+          const { qualityStatus, priority, callbackStatus } = osiImageReview;
           const categoryList = (category || '').split(',');
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
-            reasonTitle = getReasonTitle(reasonDataToMap(allReason), standardReason, customReason);
+            reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
           }
 
           return {
@@ -277,11 +277,11 @@ function List() {
     window.open(`/image/license?id=${id}`);
   };
 
-  // 操作日志
+  // 显示操作日志
   const showLogs = async index => {
     const { id } = list[index];
     const res = await imageService.getLogList([id]);
-    console.log(res, 'res');
+
     const mod = modal({
       title: `操作日志`,
       width: 640,
@@ -328,8 +328,11 @@ function List() {
       const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
       mod.close();
       message.success(`设置通过成功！`);
+      setList(idList, {
+        reasonTitle: '',
+        qualityStatus: '24'
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -342,7 +345,6 @@ function List() {
     let standardReason = [];
     let customReason = '';
 
-    console.log(allReason, 'allReason');
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({
@@ -382,8 +384,11 @@ function List() {
       });
       mod.close();
       message.success(`设置不通过成功！`);
+      setList(idList, {
+        reasonTitle: getReasonTitle(reasonMap, standardReason, customReason),
+        qualityStatus: '34'
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -400,8 +405,10 @@ function List() {
       const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
       message.success(`设置等级成功！`);
+      setList(idList, {
+        qualityRank: value
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -418,8 +425,10 @@ function List() {
       const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
       message.success(`设置授权成功！`);
+      setList(idList, {
+        licenseType: value
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -437,8 +446,10 @@ function List() {
       const res = await update({ body: idList, query: { type: '3', value } });
       mod.close();
       message.success(`设置授权成功！`);
+      setList(idList, {
+        copyright: value
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -475,17 +486,20 @@ function List() {
       const res = await update({ body: idList, query: { type: '3', value: copyright } });
       mod.close();
       message.success(`设置授权成功！`);
+      setList(idList, {
+        copyright: value
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
     }
   };
 
-  // 设置授权
+  // 设置备注
   const setMemo = async (index, value) => {
     const { id } = list[index];
+    const idList = [id];
     let mod = null;
     try {
       mod = await confirm({ title: '设置备注', content: `请确认是否修改备注?` });
@@ -493,7 +507,7 @@ function List() {
       mutate({
         total,
         list: list.map(item => {
-          if (item.id === id) {
+          if (idList.includes(item.id)) {
             const { tempData } = item;
             return {
               ...item,
@@ -507,11 +521,13 @@ function List() {
     }
     try {
       mod.confirmLoading();
-      const res = await update({ body: [id], query: { type: '4', memo: value } });
+      const res = await update({ body: idList, query: { type: '4', memo: value } });
       mod.close();
       message.success(`设置备注成功！`);
+      setList(idList, {
+        memo: value
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -535,8 +551,10 @@ function List() {
       const res = await update({ body: idList, query: { type: '4', memo } });
       mod.close();
       message.success(`设置授权成功！`);
+      setList(idList, {
+        memo
+      });
       setSelectedIds([]);
-      refresh();
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -548,6 +566,7 @@ function List() {
       <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} initialValues={query} />
       <Toolbar
         onSelectIds={setSelectedIds}
+        onRefresh={refresh}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         pagerProps={{
