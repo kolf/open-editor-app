@@ -144,6 +144,8 @@ function List() {
       case 'showMiddleImage':
         showMiddleImage(index);
         break;
+      case 'openOriginImage':
+        openOriginImage(index);
         break;
       case 'logs':
         showLogs(index);
@@ -173,6 +175,15 @@ function List() {
         </div>
       ),
       footer: null
+    });
+  };
+
+  //  打开原图
+  const openOriginImage = async index => {
+    const idList = [list[index].id];
+    idList.forEach(id => {
+      const { urlYuan } = list.find(item => item.id === id);
+      window.open(urlYuan);
     });
   };
 
