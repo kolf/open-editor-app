@@ -317,19 +317,24 @@ function List() {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
       const imageList = list
-        .filter(item => idList.includes(item.id))
+        .filter(item => idList.includes(item.id) && item.callbackStatus !== 2)
         .map(item => ({
           ...item,
           osiImageReview: undefined,
           createdTime: undefined,
           updatedTime: undefined
         }));
+      if (imageList.length === 0) {
+        mod.close();
+        return;
+      }
       mod.confirmLoading();
       const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
       mod.close();
       message.success(`设置通过成功！`);
       setList(idList, {
         reasonTitle: '',
+        callbackStatus: 2,
         qualityStatus: '24'
       });
       setSelectedIds([]);
@@ -369,13 +374,19 @@ function List() {
       }
 
       const imageList = list
-        .filter(item => idList.includes(item.id))
+        .filter(item => idList.includes(item.id) && item.callbackStatus !== 2)
         .map(item => ({
           ...item,
+          callbackStatus: 2,
           osiImageReview: undefined,
           createdTime: undefined,
           updatedTime: undefined
         }));
+
+      if (imageList.length === 0) {
+        mod.close();
+        return;
+      }
 
       mod.confirmLoading();
       const res = await review({
@@ -456,11 +467,11 @@ function List() {
     }
   };
 
-  const setCopyrightList = async (index, value) => {
+  const setCopyrightList = async index => {
     let mod = null;
     try {
       const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      let copyright = value || '';
+      let copyright = '';
       mod = await confirm({
         title: '设置授权',
         content: (
@@ -487,7 +498,7 @@ function List() {
       mod.close();
       message.success(`设置授权成功！`);
       setList(idList, {
-        copyright: value
+        copyright
       });
       setSelectedIds([]);
     } catch (error) {

@@ -1,12 +1,18 @@
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useState, useRef } from 'react';
+import { usePdf } from '@mikecousins/react-pdf';
 import { Card, Table } from 'antd';
 import { useRequest } from 'ahooks';
 import { useQuery } from 'src/hooks/useQueryParam';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import imageService from 'src/services/imageService';
+
 import './style.less';
 
 interface Props {}
+
+function isPdf(url: string) {
+  return url.endsWith('.pdf') || !url.endsWith('.jpg');
+}
 
 function makeData(data: any) {
   if (!data) {
@@ -20,6 +26,15 @@ export default function LicenseType({}: Props): ReactElement {
   const { id } = useQuery();
   const { data, loading, error } = useRequest(() => imageService.getLicenseList({ imageId: id }), { initialData: [] });
   const [index, setIndex] = useState(-1);
+
+  const [page, setPage] = useState(1);
+  const canvasRef = useRef(null);
+
+  const { pdfDocument, pdfPage } = usePdf({
+    file: 'https://projects.wojtekmaj.pl/react-pdf/static/sample.49a87e34.pdf',
+    page,
+    canvasRef
+  });
 
   const columns = [
     {
@@ -64,6 +79,39 @@ export default function LicenseType({}: Props): ReactElement {
     return i === index ? 'isActive' : '';
   };
 
+  const renderMain = () => {
+    if (data.length === 0) {
+      return null;
+    }
+    const fileUrl = data[index === -1 ? 0 : index].url;
+    console.log(fileUrl, 'fileUrl');
+    if (isPdf(fileUrl)) {
+      return (
+        <div>
+          {!pdfDocument && <span>Loading...</span>}
+          <canvas ref={canvasRef} />
+          {Boolean(pdfDocument && pdfDocument.numPages) && (
+            <nav>
+              <ul className="pager">
+                <li className="previous">
+                  <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+                    Previous
+                  </button>
+                </li>
+                <li className="next">
+                  <button disabled={page === pdfDocument.numPages} onClick={() => setPage(page + 1)}>
+                    Next
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          )}
+        </div>
+      );
+    }
+    return <img src={fileUrl} />;
+  };
+
   return (
     <div className="license-root">
       <Card title="肖像权/物权文件" bordered={false} style={{ width: 1200 }}>
@@ -77,7 +125,7 @@ export default function LicenseType({}: Props): ReactElement {
               loading={loading}
             />
           </div>
-          <div className="license-main">{data.length > 0 && <img src={data[index === -1 ? 0 : index].url} />}</div>
+          <div className="license-main">{renderMain()}</div>
         </div>
       </Card>
     </div>
