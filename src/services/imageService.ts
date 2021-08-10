@@ -34,7 +34,7 @@ export class ImageService {
   }
   async getLogList(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/log/list4image`, data);
-    return res.data.data
+    return res.data.data.reverse()
   }
   async getSentiveWordByImageIds(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);

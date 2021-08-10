@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Select, Input, Space, Divider, Row, Col } from 'antd';
-import { CheckOutlined, CloseOutlined, CalendarOutlined,StarOutlined } from '@ant-design/icons';
+import { CheckOutlined, CloseOutlined, CalendarOutlined, StarOutlined } from '@ant-design/icons';
 import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
@@ -58,9 +58,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       height={470}
       onClick={onClick}
       selected={selected}
-      actions={[
-        { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
-      ]}
+      actions={[{ icon: <CalendarOutlined />, value: 'logs', label: '日志' }]}
     >
       <GridItemRow>
         <Row>
@@ -75,7 +73,11 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <GridItemRow label={<IconFont type="icon-ic_image" />}>
         <a onClick={e => onClick('id')}>{dataSource.id}</a>
         {dataSource.priority === 2 && (
-          <IconFont title='加急' type="icon-xing" style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }} />
+          <IconFont
+            title="加急"
+            type="icon-xing"
+            style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }}
+          />
         )}
       </GridItemRow>
       <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
@@ -89,7 +91,9 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       </GridItemRow>
 
       <GridItemRow>
-        <div style={{ height: 32, fontWeight: 700 }}>{dataSource.title}</div>
+        <div style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {dataSource.title}
+        </div>
       </GridItemRow>
       <Divider style={{ margin: '6px 0' }} />
 

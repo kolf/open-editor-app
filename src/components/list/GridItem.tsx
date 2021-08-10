@@ -3,8 +3,6 @@ import { Space, Button, Tag, Tooltip, Popover } from 'antd';
 import Iconfont from 'src/components/Iconfont';
 import className from 'classnames';
 
-function loop(e) {}
-
 interface Props {
   onClick?: any;
   cover: any;
@@ -42,7 +40,7 @@ const TopTag = ({ children, align, color, onClick }) => {
     style = { right: -8 };
   }
   return (
-    <Tag color={color} style={style} className="grid-item-topTag" title={children} onClick={onClick}>
+    <Tag color={color} style={style} className="grid-item-topTag active" title={children} onClick={onClick} onClose={e => e.preventDefault()} >
       {children}
     </Tag>
   );
@@ -102,7 +100,6 @@ const GridItem = ({
           </span>
         </div>
       </div>
-      {}
     </div>
   );
 };

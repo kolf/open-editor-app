@@ -63,7 +63,7 @@ export default function ListItem({
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
       indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
-      height={466}
+      height={470}
       onClick={onClick}
       selected={selected}
       actions={[
@@ -103,7 +103,9 @@ export default function ListItem({
       </GridItemRow>
 
       <GridItemRow>
-        <div style={{ height: 32, fontWeight: 700 }}>{dataSource.title}</div>
+        <div style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+          {dataSource.title}
+        </div>
       </GridItemRow>
       <Divider style={{ margin: '6px 0' }} />
 

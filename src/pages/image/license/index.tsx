@@ -84,31 +84,31 @@ export default function LicenseType({}: Props): ReactElement {
       return null;
     }
     const fileUrl = data[index === -1 ? 0 : index].url;
-    console.log(fileUrl, 'fileUrl');
-    if (isPdf(fileUrl)) {
-      return (
-        <div>
-          {!pdfDocument && <span>Loading...</span>}
-          <canvas ref={canvasRef} />
-          {Boolean(pdfDocument && pdfDocument.numPages) && (
-            <nav>
-              <ul className="pager">
-                <li className="previous">
-                  <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-                    Previous
-                  </button>
-                </li>
-                <li className="next">
-                  <button disabled={page === pdfDocument.numPages} onClick={() => setPage(page + 1)}>
-                    Next
-                  </button>
-                </li>
-              </ul>
-            </nav>
-          )}
-        </div>
-      );
-    }
+    // console.log(fileUrl, 'fileUrl');
+    // if (isPdf(fileUrl)) {
+    //   return (
+    //     <div>
+    //       {!pdfDocument && <span>Loading...</span>}
+    //       <canvas ref={canvasRef} />
+    //       {Boolean(pdfDocument && pdfDocument.numPages) && (
+    //         <nav>
+    //           <ul className="pager">
+    //             <li className="previous">
+    //               <button disabled={page === 1} onClick={() => setPage(page - 1)}>
+    //                 Previous
+    //               </button>
+    //             </li>
+    //             <li className="next">
+    //               <button disabled={page === pdfDocument.numPages} onClick={() => setPage(page + 1)}>
+    //                 Next
+    //               </button>
+    //             </li>
+    //           </ul>
+    //         </nav>
+    //       )}
+    //     </div>
+    //   );
+    // }
     return <img src={fileUrl} />;
   };
 
