@@ -41,7 +41,7 @@ function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): Re
   }
   return (
     <div className="grid-list-root">
-      <Row gutter={8}>
+      <Row gutter={4}>
         {dataSource.map((item, index) => (
           <Col key={item[rowKey] + '-' + index} {...layout}>
             {renderItem(item, index)}
