@@ -103,38 +103,40 @@ export default function ListItem({
       </GridItemRow>
 
       <GridItemRow>
-        <div title={dataSource.title} style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}>
+        <div
+          title={dataSource.title}
+          style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}
+        >
           {dataSource.title}
         </div>
       </GridItemRow>
       <Divider style={{ margin: '6px 0' }} />
 
       <GridItemRow>
-        <Row style={{ paddingBottom: 6 }}>
-          <Col flex="auto">
-            <Space style={{ paddingRight: 12, paddingTop: 6 }}>
-              {licenseOptions
-                .filter(o => o.value !== '3')
-                .map(o => {
-                  const isActvie = isLicenseActive(dataSource.releases, o.value);
-                  return (
-                    <a
-                      key={o.value}
-                      style={{ color: isActvie ? '' : '#666' }}
-                      onClick={e => (isActvie ? onClick('license', o.value) : null)}
-                    >
-                      {o.label}
-                    </a>
-                  );
-                })}
-            </Space>
-            <RadioText
-              options={licenseTypeOptions}
-              value={dataSource.licenseType}
-              onChange={value => onForceChange('licenseType', value)}
-            />
-          </Col>
-          <Col>
+        <div style={{ paddingBottom: 6 }}>
+          <Space style={{ paddingRight: 12, paddingTop: 6 }}>
+            {licenseOptions
+              .filter(o => o.value !== '3')
+              .map(o => {
+                const isActvie = isLicenseActive(dataSource.releases, o.value);
+                return (
+                  <a
+                    key={o.value}
+                    style={{ color: isActvie ? '' : '#666' }}
+                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
+                  >
+                    {o.label}
+                  </a>
+                );
+              })}
+          </Space>
+          <RadioText
+            options={licenseTypeOptions}
+            value={dataSource.licenseType}
+            onChange={value => onForceChange('licenseType', value)}
+          />
+
+          <div style={{ position: 'absolute', right: 0, top: 0 }}>
             <Select
               value={dataSource.qualityRank}
               placeholder="等级"
@@ -148,8 +150,8 @@ export default function ListItem({
                 </Option>
               ))}
             </Select>
-          </Col>
-        </Row>
+          </div>
+        </div>
       </GridItemRow>
       <GridItemRow>
         <Select

@@ -101,31 +101,30 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
       <Divider style={{ margin: '6px 0' }} />
 
       <GridItemRow>
-        <Row style={{ paddingBottom: 6 }}>
-          <Col flex="auto">
-            <Space style={{ paddingRight: 12, paddingTop: 6 }}>
-              {licenseOptions
-                .filter(o => o.value !== '3')
-                .map(o => {
-                  const isActvie = isLicenseActive(dataSource.releases, o.value);
-                  return (
-                    <a
-                      key={o.value}
-                      style={{ color: isActvie ? '' : '#666' }}
-                      onClick={e => (isActvie ? onClick('license', o.value) : null)}
-                    >
-                      {o.label}
-                    </a>
-                  );
-                })}
-            </Space>
-            <RadioText
-              options={licenseTypeOptions}
-              value={dataSource.licenseType}
-              onChange={value => onChange('licenseType', value)}
-            />
-          </Col>
-          <Col style={{ textAlign: 'center' }}>
+        <div style={{ paddingBottom: 6 }}>
+          <Space style={{ paddingRight: 8, paddingTop: 6 }}>
+            {licenseOptions
+              .filter(o => o.value !== '3')
+              .map(o => {
+                const isActvie = isLicenseActive(dataSource.releases, o.value);
+                return (
+                  <a
+                    key={o.value}
+                    style={{ color: isActvie ? '' : '#666' }}
+                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
+                  >
+                    {o.label}
+                  </a>
+                );
+              })}
+          </Space>
+          <RadioText
+            options={licenseTypeOptions}
+            value={dataSource.licenseType}
+            onChange={value => onChange('licenseType', value)}
+          />
+
+          <div style={{ position: 'absolute', right: 0, top: 0 }}>
             <Select value={dataSource.qualityRank} placeholder="等级">
               {qualityOptions.map(o => (
                 <Option value={o.value} key={o.value}>
@@ -133,8 +132,8 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
                 </Option>
               ))}
             </Select>
-          </Col>
-        </Row>
+          </div>
+        </div>
       </GridItemRow>
       <GridItemRow>
         <Select

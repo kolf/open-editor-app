@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Collapse, Checkbox, Input } from 'antd';
+import { Collapse, Checkbox, Input, message } from 'antd';
 const { Panel } = Collapse;
 
 interface Props {
@@ -16,6 +16,10 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
     setOtherValue('');
     let nextValue = [];
     if (checked) {
+      if (value.length >= 3) {
+        message.info(`最多选择三个不通过原因，请取消一个再选择~！`);
+        return;
+      }
       nextValue = [...value, newValue];
     } else {
       nextValue = value.filter(v => v !== newValue);

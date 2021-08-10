@@ -48,9 +48,9 @@ function List() {
   const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
-  const { run: review } = useRequest(imageService.qualityReview, { manual: true });
-  const { run: update } = useRequest(imageService.update, { manual: true });
-  const { run: getExif } = useRequest(imageService.getExif, { manual: true });
+  const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
+  const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
+  const { run: getExif } = useRequest(imageService.getExif, { manual: true, throwOnError: true });
   const {
     data: { list, total },
     loading,
