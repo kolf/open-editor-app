@@ -96,8 +96,8 @@ export default function ListItem({
       <GridItemRow>
         <Space>
           <span>LAI</span>
-          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
           <span title="AI质量评分">{dataSource.aiQualityScore}</span>
+          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
           <span>{dataSource.categoryNames}</span>
         </Space>
       </GridItemRow>
