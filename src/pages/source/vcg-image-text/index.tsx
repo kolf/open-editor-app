@@ -52,7 +52,7 @@ function VcgImageText() {
       title: '数据分配',
       content: <AssignForm saveRef={r => (formRef = r)} />,
       onOk,
-      autoIndex: false
+      // autoIndex: false
     });
     async function onOk() {
       const values = await formRef.validateFields();
