@@ -242,6 +242,7 @@ function List() {
 
   const checkSelectedIds = () => {
     if (selectedIds.length === 0) {
+      // TODO 使用throw不合理
       throw '请选择图片！';
     }
     return [...selectedIds];
@@ -370,7 +371,8 @@ function List() {
       });
 
       if (standardReason.length === 0 && !customReason) {
-        throw `请选择不通过原因！`;
+        message.info(`请选择不通过原因！`);
+        return;
       }
 
       const imageList = list
@@ -491,7 +493,8 @@ function List() {
         )
       });
       if (!copyright) {
-        throw `请选择授权！`;
+        message.info(`请选择授权！`);
+        return;
       }
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '3', value: copyright } });
@@ -556,7 +559,8 @@ function List() {
         content: <Input placeholder="请输入备注信息" onChange={e => (memo = e.target.value)} />
       });
       if (!memo) {
-        throw `请输入备注信息！`;
+        message.info(`请输入备注信息！`);
+        return;
       }
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '4', memo } });

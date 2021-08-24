@@ -23,7 +23,7 @@ const columns = [
 ];
 
 const ImageLogs = ({ dataSource = [] }: Props) => (
-  <Table dataSource={dataSource} size="small" pagination={false} columns={columns} />
+  <Table rowKey="id" dataSource={dataSource} size="small" pagination={false} columns={columns} />
 );
 
 export default ImageLogs;
