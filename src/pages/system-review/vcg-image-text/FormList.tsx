@@ -4,6 +4,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import SearchSelect from 'src/components/SearchSelect';
 import InputSlider from 'src/components/InputSlider';
+import InputSplit from 'src/components/InputSplit';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import options, {
   Priority,
@@ -83,10 +84,10 @@ export const FormList = ({ initialValues, onChange }: any) => {
             <SearchSelect type="provider" manual options={providerOptions} style={{ width: 160 }} placeholder="数据来源" />
           </Form.Item>
           <Form.Item name="aiQualityScore" className="form-list-item">
-            <InputSlider width={106} placeholder="AI质量评分" />
+            <InputSplit width={106} placeholder="AI质量评分" />
           </Form.Item>
           <Form.Item name="aiBeautyScore" className="form-list-item">
-            <InputSlider width={106} placeholder="AI美学评分" />
+            <InputSplit width={106} placeholder="AI美学评分" />
           </Form.Item>
           <Form.Item name="qualityRank" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="质量等级">
