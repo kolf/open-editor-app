@@ -4,6 +4,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import { useRequest } from 'ahooks';
 import SearchSelect from 'src/components/SearchSelect';
 import InputSlider from 'src/components/InputSlider';
+import InputSplit from 'src/components/InputSplit';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import options, {
   Priority,
@@ -16,7 +17,6 @@ import options, {
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
 
-
 const { Option } = Select;
 const { Search } = Input;
 const { RangePicker } = DatePicker;
@@ -26,7 +26,6 @@ const qualityOptions = options.get(Quality);
 const licenseOptions = options.get(License);
 const ifSensitveCheckOptions = options.get(IfSensitveCheck);
 const LicenseTypeOptions = options.get(LicenseType);
-const exclusiveOptions = options.get(Exclusive);
 
 function filterOption(input, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -78,13 +77,19 @@ export const FormList = ({ initialValues, onChange }: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="osiProviderId" className="form-list-item">
-            <SearchSelect type="provider" manual options={providerOptions} style={{ width: 160 }} placeholder="数据来源" />
+            <SearchSelect
+              type="provider"
+              manual
+              options={providerOptions}
+              style={{ width: 160 }}
+              placeholder="数据来源"
+            />
           </Form.Item>
           <Form.Item name="aiQualityScore" className="form-list-item">
-            <InputSlider width={106} placeholder="AI质量评分" />
+            <InputSplit width={106} placeholder="AI质量评分" />
           </Form.Item>
           <Form.Item name="aiBeautyScore" className="form-list-item">
-            <InputSlider width={106} placeholder="AI美学评分" />
+            <InputSplit width={106} placeholder="AI美学评分" />
           </Form.Item>
           <Form.Item name="qualityRank" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="质量等级">
@@ -132,7 +137,13 @@ export const FormList = ({ initialValues, onChange }: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="category" className="form-list-item">
-            <SearchSelect style={{ width: 120 }} manual options={categoryOptions} placeholder="AI分类" type="category" />
+            <SearchSelect
+              style={{ width: 120 }}
+              manual
+              options={categoryOptions}
+              placeholder="AI分类"
+              type="category"
+            />
           </Form.Item>
         </Form>
       </div>

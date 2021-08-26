@@ -50,14 +50,7 @@ function isLicenseActive(releases: any, value: string): boolean {
   return !!releases.find(o => o.type + '' === value);
 }
 
-export default function ListItem({
-  dataSource,
-  selected,
-  index,
-  onClick,
-  onChange,
-  onForceChange
-}: Props): ReactElement {
+export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList);
   return (
     <GridItem
@@ -123,7 +116,7 @@ export default function ListItem({
                   <a
                     key={o.value}
                     style={{ color: isActvie ? '' : '#666' }}
-                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
+                    onClick={e => (isActvie ? onChange('license', o.value) : null)}
                   >
                     {o.label}
                   </a>
@@ -133,7 +126,7 @@ export default function ListItem({
           <RadioText
             options={licenseTypeOptions}
             value={dataSource.licenseType}
-            onChange={value => onForceChange('licenseType', value)}
+            onChange={value => onChange('licenseType', value)}
           />
 
           <div style={{ position: 'absolute', right: 0, top: 0 }}>
@@ -141,7 +134,7 @@ export default function ListItem({
               value={dataSource.qualityRank}
               placeholder="等级"
               onChange={o => {
-                onForceChange('qualityRank', o);
+                onChange('qualityRank', o);
               }}
             >
               {qualityOptions.map(o => (
@@ -158,7 +151,7 @@ export default function ListItem({
           value={dataSource.copyright}
           placeholder="授权"
           style={{ width: '100%' }}
-          onChange={value => onForceChange('copyright', value)}
+          onChange={value => onChange('copyright', value)}
         >
           {copyrightOptions.map(o => (
             <Option value={o.value} key={o.value}>
@@ -173,9 +166,6 @@ export default function ListItem({
           value={dataSource.memo}
           onChange={e => {
             onChange('memo', e.target.value);
-          }}
-          onBlur={e => {
-            onForceChange('memo', dataSource.memo);
           }}
         />
       </GridItemRow>
