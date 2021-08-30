@@ -53,7 +53,7 @@ function List() {
   const { run: getExif } = useRequest(imageService.getExif, { manual: true, throwOnError: true });
 
   const {
-    data: { list, total },
+    data: { list, total } = initialData,
     loading,
     mutate,
     run,
@@ -67,7 +67,6 @@ function List() {
       ready: !!(providerOptions && categoryOptions && allReason),
       manual: true,
       throttleInterval: 600,
-      initialData,
       formatResult
     }
   );

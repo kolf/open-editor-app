@@ -35,7 +35,7 @@ function List() {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { run: getExif } = useRequest(imageService.getExif, { manual: true });
   const {
-    data: { list, total },
+    data: { list, total } = initialData,
     loading,
     run,
     refresh
@@ -43,7 +43,6 @@ function List() {
     ready: !!(providerOptions && categoryOptions && allReason),
     manual: true,
     throttleInterval: 600,
-    initialData,
     formatResult
   });
 
