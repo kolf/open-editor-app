@@ -51,6 +51,7 @@ function List() {
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
   const { run: getExif } = useRequest(imageService.getExif, { manual: true, throwOnError: true });
+
   const {
     data: { list, total },
     loading,
@@ -386,50 +387,108 @@ function List() {
     }
   };
 
-  const setCopyrightList = async () => {
-    let value = '';
-    const mod = await confirm({
-      title: '设置授权',
-      content: (
-        <Radio.Group
-          onChange={e => {
-            value = e.target.value;
-          }}
-        >
-          <Space direction="vertical">
-            {copyrightOptions.map(o => (
-              <Radio value={o.value} key={o.value}>
-                {o.label}
-              </Radio>
-            ))}
-          </Space>
-        </Radio.Group>
-      )
-    });
-    if (!value) {
-      message.info(`请选择授权！`);
-      return;
+  // 设置等级
+  const setQualityList = async (index, value) => {
+    let mod = null;
+    try {
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+      mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
+      mod.confirmLoading();
+      const res = await update({ body: idList, query: { type: '1', value } });
+      mod.close();
+      message.success(`设置等级成功！`);
+      setList(idList, {
+        qualityRank: value
+      });
+      setSelectedIds([]);
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
     }
-
-    mod.close();
-
-    setList(null, {
-      copyright: value
-    });
   };
 
-  const setMemoList = async () => {
-    let value = '';
-    const mod = await confirm({
-      title: '设置备注',
-      content: <Input placeholder="请输入备注信息" onChange={e => (value = e.target.value)} />
-    });
+  // 设置授权类型
+  const setLicenseTypeList = async (index, value) => {
+    let mod = null;
+    try {
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
+      mod.confirmLoading();
+      const res = await update({ body: idList, query: { type: '2', value } });
+      mod.close();
+      message.success(`设置授权成功！`);
+      setList(idList, {
+        licenseType: value
+      });
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
+    }
+  };
 
-    mod.close();
+  // 设置授权
+  const setCopyrightList = async index => {
+    let mod = null;
+    try {
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+      let value = '';
+      mod = await confirm({
+        title: '设置授权',
+        content: (
+          <Radio.Group
+            onChange={e => {
+              value = e.target.value;
+            }}
+          >
+            <Space direction="vertical">
+              {copyrightOptions.map(o => (
+                <Radio value={o.value} key={o.value}>
+                  {o.label}
+                </Radio>
+              ))}
+            </Space>
+          </Radio.Group>
+        )
+      });
+      if (!value) {
+        message.info(`请选择授权！`);
+        return;
+      }
+      mod.confirmLoading();
+      const res = await update({ body: idList, query: { type: '3', value: value } });
+      mod.close();
+      message.success(`设置授权成功！`);
+      setList(idList, {
+        copyright: value
+      });
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
+    }
+  };
 
-    setList(null, {
-      memo: value
-    });
+  const setMemoList = async index => {
+    // setMemo
+    let mod = null;
+    try {
+      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
+      let value = '';
+      mod = await confirm({
+        title: '设置备注',
+        content: <Input placeholder="请输入备注信息" onChange={e => (value = e.target.value)} />
+      });
+
+      mod.confirmLoading();
+      const res = await update({ body: idList, query: { type: '4', memo: value } });
+      mod.close();
+      message.success(`设置授权成功！`);
+      setList(idList, {
+        memo: value
+      });
+    } catch (error) {
+      mod && mod.close();
+      error && message.error(error);
+    }
   };
 
   return (
@@ -459,40 +518,23 @@ function List() {
             编辑
           </Button>
           {licenseTypeOptions.map(o => (
-            <Button
-              size="small"
-              title={`设置${o.label}`}
-              onClick={e =>
-                setList(null, {
-                  licenseType: o.value
-                })
-              }
-            >
+            <Button size="small" title={`设置${o.label}`} onClick={e => setLicenseTypeList(-1, o.value)}>
               {o.label}
             </Button>
           ))}
 
           {qualityOptions.map(o => (
-            <Button
-              size="small"
-              title={`设置等级${o.label}`}
-              key={o.value}
-              onClick={e =>
-                setList(null, {
-                  qualityRank: o.value
-                })
-              }
-            >
+            <Button size="small" title={`设置等级${o.label}`} key={o.value} onClick={e => setQualityList(-1, o.value)}>
               {o.label}
             </Button>
           ))}
           <Button
             size="small"
             title="设置授权文件说明"
-            onClick={e => setCopyrightList()}
+            onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />
-          <Button size="small" title="修改备注" onClick={e => setMemoList()} icon={<Iconfont type="icon-beizhu" />} />
+          <Button size="small" title="修改备注" onClick={e => setMemoList(-1)} icon={<Iconfont type="icon-beizhu" />} />
           <Button
             size="small"
             title="批量打开大图"
