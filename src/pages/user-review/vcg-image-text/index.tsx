@@ -399,7 +399,6 @@ function List() {
       setList(idList, {
         qualityRank: value
       });
-      setSelectedIds([]);
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
