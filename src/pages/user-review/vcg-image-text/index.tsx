@@ -438,7 +438,10 @@ function List() {
       <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} initialValues={query} />
       <Toolbar
         onSelectIds={setSelectedIds}
-        onRefresh={refresh}
+        onRefresh={() => {
+          refresh()
+          setSelectedIds([])
+        }}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         pagerProps={{
