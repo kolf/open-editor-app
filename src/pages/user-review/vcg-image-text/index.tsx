@@ -8,20 +8,17 @@ import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
-import ImageDetails from 'src/components/modals/ImageDetails';
 import SelectReject from 'src/components/modals/SelectReject';
-import ImageLogs from 'src/components/modals/ImageLogs';
-import Loading from 'src/components/common/LoadingBlock';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import { useKeywords } from 'src/hooks/useKeywords';
+import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
 import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
 
 import config from 'src/config';
-import modal from 'src/utils/modal';
 import confirm from 'src/utils/confirm';
 import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
 
@@ -50,7 +47,6 @@ function List() {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
-  const { run: getExif } = useRequest(imageService.getExif, { manual: true, throwOnError: true });
 
   const {
     data: { list, total } = initialData,
@@ -70,6 +66,8 @@ function List() {
       formatResult
     }
   );
+
+  const { showDetails, showLogs, openLicense, showMiddleImage } = useImage(list);
 
   useEffect(() => {
     run();
@@ -228,21 +226,6 @@ function List() {
     return [...selectedIds];
   };
 
-  // 显示中图
-  const showMiddleImage = index => {
-    const { urlSmall } = list[index];
-    const mod = modal({
-      title: `查看中图`,
-      width: 640,
-      content: (
-        <div className="image-max">
-          <img src={urlSmall} style={{ width: '100%' }} />
-        </div>
-      ),
-      footer: null
-    });
-  };
-
   //  打开原图
   const openOriginImage = async index => {
     const idList = index === -1 ? checkSelectedIds() : [list[index].id];
@@ -250,45 +233,6 @@ function List() {
       const { urlYuan } = list.find(item => item.id === id);
       window.open(urlYuan);
     });
-  };
-
-  // 打开授权文件
-  const openLicense = async index => {
-    const { id } = list[index];
-    window.open(`/image/license?id=${id}`);
-  };
-
-  // 显示操作日志
-  const showLogs = async index => {
-    const { id } = list[index];
-    const res = await imageService.getLogList([id]);
-
-    const mod = modal({
-      title: `操作日志`,
-      width: 640,
-      content: <ImageLogs dataSource={res} />,
-      footer: null
-    });
-  };
-
-  // 显示详情
-  const showDetails = async index => {
-    const { id, urlSmall, urlYuan } = list[index];
-    const mod = modal({
-      title: `图片详情`,
-      width: 640,
-      content: <Loading />,
-      footer: null
-    });
-    try {
-      const res = await getExif({ id });
-      mod.update({
-        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall, urlYuan }} />
-      });
-    } catch (error) {
-      message.error(`请求接口出错！`);
-      mod.close();
-    }
   };
 
   // 设置通过
