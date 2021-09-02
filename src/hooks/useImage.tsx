@@ -35,7 +35,7 @@ export default function useImage(list: Array<IProps>) {
   }
 
   // 打开授权文件
-  async function openLicense(index: number) {
+  function openLicense(index: number) {
     const { id } = list[index];
     window.open(`/image/license?id=${id}`);
   }
