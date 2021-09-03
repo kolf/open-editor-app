@@ -52,6 +52,8 @@ function isLicenseActive(releases: any, value: string): boolean {
 
 export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList);
+
+  console.log(dataSource.categoryNames,'categoryNames')
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
