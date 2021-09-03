@@ -127,15 +127,13 @@ function List() {
             customReason,
             memo
           } = item;
-          const { qualityStatus, priority, callbackStatus } = osiImageReview;
+          const { qualityStatus, priority, callbackStatus, qualityEditTime } = osiImageReview;
           const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
             reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
           }
-
-          console.log(categoryList, categoryOptions, 'providerOptions');
 
           return {
             tempData: {
@@ -144,6 +142,7 @@ function List() {
             ...item,
             priority,
             qualityStatus,
+            qualityEditTime,
             callbackStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
@@ -151,9 +150,7 @@ function List() {
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter(o => {
-                return categoryList.includes(o.value);
-              })
+              .filter((o, index) => categoryList.includes(o.value))
               .map(o => o.label)
               .join(','),
             createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),

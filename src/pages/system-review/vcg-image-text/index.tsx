@@ -99,7 +99,7 @@ function List() {
             standardReason,
             customReason
           } = item;
-          const { qualityStatus, priority } = osiImageReview;
+          const { qualityStatus, priority, qualityEditTime } = osiImageReview;
           const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
           let reasonTitle = '';
 
@@ -111,6 +111,7 @@ function List() {
             ...item,
             priority,
             qualityStatus,
+            qualityEditTime,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
             licenseType: licenseType + '' || undefined,
