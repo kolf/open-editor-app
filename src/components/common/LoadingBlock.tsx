@@ -5,18 +5,10 @@ interface Props {
   height?: number;
 }
 
-const defaultProps = {
-  height: 200
-};
-
-function LoadingBlock({ height }: Props): ReactElement {
+export default function LoadingBlock({ height = 200 }: Props): ReactElement {
   return (
     <Spin spinning>
       <div style={{ height }} />
     </Spin>
   );
 }
-
-LoadingBlock.defaultProps = defaultProps;
-
-export default LoadingBlock;

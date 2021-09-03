@@ -30,12 +30,6 @@ export default function LicenseType({}: Props): ReactElement {
   const [page, setPage] = useState(1);
   const canvasRef = useRef(null);
 
-  const { pdfDocument, pdfPage } = usePdf({
-    file: 'https://projects.wojtekmaj.pl/react-pdf/static/sample.49a87e34.pdf',
-    page,
-    canvasRef
-  });
-
   const columns = [
     {
       title: '序号',
@@ -83,33 +77,13 @@ export default function LicenseType({}: Props): ReactElement {
     if (data.length === 0) {
       return null;
     }
-    const fileUrl = data[index === -1 ? 0 : index].url;
-    // console.log(fileUrl, 'fileUrl');
-    // if (isPdf(fileUrl)) {
-    //   return (
-    //     <div>
-    //       {!pdfDocument && <span>Loading...</span>}
-    //       <canvas ref={canvasRef} />
-    //       {Boolean(pdfDocument && pdfDocument.numPages) && (
-    //         <nav>
-    //           <ul className="pager">
-    //             <li className="previous">
-    //               <button disabled={page === 1} onClick={() => setPage(page - 1)}>
-    //                 Previous
-    //               </button>
-    //             </li>
-    //             <li className="next">
-    //               <button disabled={page === pdfDocument.numPages} onClick={() => setPage(page + 1)}>
-    //                 Next
-    //               </button>
-    //             </li>
-    //           </ul>
-    //         </nav>
-    //       )}
-    //     </div>
-    //   );
-    // }
-    return <img src={fileUrl} />;
+    const file = data[index === -1 ? 0 : index];
+
+    if (isPdf(file.url) || isPdf(file.name)) {
+      return <iframe src={file.url} frameBorder={0} style={{ width: '100%', height: 760 }} />;
+    }
+
+    return <img src={file.url} />;
   };
 
   return (

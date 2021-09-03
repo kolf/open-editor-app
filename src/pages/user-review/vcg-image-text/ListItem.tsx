@@ -116,7 +116,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
                   <a
                     key={o.value}
                     style={{ color: isActvie ? '' : '#666' }}
-                    onClick={e => (isActvie ? onChange('license', o.value) : null)}
+                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
                   >
                     {o.label}
                   </a>

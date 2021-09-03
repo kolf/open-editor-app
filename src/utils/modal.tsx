@@ -1,36 +1,20 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { Modal, ConfigProvider } from 'antd';
+import { ModalFuncProps } from 'antd/lib/modal/Modal';
 import zhCN from 'antd/lib/locale/zh_CN';
 
 const IS_REACT_16 = !!ReactDOM.createPortal;
 
-interface IMod {
-  title: string;
-  dragable?: boolean;
-  autoIndex?: boolean;
-  style: { top: number };
-  width: number;
-  isMobile?: boolean;
-  visible: boolean;
-  footer: number | null;
-  wrapClassName?: string;
-}
-
-interface IModalConfig {
-  width?: number;
-  title: string;
-  content: React.ReactNode;
+interface IModleProps extends ModalFuncProps {
   footer?: React.ReactNode;
-  onOk?: (args: any | never) => Promise<any> | void;
   autoIndex?: boolean;
-  afterClose?: (...args: any[]) => void;
-  onCancel?: (...args: any[]) => void;
+  dragable?: boolean;
 }
 
-class Mod extends React.Component<IMod> {
-  container: any;
-  header: any;
+class Mod extends React.Component<IModleProps> {
+  private container: any;
+  private header: any;
 
   static defaultProps = {
     autoIndex: true,
@@ -168,7 +152,7 @@ class Mod extends React.Component<IMod> {
   }
 }
 
-export default function modal(config: IModalConfig) {
+export default function modal(config: IModleProps) {
   const div = document.createElement('div');
   document.body.appendChild(div);
   let currentConfig = {
