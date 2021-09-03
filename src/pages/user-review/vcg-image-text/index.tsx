@@ -260,7 +260,7 @@ function List() {
       message.success(`设置通过成功！`);
       setList(idList, {
         reasonTitle: '',
-        callbackStatus: 2,
+        // callbackStatus: 2,
         qualityStatus: '24'
       });
     } catch (error) {
@@ -303,7 +303,7 @@ function List() {
         .filter(item => idList.includes(item.id) && item.callbackStatus !== 2)
         .map(item => ({
           ...item,
-          callbackStatus: 2,
+          // callbackStatus: 2,
           osiImageReview: undefined,
           createdTime: undefined,
           updatedTime: undefined
