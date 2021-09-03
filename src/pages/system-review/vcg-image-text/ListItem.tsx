@@ -5,6 +5,7 @@ import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
+import config from 'src/config';
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
 import options, { Quality, LicenseType, CopyrightType, License } from 'src/declarations/enums/query';
 const { Option } = Select;
@@ -66,12 +67,14 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
             {dataSource.createdTime}
           </Col>
           <Col title="编辑时间" style={{ textAlign: 'right' }}>
-            {dataSource.updatedTime}
+            {dataSource.qualityEditTime}
           </Col>
         </Row>
       </GridItemRow>
       <GridItemRow label={<IconFont type="icon-ic_image" />}>
-        <a style={{ color: '#337ab7' }} onClick={e => onClick('id')}>{dataSource.id}</a>
+        <a style={{ color: '#337ab7' }} onClick={e => onClick('id')}>
+          {dataSource.id}
+        </a>
         {dataSource.priority === 2 && (
           <IconFont
             title="加急"

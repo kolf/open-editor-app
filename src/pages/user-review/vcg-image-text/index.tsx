@@ -127,8 +127,8 @@ function List() {
             customReason,
             memo
           } = item;
-          const { qualityStatus, priority, callbackStatus } = osiImageReview;
-          const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
+          const { qualityStatus, priority, callbackStatus, qualityEditTime } = osiImageReview;
+          const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
@@ -142,6 +142,7 @@ function List() {
             ...item,
             priority,
             qualityStatus,
+            qualityEditTime,
             callbackStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
@@ -439,8 +440,8 @@ function List() {
       <Toolbar
         onSelectIds={setSelectedIds}
         onRefresh={() => {
-          refresh()
-          setSelectedIds([])
+          refresh();
+          setSelectedIds([]);
         }}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
