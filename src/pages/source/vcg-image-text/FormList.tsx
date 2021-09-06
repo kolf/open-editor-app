@@ -95,7 +95,7 @@ const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="aiDetection" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="AI分类">
+          <Select allowClear style={{ width: 120 }} placeholder="AI检测">
             {options.get(AIDetection).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
@@ -106,9 +106,9 @@ const FormList = (props: any) => {
       </Form>
       <div className="formList-dropdown">
         {collapse ? (
-          <Button type="text" shape="circle" title="收缩" icon={<DownOutlined />} onClick={e => setCollapse(false)} />
+          <Button type="text" shape="circle" title="收缩" icon={<UpOutlined />} onClick={e => setCollapse(false)} />
         ) : (
-          <Button type="text" shape="circle" title="展开" icon={<UpOutlined />} onClick={e => setCollapse(true)} />
+          <Button type="text" shape="circle" title="展开" icon={<DownOutlined />} onClick={e => setCollapse(true)} />
         )}
       </div>
     </div>
