@@ -43,17 +43,21 @@ export default function useImage(list: Array<IProps>) {
   // 显示操作日志
   async function showLogs(index: number) {
     const { id } = list[index];
-    const res = await imageService.getLogList([id]);
-    const mod = modal({
-      title: `操作日志`,
-      width: 640,
-      content: <ImageLogs dataSource={res} />,
-      footer: null
-    });
+    try {
+      const res = await imageService.getLogList([id]);
+      const mod = modal({
+        title: `操作日志`,
+        width: 640,
+        content: <ImageLogs dataSource={res} />,
+        footer: null
+      });
+    } catch (error) {
+      message.error(`请求接口出错！`);
+    }
   }
 
   // 显示中图
-  async function showMiddleImage(index: number) {
+  function showMiddleImage(index: number) {
     const { urlSmall } = list[index];
     const mod = modal({
       title: `查看中图`,

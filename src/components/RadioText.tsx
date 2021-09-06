@@ -16,7 +16,11 @@ function RadioText({ value, options, onChange }: Props): ReactElement {
   return (
     <Space>
       {options.map(o => (
-        <a key={o.value} onClick={e => onChange(o.value)} style={{ color: value === o.value ? '#ff0000' : '#333333' }}>
+        <a
+          key={o.value}
+          onClick={e => onChange(o.value)}
+          style={value === o.value ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444'}}
+        >
           {o.label}
         </a>
       ))}

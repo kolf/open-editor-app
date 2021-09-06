@@ -127,8 +127,8 @@ function List() {
             customReason,
             memo
           } = item;
-          const { qualityStatus, priority, callbackStatus } = osiImageReview;
-          const categoryList = (category || '').split(',');
+          const { qualityStatus, priority, callbackStatus, qualityEditTime } = osiImageReview;
+          const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
@@ -142,6 +142,7 @@ function List() {
             ...item,
             priority,
             qualityStatus,
+            qualityEditTime,
             callbackStatus,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
@@ -149,7 +150,7 @@ function List() {
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value) && index < 2)
+              .filter((o, index) => categoryList.includes(o.value))
               .map(o => o.label)
               .join(','),
             createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
@@ -259,7 +260,7 @@ function List() {
       message.success(`设置通过成功！`);
       setList(idList, {
         reasonTitle: '',
-        callbackStatus: 2,
+        // callbackStatus: 2,
         qualityStatus: '24'
       });
     } catch (error) {
@@ -302,7 +303,7 @@ function List() {
         .filter(item => idList.includes(item.id) && item.callbackStatus !== 2)
         .map(item => ({
           ...item,
-          callbackStatus: 2,
+          // callbackStatus: 2,
           osiImageReview: undefined,
           createdTime: undefined,
           updatedTime: undefined
@@ -439,8 +440,8 @@ function List() {
       <Toolbar
         onSelectIds={setSelectedIds}
         onRefresh={() => {
-          refresh()
-          setSelectedIds([])
+          refresh();
+          setSelectedIds([]);
         }}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}

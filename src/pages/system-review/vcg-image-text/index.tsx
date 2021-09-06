@@ -99,8 +99,8 @@ function List() {
             standardReason,
             customReason
           } = item;
-          const { qualityStatus, priority } = osiImageReview;
-          const categoryList = (category || '').split(',');
+          const { qualityStatus, priority,qualityEditTime } = osiImageReview;
+          const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
           let reasonTitle = '';
 
           if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
@@ -111,13 +111,14 @@ function List() {
             ...item,
             priority,
             qualityStatus,
+            qualityEditTime,
             copyright: copyright + '',
             qualityRank: qualityRank ? qualityRank + '' : undefined,
             licenseType: licenseType + '' || undefined,
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value) && index < 2)
+              .filter((o, index) => categoryList.includes(o.value))
               .map(o => o.label)
               .join(','),
             createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
