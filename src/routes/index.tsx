@@ -6,28 +6,25 @@ import Login from 'src/pages/auth/Login';
 import PageNotFound from 'src/pages/errors/PageNotFound';
 import ServerError from 'src/pages/errors/ServerError';
 import { RouteLayout } from 'src/components/router/RouteLayout';
-import Home from 'src/pages/home';
+// import Home from 'src/pages/home';
 // 数据分配
 import SouceList from 'src/pages/source/list';
-import SourceVcgImageText from 'src/pages/source/vcg-image-text';
-import SourceVcgImageKeyword from 'src/pages/source/vcg-image-keyword';
-import SourceVcgImageSensitive from 'src/pages/source/vcg-image-sensitive';
-import SourceCfpImageList from 'src/pages/source/cfp-image-list';
+import SourceImageText from 'src/pages/source/image-text';
+import SourceImageKeyword from 'src/pages/source/image-keyword';
+import SourceImageSensitive from 'src/pages/source/image-sensitive';
 // 全部资源
-import SystemReviewVcgImageText from 'src/pages/system-review/vcg-image-text';
-import SystemReviewVcgImageKeyword from 'src/pages/system-review/vcg-image-keyword';
-import SystemReviewVcgImageSensitive from 'src/pages/system-review/vcg-image-sensitive';
-import SystemReviewCfpImageList from 'src/pages/system-review/cfp-image-list';
+import SystemReviewImageText from 'src/pages/system-review/image-text';
+import SystemReviewImageKeyword from 'src/pages/system-review/image-keyword';
+import SystemReviewImageSensitive from 'src/pages/system-review/image-sensitive';
+
 // 我的审核
-import UserReviewVcgImageText from 'src/pages/user-review/vcg-image-text';
-import UserReviewVcgImageKeyword from 'src/pages/user-review/vcg-image-keyword';
-import UserReviewVcgImageSensitive from 'src/pages/user-review/vcg-image-sensitive';
-import UserReviewCfpImageList from 'src/pages/user-review/cfp-image-list';
+import UserReviewImageText from 'src/pages/user-review/image-text';
+import UserReviewImageKeyword from 'src/pages/user-review/image-keyword';
+import UserReviewImageSensitive from 'src/pages/user-review/image-sensitive';
 // 终审
-import ReviewResultVcgImageText from 'src/pages/review-result/vcg-image-text';
-import ReviewResultVcgImageKeyword from 'src/pages/review-result/vcg-image-keyword';
-import ReviewResultVcgImageSensitive from 'src/pages/review-result/vcg-image-sensitive';
-import ReviewResultCfpImageList from 'src/pages/review-result/cfp-image-list';
+import ReviewResultImageText from 'src/pages/review-result/image-text';
+import ReviewResultImageKeyword from 'src/pages/review-result/image-keyword';
+import ReviewResultImageSensitive from 'src/pages/review-result/image-sensitive';
 // 统计
 import StatisticalList from 'src/pages/statistical/list';
 // 帮助
@@ -40,87 +37,68 @@ import { PATH } from './path';
 export const RootRouter = React.memo(() => {
   return (
     <Switch>
-      <Redirect path="/" to={PATH.SOURCE_VCG_IMAGE_TEXT} exact />
+      <Redirect path="/" to={PATH.SOURCE_IMAGE_TEXT} exact />
       <RouteLayout path={PATH.LOGIN} component={Login} layout={GuestLayout} isPrivate={false} exact />
       <RouteLayout path={PATH.SOURCE_LIST} component={SouceList} layout={MainLayout} exact />
-      <RouteLayout path={PATH.SOURCE_VCG_IMAGE_TEXT} component={SourceVcgImageText} layout={MainLayout} exact />
-      <RouteLayout path={PATH.SOURCE_VCG_IMAGE_KEYWORD} component={SourceVcgImageKeyword} layout={MainLayout} exact />
+      <RouteLayout path={PATH.SOURCE_IMAGE_TEXT} component={SourceImageText} layout={MainLayout} exact />
+      <RouteLayout path={PATH.SOURCE_IMAGE_KEYWORD} component={SourceImageKeyword} layout={MainLayout} exact />
       <RouteLayout
-        path={PATH.SOURCE_VCG_IMAGE_SENSITIVE}
-        component={SourceVcgImageSensitive}
-        layout={MainLayout}
-        exact
-      />
-      <RouteLayout path={PATH.SOURCE_CFP_IMAGE_LIST} component={SourceCfpImageList} layout={MainLayout} exact />
-      <RouteLayout
-        path={PATH.SYSTEM_REVIEW_VCG_IMAGE_TEXT}
-        component={SystemReviewVcgImageText}
+        path={PATH.SOURCE_IMAGE_SENSITIVE}
+        component={SourceImageSensitive}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.SYSTEM_REVIEW_VCG_IMAGE_KEYWORD}
-        component={SystemReviewVcgImageKeyword}
+        path={PATH.SYSTEM_REVIEW_IMAGE_TEXT}
+        component={SystemReviewImageText}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.SYSTEM_REVIEW_VCG_IMAGE_SENSITIVE}
-        component={SystemReviewVcgImageSensitive}
+        path={PATH.SYSTEM_REVIEW_IMAGE_KEYWORD}
+        component={SystemReviewImageKeyword}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.SYSTEM_REVIEW_CFP_IMAGE_LIST}
-        component={SystemReviewCfpImageList}
+        path={PATH.SYSTEM_REVIEW_IMAGE_SENSITIVE}
+        component={SystemReviewImageSensitive}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.USER_REVIEW_VCG_IMAGE_TEXT}
-        component={UserReviewVcgImageText}
+        path={PATH.USER_REVIEW_IMAGE_TEXT}
+        component={UserReviewImageText}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.USER_REVIEW_VCG_IMAGE_KEYWORD}
-        component={UserReviewVcgImageKeyword}
+        path={PATH.USER_REVIEW_IMAGE_KEYWORD}
+        component={UserReviewImageKeyword}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.USER_REVIEW_VCG_IMAGE_SENSITIVE}
-        component={UserReviewVcgImageSensitive}
+        path={PATH.USER_REVIEW_IMAGE_SENSITIVE}
+        component={UserReviewImageSensitive}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.USER_REVIEW_CFP_IMAGE_LIST}
-        component={UserReviewCfpImageList}
+        path={PATH.REVIEW_RESULT_IMAGE_TEXT}
+        component={ReviewResultImageText}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.REVIEW_RESULT_VCG_IMAGE_TEXT}
-        component={ReviewResultVcgImageText}
+        path={PATH.REVIEW_RESULT_IMAGE_KEYWORD}
+        component={ReviewResultImageKeyword}
         layout={MainLayout}
         exact
       />
       <RouteLayout
-        path={PATH.REVIEW_RESULT_VCG_IMAGE_KEYWORD}
-        component={ReviewResultVcgImageKeyword}
-        layout={MainLayout}
-        exact
-      />
-      <RouteLayout
-        path={PATH.REVIEW_RESULT_VCG_IMAGE_SENSITIVE}
-        component={ReviewResultVcgImageSensitive}
-        layout={MainLayout}
-        exact
-      />
-      <RouteLayout
-        path={PATH.REVIEW_RESULT_CFP_IMAGE_LIST}
-        component={ReviewResultCfpImageList}
+        path={PATH.REVIEW_RESULT_IMAGE_SENSITIVE}
+        component={ReviewResultImageSensitive}
         layout={MainLayout}
         exact
       />
