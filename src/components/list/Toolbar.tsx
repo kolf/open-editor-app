@@ -1,24 +1,33 @@
 import React, { ReactElement } from 'react';
 import { Affix, Space, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
-import Pager, { IPagerProps } from 'src/components/Pager';
+import Pager, { Props as IPager } from 'src/components/Pager';
 import './Toolbar.less';
 
-const selectOptions = ['全选', '反选', '取消'].map((o, i) => ({
+const selectOptions: Option[] = ['全选', '反选', '取消'].map((o, i) => ({
   value: i + '',
   label: o
 }));
 
 interface Props {
-  selectedIds?: number[];
-  idList?: number[];
-  onSelectIds?: (args: number[]) => void;
-  onRefresh?: Function;
+  selectedIds?: IdList;
+  idList?: IdList;
+  onSelectIds?: (idList: IdList) => void;
+  onRefresh?: () => void;
   children?: ReactElement;
-  pagerProps?: IPagerProps;
+  pagerProps?: IPager;
+  extraContent?: React.ReactNode;
 }
 
-function Toolbar({ selectedIds = [], idList, children, onSelectIds, onRefresh, pagerProps }: Props): ReactElement {
+function Toolbar({
+  selectedIds = [],
+  idList,
+  children,
+  onSelectIds,
+  onRefresh,
+  pagerProps,
+  extraContent
+}: Props): ReactElement {
   const handleClick = key => {
     let nextSelectedIds = [];
     switch (key) {
@@ -37,7 +46,7 @@ function Toolbar({ selectedIds = [], idList, children, onSelectIds, onRefresh, p
       <div className="toolbar-root">
         <div className="toolbar-left">
           {onSelectIds && (
-            <Space style={{paddingRight:6}}>
+            <Space style={{ paddingRight: 6 }}>
               {selectOptions.map(o => (
                 <a key={o.value} onClick={e => handleClick(o.value)}>
                   {o.label}
@@ -48,15 +57,19 @@ function Toolbar({ selectedIds = [], idList, children, onSelectIds, onRefresh, p
           )}
           {onRefresh && (
             <Button
-              style={{ backgroundColor: '#eee'}}
+              style={{ backgroundColor: '#eee' }}
               size="small"
               icon={<ReloadOutlined />}
-              onClick={onRefresh}
+              onClick={e => {
+                onSelectIds && onSelectIds([]);
+                onRefresh();
+              }}
             />
           )}
         </div>
         <div className="toolbar-content">{children}</div>
         <div className="toolbar-right">
+          {extraContent && <span style={{ paddingRight: 6 }}>{extraContent}</span>}
           <Pager {...pagerProps} />
         </div>
       </div>

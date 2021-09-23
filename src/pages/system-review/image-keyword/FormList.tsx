@@ -13,8 +13,9 @@ import options, {
   IfSensitveCheck
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
+
 interface Props {
-  initialValues: any;
+  initialValues?: any;
   onChange: (value: any) => void;
 }
 
@@ -41,6 +42,9 @@ export default React.memo(function FormList({ initialValues, onChange }: Props) 
     <div className="formList-root">
       <div className="formList-list" style={{ height: collapse ? 'auto' : 38 }}>
         <Form form={form} layout="inline" initialValues={initialValues} onValuesChange={onChange}>
+          <Form.Item name="qualityAuditorId" className="form-list-item">
+            <SearchSelect manual style={{ width: 160 }} placeholder="审核人" type="editUser" />
+          </Form.Item>
           <Form.Item name="createdTime" className="form-list-item">
             <RangePicker
               inputReadOnly
@@ -56,7 +60,7 @@ export default React.memo(function FormList({ initialValues, onChange }: Props) 
               placeholder={['审核时间', '']}
             />
           </Form.Item>
-          <Form.Item name="qualityStatus" className="form-list-item">
+          <Form.Item name="keywordsStatus" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="审核状态">
               {qualityStatusOptions.map(o => (
                 <Option key={o.value} value={o.value}>

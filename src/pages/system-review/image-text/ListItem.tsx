@@ -5,7 +5,6 @@ import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
-import config from 'src/config';
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
 import options, { Quality, LicenseType, CopyrightType, License } from 'src/declarations/enums/query';
 const { Option } = Select;
@@ -14,15 +13,13 @@ const licenseOptions = options.get(License);
 const qualityOptions = options.get(Quality);
 const copyrightOptions = options.get(CopyrightType);
 
-interface Props {
-  dataSource: any;
+type Props<T> = {
+  dataSource: T;
   index: number;
-  onClick: any;
-  onChange: any;
-  selected: boolean;
-}
+  onClick: (index: number, field: IImageActionType) => void;
+};
 
-function getIndexProps(qualityStatus) {
+function getIndexProps(qualityStatus: IOsiImageReview['qualityStatus']) {
   if (/^1/.test(qualityStatus)) {
     return {
       title: `待编审`,
@@ -43,22 +40,21 @@ function getIndexProps(qualityStatus) {
   }
 }
 
-function isLicenseActive(releases: any, value: string): boolean {
+function isLicenseActive(releases: IImage['releases'], value: string): boolean {
   if (!releases || releases.length === 0) {
     return false;
   }
   return !!releases.find(o => o.type + '' === value);
 }
 
-export default function ListItem({ dataSource, selected, index, onClick, onChange }: Props): ReactElement {
-  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList);
+export default React.memo(function ListItem({ dataSource, index, onClick }: Props<IImage>): ReactElement {
+  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
-      indexProps={{ ...getIndexProps(dataSource.qualityStatus), text: index + 1 }}
+      indexProps={{ ...getIndexProps(dataSource.osiImageReview.qualityStatus), text: index + 1 + '' }}
       height={460}
-      onClick={onClick}
-      selected={selected}
+      onClick={field => onClick(index, field)}
       actions={[{ icon: <CalendarOutlined />, value: 'logs', label: '日志' }]}
     >
       <GridItemRow>
@@ -67,15 +63,15 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
             {dataSource.createdTime}
           </Col>
           <Col title="编辑时间" style={{ textAlign: 'right' }}>
-            {dataSource.qualityEditTime}
+            {dataSource.osiImageReview.qualityEditTime}
           </Col>
         </Row>
       </GridItemRow>
       <GridItemRow label={<IconFont type="icon-ic_image" />}>
-        <a style={{ color: '#337ab7' }} onClick={e => onClick('id')}>
+        <a style={{ color: '#337ab7' }} onClick={e => onClick(index, 'id')}>
           {dataSource.id}
         </a>
-        {dataSource.priority === 2 && (
+        {dataSource.osiImageReview.priority === 2 && (
           <IconFont
             title="加急"
             type="icon-xing"
@@ -105,30 +101,27 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
 
       <GridItemRow>
         <div style={{ paddingBottom: 6 }}>
-          <Space style={{ paddingRight: 8, paddingTop: 6 }}>
+          <Space style={{ paddingRight: 12, paddingTop: 6 }}>
             {licenseOptions
               .filter(o => o.value !== '3')
               .map(o => {
-                const isActvie = isLicenseActive(dataSource.releases, o.value);
+                const isActvie = isLicenseActive(dataSource.releases, o.value as string);
                 return (
                   <a
                     key={o.value}
                     style={isActvie ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
-                    onClick={e => (isActvie ? onClick('license', o.value) : null)}
+                    onClick={e => (isActvie ? onClick(index, 'releases') : null)}
                   >
                     {o.label}
                   </a>
                 );
               })}
           </Space>
-          <RadioText
-            options={licenseTypeOptions}
-            value={dataSource.licenseType}
-            onChange={value => onChange('licenseType', value)}
-          />
+
+          <RadioText options={licenseTypeOptions} value={dataSource.licenseType} />
 
           <div style={{ position: 'absolute', right: 0, top: 0 }}>
-            <Select value={dataSource.qualityRank} placeholder="等级">
+            <Select defaultValue={dataSource.qualityRank} placeholder="等级">
               {qualityOptions.map(o => (
                 <Option value={o.value} key={o.value}>
                   {o.label}
@@ -139,12 +132,7 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
         </div>
       </GridItemRow>
       <GridItemRow>
-        <Select
-          value={dataSource.copyright}
-          placeholder="授权"
-          style={{ width: '100%' }}
-          onChange={value => onChange('copyright', value)}
-        >
+        <Select defaultValue={dataSource.copyright} placeholder="授权" style={{ width: '100%' }}>
           {copyrightOptions.map(o => (
             <Option value={o.value} key={o.value}>
               {o.label}
@@ -163,9 +151,9 @@ export default function ListItem({ dataSource, selected, index, onClick, onChang
 
       {dataSource.sensitiveList.length > 0 && (
         <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
-          {sensitiveListTitle}
+          {sensitiveListTitle as string}
         </GridItem.TopTag>
       )}
     </GridItem>
   );
-}
+});

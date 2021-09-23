@@ -11,20 +11,14 @@ const layout = {
   xxl: 4
 };
 
-interface Props {
-  dataSource: any;
-  renderItem: any;
+type Props<T> = {
+  dataSource: T[];
+  renderItem: (item: T, index: number) => ReactElement;
   loading: boolean;
   rowKey?: string;
-  error?: string;
-}
-
-const defaultProps = {
-  rowKey: 'id',
-  dataSource: []
 };
 
-function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): ReactElement {
+export default function GridList<T>({ dataSource = [], renderItem, rowKey = 'id', loading }: Props<T>): ReactElement {
   if (loading) {
     return (
       <Spin tip="加载中...">
@@ -51,7 +45,3 @@ function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): Re
     </div>
   );
 }
-
-GridList.defaultProps = defaultProps;
-
-export default GridList;

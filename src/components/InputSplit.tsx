@@ -3,17 +3,17 @@ import { Dropdown, Input, InputNumber, Menu } from 'antd';
 
 interface Props {
   placeholder: string;
-  onChange?: any;
+  onChange?: (value: string) => void;
 }
 
-export default function InputSplit({ placeholder, onChange }: Props): ReactElement {
-  const [minValue, setMinValue] = useState<Number>();
-  const [maxValue, setMaxValue] = useState<Number>();
+export default React.memo(function InputSplit({ placeholder, onChange }: Props): ReactElement {
+  const [minValue, setMinValue] = useState<number>();
+  const [maxValue, setMaxValue] = useState<number>();
 
   useEffect(() => {
-    updatePropsValue();
+    handleChange();
 
-    function updatePropsValue() {
+    function handleChange() {
       if (minValue !== undefined && maxValue !== undefined) {
         onChange(`${minValue},${maxValue}`);
       }
@@ -26,7 +26,7 @@ export default function InputSplit({ placeholder, onChange }: Props): ReactEleme
     <Input.Group compact style={{ border: '1px solid #d9d9d9', overflow: 'hidden', width: 170, height: 32 }}>
       <InputNumber
         value={minValue}
-        onChange={setMinValue}
+        onChange={value => setMinValue(value)}
         step={0.1}
         min={0}
         max={10}
@@ -38,7 +38,7 @@ export default function InputSplit({ placeholder, onChange }: Props): ReactEleme
       {hasValue && (
         <InputNumber
           value={maxValue}
-          onChange={setMaxValue}
+          onChange={value => setMaxValue(value)}
           step={0.1}
           min={minValue || 0}
           max={10}
@@ -53,4 +53,4 @@ export default function InputSplit({ placeholder, onChange }: Props): ReactEleme
       )}
     </Input.Group>
   );
-}
+});

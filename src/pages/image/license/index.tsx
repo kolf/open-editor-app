@@ -28,7 +28,7 @@ export default function LicenseType({}: Props): ReactElement {
   const [index, setIndex] = useState(-1);
 
   const [page, setPage] = useState(1);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef();
 
   const columns = [
     {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRequest } from 'ahooks';
+import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import moment from 'moment';
 import { Radio, Button, Space, Input, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
@@ -12,7 +13,7 @@ import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { useKeywords } from 'src/hooks/useKeywords';
+import { useSearchValue } from 'src/hooks/useSearchValue';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
@@ -26,12 +27,6 @@ const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
 const copyrightOptions = options.get(CopyrightType);
 
-interface listProps {
-  // TODO: 添加图片接口
-  list?: any;
-  total?: number;
-}
-
 const initialData = {
   list: [],
   total: 0
@@ -40,39 +35,51 @@ const initialData = {
 function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
-  const [keywords] = useKeywords();
+  const [keywords] = useSearchValue();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
 
   const {
     data: { list, total } = initialData,
-    loading,
+    loading = true,
     mutate,
-    run,
     refresh
-  } = useRequest(
+  }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
       return res;
     },
     {
       ready: !!(providerOptions && categoryOptions && allReason),
-      manual: true,
       throttleInterval: 600,
-      formatResult
+      formatResult: data => formatResult(data),
+      refreshDeps: [query, keywords]
     }
   );
 
-  const { showDetails, showLogs, openLicense, showMiddleImage } = useImage(list);
+  const {
+    showDetails,
+    showLogs,
+    showMiddleImage,
+    openLicense,
+    openOriginImage,
+    selectedIds,
+    onSelect,
+    setList,
+    setSelectedIds
+  } = useImage({
+    list,
+    onChange: list => {
+      mutate({
+        total,
+        list
+      });
+    }
+  });
 
-  useEffect(() => {
-    run();
-    setSelectedIds([]);
-  }, [query, keywords]);
   // 格式化查询参数
   const formatQuery = query => {
     let result = Object.keys(query).reduce(
@@ -83,8 +90,6 @@ function List() {
           result[key] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
             config.data.DATE_FORMAT
           )} 23:59:59`;
-          // const date = value.format(config.data.DATE_FORMAT);
-          // result[key] = `${date} 00:00:00,${date} 23:59:59`;
         } else if (value && typeof value === 'object') {
           result[key] = value.key;
         } else if (value) {
@@ -106,32 +111,28 @@ function List() {
   };
 
   // 格式化返回的数据
-  function formatResult(data: listProps): listProps {
-    if (!data) {
-      return initialData;
-    }
+  const formatResult = (data: IImageResponse): IImageResponse => {
     try {
       return {
         total: data.total,
         list: data.list.map(item => {
           const {
-            createdTime,
-            updatedTime,
             osiImageReview,
-            qualityRank,
-            copyright,
-            licenseType,
             osiProviderId,
             category,
             standardReason,
             customReason,
-            memo
+            memo,
+            copyright,
+            qualityRank,
+            licenseType
           } = item;
-          const { qualityStatus, priority, callbackStatus, qualityEditTime } = osiImageReview;
-          const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
-          let reasonTitle = '';
+          const categoryList: IImage['categoryNames'][] = (category || '')
+            .split(',')
+            .filter((item, index) => item && index < 2);
+          let reasonTitle: IImage['reasonTitle'] = '';
 
-          if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
+          if (/^3/.test(osiImageReview.qualityStatus) && (standardReason || customReason)) {
             reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
           }
 
@@ -140,43 +141,48 @@ function List() {
               memo
             },
             ...item,
-            priority,
-            qualityStatus,
-            qualityEditTime,
-            callbackStatus,
-            copyright: copyright + '',
-            qualityRank: qualityRank ? qualityRank + '' : undefined,
-            licenseType: licenseType + '' || undefined,
+            copyright: (copyright + '') as IImage['copyright'],
+            qualityRank: qualityRank ? ((qualityRank + '') as IImage['qualityRank']) : undefined,
+            licenseType: (licenseType + '') as IImage['licenseType'],
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value))
+              .filter((o, index) => categoryList.includes(o.value + ''))
               .map(o => o.label)
-              .join(','),
-            createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
-            updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
+              .join(',')
           };
         })
       };
     } catch (error) {
-      console.log(error, 'error');
       return data;
     }
-  }
+  };
+
+  useEffect(() => {
+    if (selectedIds.length > 0) {
+      setSelectedIds([]);
+    }
+  }, [query]);
+
+  // TODO 待优化
+  const handleChange = <K extends keyof IImage>(index: number, field: K, value: any) => {
+    const { id } = list[index];
+    setList([id], { [field]: value });
+  };
 
   // 点击某一项数据
-  const handleClick = (index, field) => {
+  const handleClick = (index: number, field: IImageActionType) => {
     switch (field) {
       case 'id':
         showDetails(index);
         break;
       case 'cover':
-        handleSelect(index);
+        onSelect(index);
         break;
-      case 'showMiddleImage':
+      case 'middleImage':
         showMiddleImage(index);
         break;
-      case 'openOriginImage':
+      case 'originImage':
         openOriginImage(index);
         break;
       case 'resolve':
@@ -188,7 +194,7 @@ function List() {
       case 'logs':
         showLogs(index);
         break;
-      case 'license':
+      case 'releases':
         openLicense(index);
         break;
       default:
@@ -196,54 +202,21 @@ function List() {
     }
   };
 
-  const setList = (ids, props) => {
-    const idList = ids || [...selectedIds];
-    const nextList = list.map(item => {
-      if (idList?.includes(item.id)) {
-        return {
-          ...item,
-          ...props
-        };
-      }
-      return item;
-    });
-    mutate({
-      total,
-      list: nextList
-    });
-  };
-
-  const handleSelect = index => {
-    const { id } = list[index];
-    const nextSelectedIds = selectedIds.includes(id) ? selectedIds.filter(sid => sid !== id) : [...selectedIds, id];
-    setSelectedIds(nextSelectedIds);
-  };
-
-  const checkSelectedIds = () => {
-    if (selectedIds.length === 0) {
-      // TODO 使用throw不合理
-      throw '请选择图片！';
-    }
-    return [...selectedIds];
-  };
-
-  //  打开原图
-  const openOriginImage = async index => {
-    const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-    idList.forEach(id => {
-      const { urlYuan } = list.find(item => item.id === id);
-      window.open(urlYuan);
-    });
-  };
-
   // 设置通过
-  const setResolve = async index => {
+  const setResolve = async (index: number) => {
+    const idList = index === -1 ? selectedIds : [list[index].id];
+
+    if (idList.length === 0) {
+      message.info(`请选择图片！`);
+      return;
+    }
+
     let mod = null;
     try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
+
       const imageList = list
-        .filter(item => idList.includes(item.id) && item.callbackStatus !== 2)
+        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
         .map(item => ({
           ...item,
           osiImageReview: undefined,
@@ -258,11 +231,19 @@ function List() {
       const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
       mod.close();
       message.success(`设置通过成功！`);
-      setList(idList, {
-        reasonTitle: '',
-        // callbackStatus: 2,
-        qualityStatus: '24'
-      });
+      setList(
+        idList,
+        idList.map(id => {
+          const item = list.find(l => l.id === id);
+          return {
+            reasonTitle: '',
+            osiImageReview: {
+              ...item.osiImageReview,
+              qualityStatus: '24' as IOsiImageReview['qualityStatus']
+            }
+          };
+        })
+      );
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -270,13 +251,19 @@ function List() {
   };
 
   // 设置不通过
-  const setReject = async index => {
+  const setReject = async (index: number) => {
+    const idList = index === -1 ? selectedIds : [list[index].id];
+
+    if (idList.length === 0) {
+      message.info(`请选择图片！`);
+      return;
+    }
+
     let mod = null;
     let standardReason = [];
     let customReason = '';
 
     try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({
         width: 820,
         title: '设置不通过原因',
@@ -300,10 +287,9 @@ function List() {
       }
 
       const imageList = list
-        .filter(item => idList.includes(item.id) && item.callbackStatus !== 2)
+        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
         .map(item => ({
           ...item,
-          // callbackStatus: 2,
           osiImageReview: undefined,
           createdTime: undefined,
           updatedTime: undefined
@@ -321,10 +307,22 @@ function List() {
       });
       mod.close();
       message.success(`设置不通过成功！`);
-      setList(idList, {
-        reasonTitle: getReasonTitle(reasonMap, standardReason, customReason),
-        qualityStatus: '34'
-      });
+
+      const reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
+
+      setList(
+        idList,
+        idList.map(id => {
+          const item = list.find(l => l.id === id);
+          return {
+            reasonTitle,
+            osiImageReview: {
+              ...item.osiImageReview,
+              qualityStatus: '34' as IOsiImageReview['qualityStatus']
+            }
+          };
+        })
+      );
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -332,10 +330,16 @@ function List() {
   };
 
   // 设置等级
-  const setQualityList = async (index, value) => {
+  const setQualityList = async (index: number, value: IImage['qualityRank']) => {
+    const idList = index === -1 ? selectedIds : [list[index].id];
+
+    if (idList.length === 0) {
+      message.info(`请选择图片！`);
+      return;
+    }
+
     let mod = null;
     try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '1', value } });
@@ -351,10 +355,16 @@ function List() {
   };
 
   // 设置授权类型
-  const setLicenseTypeList = async (index, value) => {
+  const setLicenseTypeList = async (index: number, value: IImage['licenseType']) => {
+    const idList = index === -1 ? selectedIds : [list[index].id];
+
+    if (idList.length === 0) {
+      message.info(`请选择图片！`);
+      return;
+    }
+
     let mod = null;
     try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
       mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '2', value } });
@@ -370,11 +380,18 @@ function List() {
   };
 
   // 设置授权
-  const setCopyrightList = async index => {
+  const setCopyrightList = async (index: number) => {
+    const idList = index === -1 ? selectedIds : [list[index].id];
+
+    if (idList.length === 0) {
+      message.info(`请选择图片！`);
+      return;
+    }
+
     let mod = null;
     try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      let value = '';
+      let value: IImage['copyright'] = null;
+
       mod = await confirm({
         title: '设置授权',
         content: (
@@ -410,12 +427,18 @@ function List() {
     }
   };
 
-  const setMemoList = async index => {
-    // setMemo
+  const setMemoList = async (index: number) => {
+    const idList = index === -1 ? selectedIds : [list[index].id];
+
+    if (idList.length === 0) {
+      message.info(`请选择图片！`);
+      return;
+    }
+
     let mod = null;
     try {
-      const idList = index === -1 ? checkSelectedIds() : [list[index].id];
-      let value = '';
+      let value: IImage['memo'] = '';
+
       mod = await confirm({
         title: '设置备注',
         content: <Input placeholder="请输入备注信息" onChange={e => (value = e.target.value)} />
@@ -436,21 +459,18 @@ function List() {
 
   return (
     <>
-      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} initialValues={query} />
+      <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} initialValues={query} />
       <Toolbar
         onSelectIds={setSelectedIds}
-        onRefresh={() => {
-          refresh();
-          setSelectedIds([]);
-        }}
+        onRefresh={refresh}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         pagerProps={{
           total,
           current: query.pageNum,
           pageSize: query.pageSize,
-          onChange: values => {
-            setQuery({ ...query, ...values });
+          onChange: value => {
+            setQuery({ ...query, ...value });
           }
         }}
       >
@@ -464,13 +484,22 @@ function List() {
             编辑
           </Button>
           {licenseTypeOptions.map(o => (
-            <Button size="small" title={`设置${o.label}`} onClick={e => setLicenseTypeList(-1, o.value)}>
+            <Button
+              size="small"
+              title={`设置${o.label}`}
+              onClick={e => setLicenseTypeList(-1, o.value as IImage['licenseType'])}
+            >
               {o.label}
             </Button>
           ))}
 
           {qualityOptions.map(o => (
-            <Button size="small" title={`设置等级${o.label}`} key={o.value} onClick={e => setQualityList(-1, o.value)}>
+            <Button
+              size="small"
+              title={`设置等级${o.label}`}
+              key={o.value}
+              onClick={e => setQualityList(-1, o.value as IImage['qualityRank'])}
+            >
               {o.label}
             </Button>
           ))}
@@ -492,15 +521,13 @@ function List() {
       <GridList
         loading={loading}
         dataSource={list}
-        renderItem={(item, index) => (
+        renderItem={(item: IImage, index) => (
           <ListItem
             selected={selectedIds.includes(item.id)}
             dataSource={item}
             index={index}
-            onClick={field => handleClick(index, field)}
-            onChange={(field, value) => {
-              setList([item.id], { [field]: value });
-            }}
+            onClick={handleClick}
+            onChange={handleChange}
           />
         )}
       />
