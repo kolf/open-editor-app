@@ -1,55 +1,40 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRequest } from 'ahooks';
-import moment from 'moment';
-import { message } from 'antd';
+import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
-import { useKeywords } from 'src/hooks/useKeywords';
+import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
-import modal from 'src/utils/modal';
-import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
-interface listProps {
-  // TODO: 添加图片接口
-  list?: any;
-  total?: number;
-}
-
 const initialData = {
   list: [],
   total: 0
 };
 
-function List() {
+export default React.memo(function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
-  const [keywords] = useKeywords();
+
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
   const {
     data: { list, total } = initialData,
-    loading,
-    run,
-    refresh
-  } = useRequest(() => imageService.getList(formatQuery(query)), {
+    loading = true,
+    run
+  }: FetchResult<IImageResponse, any> = useRequest(() => imageService.getList(formatQuery(query)), {
     ready: !!(providerOptions && categoryOptions && allReason),
-    manual: true,
     throttleInterval: 600,
-    formatResult
+    formatResult: data => formatResult(data),
+    refreshDeps: [query]
   });
 
-  const { showDetails, showLogs, openLicense, showMiddleImage } = useImage(list);
-
-  useEffect(() => {
-    run();
-    setSelectedIds([]);
-  }, [query, keywords]);
+  const [keywords] = useHeaderSearch(run);
+  const { getReasonTitle, showDetails, showLogs, openLicense, showMiddleImage, openOriginImage } = useImage({ list });
 
   // 格式化查询参数
   const formatQuery = query => {
@@ -60,8 +45,6 @@ function List() {
         result[key] = `${start.format(config.data.DATE_FORMAT)} 00:00:00,${end.format(
           config.data.DATE_FORMAT
         )} 23:59:59`;
-        // const date = value.format(config.data.DATE_FORMAT);
-        // result[key] = `${date} 00:00:00,${date} 23:59:59`;
       } else if (value && typeof value === 'object') {
         result[key] = value.key;
       } else if (value) {
@@ -69,6 +52,10 @@ function List() {
       }
       return result;
     }, {});
+
+    if (!query.qualityStatus) {
+      result['qualityStatus'] = '14,24,34';
+    }
 
     if (keywords) {
       result['keyword'] = keywords;
@@ -79,78 +66,68 @@ function List() {
   };
 
   // 格式化返回的数据
-  function formatResult(data: listProps): listProps {
-    if (!data) {
-      return initialData;
-    }
+  const formatResult = (data: IImageResponse): IImageResponse => {
     try {
       return {
         total: data.total,
         list: data.list.map(item => {
           const {
-            createdTime,
-            updatedTime,
             osiImageReview,
-            qualityRank,
-            copyright,
-            licenseType,
             osiProviderId,
             category,
             standardReason,
-            customReason
+            customReason,
+            copyright,
+            qualityRank,
+            licenseType
           } = item;
-          const { qualityStatus, priority,qualityEditTime } = osiImageReview;
-          const categoryList = (category || '').split(',').filter((item, index) => item && index < 2);
-          let reasonTitle = '';
+          const categoryList: IImage['categoryNames'][] = (category || '')
+            .split(',')
+            .filter((item, index) => item && index < 2);
+          let reasonTitle: IImage['reasonTitle'] = '';
 
-          if (/^3/.test(qualityStatus) && (standardReason || customReason)) {
-            reasonTitle = getReasonTitle(getReasonMap(allReason), standardReason, customReason);
+          if (/^3/.test(osiImageReview.qualityStatus) && (standardReason || customReason)) {
+            reasonTitle = getReasonTitle(standardReason, customReason);
           }
 
           return {
             ...item,
-            priority,
-            qualityStatus,
-            qualityEditTime,
-            copyright: copyright + '',
-            qualityRank: qualityRank ? qualityRank + '' : undefined,
-            licenseType: licenseType + '' || undefined,
+            copyright: (copyright + '') as IImage['copyright'],
+            qualityRank: qualityRank ? ((qualityRank + '') as IImage['qualityRank']) : undefined,
+            licenseType: (licenseType + '') as IImage['licenseType'],
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value))
+              .filter((o, index) => categoryList.includes(o.value + ''))
               .map(o => o.label)
-              .join(','),
-            createdTime: moment(createdTime).format(config.data.SECOND_MINUTE),
-            updatedTime: moment(updatedTime).format(config.data.SECOND_MINUTE)
+              .join(',')
           };
         })
       };
     } catch (error) {
-      console.log(error, 'error');
       return data;
     }
-  }
+  };
 
+  const onRefresh = () => {
+    run();
+  };
   // 点击某一项数据
-  const handleClick = (index, field) => {
+  const handleClick = (index: number, field: IImageActionType) => {
     switch (field) {
       case 'id':
         showDetails(index);
         break;
-      case 'cover':
-        handleSelect(index);
-        break;
-      case 'showMiddleImage':
+      case 'middleImage':
         showMiddleImage(index);
         break;
-      case 'openOriginImage':
+      case 'originImage':
         openOriginImage(index);
         break;
       case 'logs':
         showLogs(index);
         break;
-      case 'license':
+      case 'releases':
         openLicense(index);
         break;
       default:
@@ -158,52 +135,25 @@ function List() {
     }
   };
 
-  // 改变数据某一项的值
-  const handleChange = (index, field, value) => {};
-
-  const handleSelect = index => {};
-
-  //  打开原图
-  const openOriginImage = async index => {
-    const idList = [list[index].id];
-    idList.forEach(id => {
-      const { urlYuan } = list.find(item => item.id === id);
-      window.open(urlYuan);
-    });
-  };
-
   return (
     <>
-      <FormList onChange={values => setQuery({ ...query, ...values, pageNum: 1 })} />
+      <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} />
       <Toolbar
-        onRefresh={() => {
-          refresh();
-          setSelectedIds([]);
-        }}
+        onRefresh={onRefresh}
         pagerProps={{
           total,
           current: query.pageNum,
           pageSize: query.pageSize,
-          onChange: values => {
-            setQuery({ ...query, ...values });
+          onChange: value => {
+            setQuery({ ...query, ...value });
           }
         }}
       />
-      <GridList
+      <GridList<IImage>
         loading={loading}
         dataSource={list}
-        renderItem={(item, index) => (
-          <ListItem
-            selected={selectedIds.includes(item.id)}
-            dataSource={item}
-            index={index}
-            onClick={field => handleClick(index, field)}
-            onChange={(field, value) => handleChange(index, field, value)}
-          />
-        )}
+        renderItem={(item, index) => <ListItem dataSource={item} index={index} onClick={handleClick} />}
       />
     </>
   );
-}
-
-export default List;
+});

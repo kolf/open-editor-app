@@ -2,15 +2,14 @@ import React, { ReactElement, useState } from 'react';
 import { Dropdown, Input, Slider, Menu } from 'antd';
 import { useDebounceFn } from 'ahooks';
 
-interface Props {
+type Props<T> = {
   placeholder: string;
-  value?: string;
-  onChange?: any;
+  value?: T;
+  onChange?: (value: T) => void;
   width?: number;
-}
+};
 
-export default function InputSlider({ placeholder, width, value, onChange }: Props): ReactElement {
-  const [visible, setVisible] = useState(false);
+export default function InputSlider({ placeholder, width, value, onChange }: Props<string>): ReactElement {
   const { run } = useDebounceFn(
     newValue => {
       const propsValue = newValue.join(',');
@@ -31,7 +30,7 @@ export default function InputSlider({ placeholder, width, value, onChange }: Pro
     }
     // DOTO 清空有bug
     if (e.target.value === '' && value) {
-      onChange();
+      onChange('');
     }
   };
 
@@ -50,7 +49,7 @@ export default function InputSlider({ placeholder, width, value, onChange }: Pro
   );
 
   return (
-    <Dropdown placement="bottomCenter" arrow overlay={menu} onVisibleChange={setVisible}>
+    <Dropdown placement="bottomCenter" arrow overlay={menu}>
       <Input placeholder={placeholder} value={value} style={{ width }} allowClear onChange={handleChange} />
     </Dropdown>
   );

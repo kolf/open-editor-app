@@ -21,11 +21,11 @@ declare interface Column<T = any> {
 declare interface Menu {
   key: string;
   name: string;
-  hasChild: boolean;
+  hasChild?: boolean;
   icon?: string;
   path?: string;
   breadcrumbName: string;
-  hidden: boolean;
+  hidden?: boolean;
   children?: Menu[];
 }
 
@@ -33,3 +33,10 @@ declare interface AntdOptions {
   value: string;
   label: string;
 }
+
+declare interface Option {
+  value: string | number;
+  label: string;
+}
+
+declare type IdList = number[];

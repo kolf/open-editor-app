@@ -181,7 +181,7 @@ class Options {
       return result;
     }, {});
   }
-  get(enumObj): { value: string | number; label: string }[] {
+  get<T>(enumObj): Option[] {
     return Object.keys(enumObj).reduce((result, key) => {
       result.push({
         value: enumObj[key],

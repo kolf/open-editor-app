@@ -10,8 +10,7 @@ import options, {
   License,
   LicenseType,
   QualityStatus,
-  IfSensitiveCheck,
-  Exclusive
+  IfSensitveCheck
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
 interface Props {
@@ -25,7 +24,7 @@ const qualityStatusOptions = options.get(QualityStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
 const licenseOptions = options.get(License);
-const ifSensitveCheckOptions = options.get(IfSensitiveCheck);
+const ifSensitveCheckOptions = options.get(IfSensitveCheck);
 const LicenseTypeOptions = options.get(LicenseType);
 
 function filterOption(input, option) {
@@ -57,7 +56,7 @@ export default React.memo(function FormList({ initialValues, onChange }: Props) 
               placeholder={['审核时间', '']}
             />
           </Form.Item>
-          <Form.Item name="qualityStatus" className="form-list-item">
+          <Form.Item name="keywordsStatus" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="审核状态">
               {qualityStatusOptions.map(o => (
                 <Option key={o.value} value={o.value}>

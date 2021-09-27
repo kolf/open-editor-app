@@ -22,7 +22,13 @@ export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'op
  * }
  * @returns
  */
-export default function SearchSelect({ type, manual, fixedOptions, options, ...otherProps }: Props): ReactElement {
+export default React.memo(function SearchSelect({
+  type,
+  manual,
+  fixedOptions,
+  options,
+  ...restProps
+}: Props): ReactElement {
   const [inputValue, setInputValue] = useState('');
   const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
     initialData: options || [],
@@ -46,7 +52,7 @@ export default function SearchSelect({ type, manual, fixedOptions, options, ...o
       notFoundContent={loading ? <Spin size="small" /> : null}
       onSearch={setInputValue}
       options={fixedOptions ? [...fixedOptions, ...data] : data}
-      {...otherProps}
+      {...restProps}
     />
   );
-}
+});

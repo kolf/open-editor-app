@@ -1,38 +1,60 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, CSSProperties } from 'react';
 import { Space, Button, Tag, Tooltip, Popover } from 'antd';
 import Iconfont from 'src/components/Iconfont';
 import className from 'classnames';
 
-interface Props {
-  onClick?: any;
-  cover: any;
-  indexProps: any;
-  actions?: any;
-  coverActions?: any;
-  children?: any;
-  selected?: boolean;
-  style?: any;
-  height: number;
+interface IIndexProps {
+  title: string;
+  color: string;
+  text: string;
 }
+interface IAction {
+  label: string;
+  value: IImageActionType;
+  icon: ReactElement | string;
+}
+
+type Props = {
+  onClick?: (value: IImageActionType) => void;
+  cover: ReactElement;
+  indexProps: IIndexProps;
+  actions?: (IAction & { disabled?: boolean })[];
+  coverActions?: IAction[];
+  children?: ReactElement[] | ReactElement;
+  selected?: boolean;
+  style?: CSSProperties;
+  height: number;
+};
 
 const defaultProps = {
   onClick: () => {},
   indexProps: {},
   coverActions: [
     {
-      value: 'showMiddleImage',
+      value: 'middleImage',
       label: '查看中图',
       icon: 'icon-tupian'
     },
     {
-      value: 'openOriginImage',
+      value: 'originImage',
       label: '查看原图',
       icon: 'icon-xiangjipaizhao'
     }
   ]
 };
 
-const TopTag = ({ children, align, color, onClick }) => {
+// TODO 
+const TopTag = ({
+  children,
+  align,
+  color,
+  onClick
+}: {
+  children: string;
+  align: string;
+  color: string;
+  onClick?: any;
+}) => {
   let style = null;
   if (align === 'left') {
     style = { left: 0 };
@@ -40,7 +62,14 @@ const TopTag = ({ children, align, color, onClick }) => {
     style = { right: -8 };
   }
   return (
-    <Tag color={color} style={style} className="grid-item-topTag active" title={children} onClick={onClick} onClose={e => e.preventDefault()} >
+    <Tag
+      color={color}
+      style={style}
+      className="grid-item-topTag active"
+      title={children}
+      onClick={onClick}
+      onClose={e => e.preventDefault()}
+    >
       {children}
     </Tag>
   );
@@ -84,7 +113,7 @@ const GridItem = ({
               {actions.map(action => (
                 <Button
                   disabled={action.disabled}
-                  title={action.disabled ? '等待社区审核中' :action.label}
+                  title={action.disabled ? '等待社区审核中' : action.label}
                   key={action.value}
                   size="small"
                   icon={action.icon}

@@ -6,10 +6,13 @@ import zhCN from 'antd/lib/locale/zh_CN';
 
 const IS_REACT_16 = !!ReactDOM.createPortal;
 
+// DOTO 待优
 interface IModleProps extends ModalFuncProps {
   footer?: React.ReactNode;
   autoIndex?: boolean;
   dragable?: boolean;
+  isMobile?: boolean;
+  // width?: number;
 }
 
 class Mod extends React.Component<IModleProps> {
@@ -45,7 +48,7 @@ class Mod extends React.Component<IModleProps> {
   }
 
   get bodyMaxHeight() {
-    return window.innerHeight - this.props.style.top - (this.props.footer === null ? 80 : 130);
+    return window.innerHeight - (this.props.style.top as number) - (this.props.footer === null ? 80 : 130);
   }
 
   handleMove = e => {
@@ -91,12 +94,12 @@ class Mod extends React.Component<IModleProps> {
           this.container = this.container.getElementsByClassName('ant-modal')[0];
           this.container.style.paddingBottom = 0;
           this.container.style.display = 'inline-block';
-          this.container.style.left = `${(window.innerWidth - (width || 520)) / 2}px`;
+          this.container.style.left = `${(window.innerWidth - ((width as number) || 520)) / 2}px`;
         } else {
           this.container.style.right = 'auto';
           this.container.style.overflow = 'visible';
           this.container.style.bottom = 'auto';
-          this.container.style.left = `${(window.innerWidth - (width || 520)) / 2}px`;
+          this.container.style.left = `${(window.innerWidth - ((width as number) || 520)) / 2}px`;
           this.container.style.top = `${style.top}px`;
           this.container.addEventListener('mousedown', this.toTop, false);
           this.toTop();
@@ -122,13 +125,14 @@ class Mod extends React.Component<IModleProps> {
   };
 
   render() {
-    const { children, wrapClassName = '', autoIndex, style, ...otherProps } = this.props;
+    const { children, autoIndex, style, ...restProps } = this.props;
     return (
       <ConfigProvider locale={zhCN}>
         <Modal
-          {...otherProps}
-          wrapClassName={`${wrapClassName} ${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
+          {...restProps}
+          wrapClassName={`${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
           mask={!autoIndex}
+          maskClosable={false}
           style={
             (autoIndex && {
               top: 0,

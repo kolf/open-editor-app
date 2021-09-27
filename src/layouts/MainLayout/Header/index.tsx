@@ -15,7 +15,7 @@ import authService from 'src/services/authService';
 const { Search } = Input;
 export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const user = useSelector((state: RootState) => state.user.user);
-  const { show: showSearch } = useSelector(state => state.search);
+  const { show: showSearch } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
   const history = useHistory();
 
