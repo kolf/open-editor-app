@@ -7,7 +7,7 @@ import FormList from './FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
-import { useSearchValue } from 'src/hooks/useSearchValue';
+import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
@@ -20,7 +20,7 @@ const initialData = {
 
 function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
-  const [keywords] = useSearchValue();
+
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
@@ -28,14 +28,16 @@ function List() {
   const {
     data: { list, total } = initialData,
     loading = true,
+    run,
     refresh
   }: FetchResult<IImageResponse, any> = useRequest(() => imageService.getList(formatQuery(query)), {
     ready: !!(providerOptions && categoryOptions && allReason),
     throttleInterval: 600,
     formatResult: data => formatResult(data),
-    refreshDeps: [query, keywords]
+    refreshDeps: [query]
   });
 
+  const [keywords] = useHeaderSearch(run);
   const { showDetails, showLogs, openLicense, showMiddleImage, openOriginImage } = useImage({ list });
 
   // 格式化查询参数

@@ -1,28 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useRequest } from 'ahooks';
-import { message } from 'antd';
+import { Row, Col, Button, message } from 'antd';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
 import ImageLogs from 'src/components/modals/ImageLogs';
 import UpdateKeywords, { IListItem as IKeywordsInListItem } from 'src/components/modals/UpdateKeywords';
 import UpdateTitle, { PositionType } from 'src/components/modals/UpdateTitle';
+import { DataContext } from 'src/components/contexts/DataProvider';
 import imageService from 'src/services/imageService';
 import modal from 'src/utils/modal';
 import * as tools from 'src/utils/tools';
 
-type ITitleInListItem = Pick<IImage, 'id' | 'title'>;
+type ITitleInListItem = Required<Pick<IImage, 'id' | 'title'>>;
 interface Props<T> {
   list: T;
   onChange?: (list: T) => void;
 }
 
 export default function useImage({ list, onChange }: Props<IImage[]>) {
+  const { reasonMap } = React.useContext(DataContext);
   const listRef = useRef<IImage[] | null>(list);
   const [selectedIds, setSelectedIds] = useState<IdList>([]);
 
   useEffect(() => {
     listRef.current = list;
   }, [list]);
+
+  const keywordTags2string = React.useCallback(
+    (keywordTags: IKeywordsTag[]) => {
+      console.log(keywordTags, 'keywordTags');
+      return {
+        keywords: '',
+        keywordsAudit: '',
+        keywordsAll: ''
+      };
+    },
+    [list]
+  );
+
+  const getReasonTitle = React.useCallback(
+    (value, otherValue?: string): string => {
+      if (!value && !otherValue) {
+        return '';
+      }
+      const valueList = typeof value === 'string' ? value.match(/\d+/g) : value;
+      let result = (valueList || []).filter(v => reasonMap.has(v)).map(v => reasonMap.get(v));
+      if (otherValue) {
+        result.push(otherValue);
+      }
+      return result.join(',');
+    },
+    [reasonMap]
+  );
 
   const updateKeywords = (idList: IdList): void => {
     if (idList.length === 0) {
@@ -36,7 +65,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       autoIndex: false,
       content: (
         <UpdateKeywords
-          onChange={onChange}
+          onChange={setSelectedList}
           defaultList={listRef.current
             .filter(item => idList.includes(item.id))
             .map(
@@ -50,10 +79,6 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       ),
       footer: null
     });
-
-    function onChange(changedList: IKeywordsInListItem[]) {
-      setSelectedList(idList, changedList);
-    }
   };
 
   // 修改标题
@@ -91,7 +116,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
         });
       }
 
-      setSelectedList(idList, changedList);
+      setSelectedList(changedList);
     }
 
     function onReplace(findText: string, replaceText: string) {
@@ -105,27 +130,51 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
         return { id, title: tools.trim(item.title).replaceAll(tools.trim(findText), tools.trim(replaceText)) };
       });
 
-      setSelectedList(idList, changedList);
+      setSelectedList(changedList);
     }
   };
 
   // 显示图片详情
   const showDetails = async (index: number) => {
-    const { id, urlSmall, urlYuan } = listRef.current[index];
     const mod = modal({
       title: `图片详情`,
-      width: 640,
+      width: 680,
       content: <Loading />,
       footer: null
     });
-    try {
-      const res = await imageService.getExif({ id });
+
+    update(index);
+
+    async function update(index: number) {
+      const length = listRef.current.length;
+
       mod.update({
-        content: <ImageDetails dataSource={{ ...res, imgUrl: urlSmall, urlYuan }} />
+        content: <Loading />
       });
-    } catch (error) {
-      message.error(`请求接口出错！`);
-      mod.close();
+
+      const { id, urlSmall, urlYuan } = listRef.current[index];
+      try {
+        const res = await Promise.all([imageService.getKeywordDetails({ id }), imageService.getExif({ id })]);
+        mod.update({
+          content: <ImageDetails dataSource={{ ...res[0], imgUrl: urlSmall, urlYuan, exif: res[1] }} />,
+          footer: (
+            <div style={{ display: 'flex' }}>
+              <Button disabled={index === 0} onClick={e => update(index - 1)}>
+                上一个
+              </Button>
+              <div style={{ flex: 1, textAlign: 'center', paddingTop: 6 }}>
+                {index + 1}/{length}
+              </div>
+              <Button disabled={index === length - 1} onClick={e => update(index + 1)}>
+                下一个
+              </Button>
+            </div>
+          )
+        });
+      } catch (error) {
+        message.error(`请求接口出错！`);
+        mod.close();
+      }
     }
   };
 
@@ -180,19 +229,11 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   };
 
   // 修改图片信息
-  const setSelectedList = <T extends IImage>(ids: IdList, changedList: T[] | T) => {
-    const idList: IdList = ids || [...selectedIds];
-    const isUpdateList = Array.isArray(changedList);
-
-    const nextList = listRef.current.map(item => {
-      if (idList.includes(item.id)) {
-        return {
-          ...item,
-          ...(isUpdateList ? (changedList as T[]).find(p => p.id === item.id) : changedList)
-        };
-      }
-      return item;
-    });
+  const setSelectedList = <T extends IImage>(changedList: T[]) => {
+    const nextList = listRef.current.map(item => ({
+      ...item,
+      ...changedList.find(c => c.id === item.id)
+    }));
 
     onChange && onChange(nextList);
   };
@@ -205,6 +246,8 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   };
 
   return {
+    getReasonTitle,
+    keywordTags2string,
     openLicense,
     openOriginImage,
     showLogs,

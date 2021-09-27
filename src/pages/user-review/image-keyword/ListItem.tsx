@@ -66,12 +66,6 @@ export default React.memo(
             label: '通过',
             disabled: dataSource.osiImageReview.callbackStatus === 2
           },
-          {
-            icon: <CloseOutlined />,
-            value: 'reject',
-            label: '不通过',
-            disabled: dataSource.osiImageReview.callbackStatus === 2
-          },
           { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
         ]}
       >

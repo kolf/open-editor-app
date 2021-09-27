@@ -57,6 +57,7 @@ export default React.memo(function ListItem({
   onChange
 }: Props<IImage>): ReactElement {
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
+
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}

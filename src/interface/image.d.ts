@@ -14,8 +14,41 @@ declare interface IKeywordsTag extends Option {
   value: string;
   color?: string;
   kind?: number;
+  source?: keyof IKeywordsAll;
 }
 
+// {
+//   "aiKeywordsSelected": "75846,43611,109159",
+//   "aiKeywordsSelectedDel": "96603,96603,75846",
+//   "aiKeywordsUnselected": "33153,33271,8570",
+//   "aiKeywordsUnselectedDel": "96603",
+//   "userKeywords": "13804,30284",
+//   "userKeywordsDel": "30120",
+//   "userKeywordsAudit": "轮船|43614::43616::43621|2|0,织女星||0|0,昼夜||0|0,快慢||0|0,分秒必争||0|0",
+//   "userKeywordsAuditDel": "长岛县|74737::120232|2|0,水藻||0|0",
+//   "editorKeywordsAdd": "32905,76427,33857"
+// }
+declare interface IKeywordsAll {
+  aiKeywordsSelected: string;
+  aiKeywordsSelectedDel: string;
+  aiKeywordsUnselected: string;
+  aiKeywordsUnselectedDel: string;
+  userKeywords: string;
+  userKeywordsDel: string;
+  userKeywordsAudit: string;
+  userKeywordsAuditDel: string;
+  editorKeywordsAdd: string;
+}
+
+interface IOsiKeywodsData {
+  osiImageId: number;
+  aiTitle: string;
+  keywordsAudit: string;
+  keywordsAll: string;
+  createdTime: string;
+  updatedTime: string;
+  aiProcessStatus: number;
+}
 declare interface IOsiImageReview {
   osiImageId: number;
   qualityStatus: '14' | '24' | '34';
@@ -50,7 +83,6 @@ declare interface IImageQuery {}
 
 declare type IImage = Partial<{
   id: number;
-  keywordTags: IKeywordsTag[];
   providerResId: string;
   osiBatchId: number;
   osiProviderId: number;
@@ -75,8 +107,9 @@ declare type IImage = Partial<{
   reasonTitle: string;
   osiProviderName: string;
   categoryNames: string;
+  keywordTags: IKeywordsTag[];
   osiImageReview: IOsiImageReview;
-  osiKeywods?: any;
+  osiKeywodsData: IOsiKeywodsData;
   releases: IRelease[];
   sensitiveList: any[]; // TODO 待优化
 }>;

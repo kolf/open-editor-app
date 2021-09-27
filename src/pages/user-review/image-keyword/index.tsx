@@ -1,25 +1,17 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
-import moment from 'moment';
 import { Radio, Button, Space, Input, message } from 'antd';
-import {
-  CheckOutlined,
-  CloseOutlined,
-  LineOutlined,
-  FileSearchOutlined,
-  UnorderedListOutlined
-} from '@ant-design/icons';
+import { CheckOutlined, LineOutlined, FileSearchOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
 import FormList from './FormList';
 import ListItem from './ListItem';
-import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { useSearchValue } from 'src/hooks/useSearchValue';
+import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
@@ -35,18 +27,18 @@ const initialData = {
 export default React.memo(function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
-  const [keywords] = useSearchValue();
+
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
-  const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
+  const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
 
   const {
     data: { list, total } = initialData,
     loading = true,
     mutate,
-    refresh
+    run
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
@@ -61,11 +53,14 @@ export default React.memo(function List() {
       ready: !!(providerOptions && categoryOptions && allReason),
       throttleInterval: 600,
       formatResult: data => formatResult(data),
-      refreshDeps: [query, keywords]
+      refreshDeps: [query]
     }
   );
 
+  const [keywords] = useHeaderSearch(() => onRefresh());
+
   const {
+    keywordTags2string,
     showDetails,
     showLogs,
     showMiddleImage,
@@ -86,12 +81,6 @@ export default React.memo(function List() {
       });
     }
   });
-
-  useEffect(() => {
-    if (selectedIds.length > 0) {
-      setSelectedIds([]);
-    }
-  }, [query]);
 
   // 格式化查询参数
   const formatQuery = query => {
@@ -129,7 +118,7 @@ export default React.memo(function List() {
       return {
         total: data.total,
         list: data.list.map(item => {
-          const { osiImageReview, osiProviderId, category, standardReason, customReason } = item;
+          const { osiImageReview, osiProviderId, category, standardReason, customReason, keywordTags } = item;
           const categoryList: IImage['categoryNames'][] = (category || '')
             .split(',')
             .filter((item, index) => item && index < 2);
@@ -142,6 +131,7 @@ export default React.memo(function List() {
           return {
             ...item,
             reasonTitle,
+            keywordTags: keywordTags || [],
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter((o, index) => categoryList.includes(o.value + ''))
@@ -155,10 +145,15 @@ export default React.memo(function List() {
     }
   };
 
+  const onRefresh = () => {
+    setSelectedIds([]);
+    run();
+  };
+
   // TODO
   const handleChange = <K extends keyof IImage>(index: number, field: K, value: any) => {
     const { id } = list[index];
-    setList([id], { [field]: value });
+    setList([{ id, [field]: value }]);
   };
 
   // 点击某一项数据
@@ -178,9 +173,6 @@ export default React.memo(function List() {
         break;
       case 'resolve':
         setResolve(index);
-        break;
-      case 'reject':
-        setReject(index);
         break;
       case 'logs':
         showLogs(index);
@@ -207,110 +199,34 @@ export default React.memo(function List() {
       mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
 
       const imageList = list
-        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
+        // .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
+        .map(item => {
+          console.log(keywordTags2string(item.keywordTags));
+          return {
+            ...item,
+            keywordTags: undefined,
+            osiImageReview: undefined,
+            createdTime: undefined,
+            updatedTime: undefined
+          };
+        });
       if (imageList.length === 0) {
         mod.close();
         return;
       }
       mod.confirmLoading();
-      const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
+      const res = await review({ body: imageList, query: { status: 1 } });
       mod.close();
       message.success(`设置通过成功！`);
       setList(
-        idList,
         idList.map(id => {
           const item = list.find(l => l.id === id);
           return {
+            id,
             reasonTitle: '',
             osiImageReview: {
               ...item.osiImageReview,
               keywordsStatus: '24' as IOsiImageReview['keywordsStatus']
-            }
-          };
-        })
-      );
-    } catch (error) {
-      mod && mod.close();
-      error && message.error(error);
-    }
-  };
-
-  // 设置不通过
-  const setReject = async (index: number) => {
-    const idList = index === -1 ? selectedIds : [list[index].id];
-
-    if (idList.length === 0) {
-      message.info(`请选择图片！`);
-      return;
-    }
-
-    let mod = null;
-    let standardReason = [];
-    let customReason = '';
-
-    try {
-      mod = await confirm({
-        width: 820,
-        title: '设置不通过原因',
-        bodyStyle: { padding: 0 },
-        content: (
-          <div style={{ margin: -24 }}>
-            <SelectReject
-              dataSource={allReason}
-              onChange={(value, otherValue) => {
-                standardReason = value;
-                customReason = otherValue;
-              }}
-            />
-          </div>
-        )
-      });
-
-      if (standardReason.length === 0 && !customReason) {
-        message.info(`请选择不通过原因！`);
-        return;
-      }
-
-      const imageList = list
-        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
-        .map(item => ({
-          ...item,
-          osiImageReview: undefined,
-          createdTime: undefined,
-          updatedTime: undefined
-        }));
-
-      if (imageList.length === 0) {
-        mod.close();
-        return;
-      }
-
-      mod.confirmLoading();
-      const res = await review({
-        body: imageList,
-        query: { stage: 1, status: 2, standardReason: standardReason.join(','), customReason }
-      });
-      mod.close();
-
-      message.success(`设置不通过成功！`);
-
-      const reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
-
-      setList(
-        idList,
-        idList.map(id => {
-          const item = list.find(l => l.id === id);
-          return {
-            reasonTitle,
-            osiImageReview: {
-              ...item.osiImageReview,
-              keywordsStatus: '34' as IOsiImageReview['keywordsStatus']
             }
           };
         })
@@ -326,7 +242,7 @@ export default React.memo(function List() {
       <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} initialValues={query} />
       <Toolbar
         onSelectIds={setSelectedIds}
-        onRefresh={refresh}
+        onRefresh={onRefresh}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         pagerProps={{
@@ -362,7 +278,6 @@ export default React.memo(function List() {
             审核
           </Button>
           <Button size="small" title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
-          <Button size="small" title="不通过" onClick={e => setReject(-1)} icon={<CloseOutlined />} />
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
             编辑
           </Button>

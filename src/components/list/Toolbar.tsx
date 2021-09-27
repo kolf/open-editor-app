@@ -61,7 +61,6 @@ function Toolbar({
               size="small"
               icon={<ReloadOutlined />}
               onClick={e => {
-                onSelectIds && onSelectIds([]);
                 onRefresh();
               }}
             />

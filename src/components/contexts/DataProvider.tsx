@@ -2,13 +2,34 @@ import React, { createContext } from 'react';
 import { useRequest } from 'ahooks';
 import commonService from 'src/services/commonService';
 
+interface IReason {}
+
 interface Props {
   providerOptions?: Option[];
   categoryOptions?: Option[];
   allReason?: any[];
+  reasonMap: Map<string, string>;
 }
 
-export const DataContext = createContext<Props>({});
+function getReasonMap(treeData): Map<string, string> {
+  let result = new Map();
+  const loop = data => {
+    data.forEach(item => {
+      const key = item.id + '';
+      result.set(key, item.desc);
+      if (item.childNodes) {
+        loop(item.childNodes);
+      }
+    });
+  };
+  if (treeData) {
+    loop(treeData);
+  }
+
+  return result;
+}
+
+export const DataContext = createContext<Props>(null);
 
 export const DataProvider = ({ children }) => {
   const { data = [], loading } = useRequest(async () => {
@@ -20,7 +41,8 @@ export const DataProvider = ({ children }) => {
     return {
       providerOptions,
       categoryOptions,
-      allReason
+      allReason,
+      reasonMap: getReasonMap(allReason)
     };
   });
 

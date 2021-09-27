@@ -59,14 +59,14 @@ export default React.memo(function KeywordTextArea({
   const [contenteditable, setContenteditable] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
-  const hybridClick = useDoubleClick(showDetails, deleteValue);
+  const hybridClick = useDoubleClick(showDetails, onDeleteValue);
 
   useEffect(() => {
     if (inputRef.current) {
       const width = value.length === 0 && !inputValue ? 148 : inputMirrorRef.current.clientWidth;
       inputRef.current.style.width = Math.min(wrapRef.current.clientWidth - 4, width) + 'px';
     }
-  }, [inputValue, inputRef]);
+  }, [inputValue, inputRef, value]);
 
   async function handleWrapDbClick() {
     if (!added) {
@@ -100,7 +100,7 @@ export default React.memo(function KeywordTextArea({
     }
 
     if (valueType === 2) {
-      selectValue(index);
+      onSelectValue(index);
       return;
     }
 
@@ -121,7 +121,7 @@ export default React.memo(function KeywordTextArea({
     }
   }
 
-  async function selectValue(index: number) {
+  async function onSelectValue(index: number) {
     const valueItem = value[index];
 
     const mod = modal({
@@ -160,7 +160,7 @@ export default React.memo(function KeywordTextArea({
     }
   }
 
-  function deleteValue(e) {
+  function onDeleteValue(e) {
     const index: number = e.target.dataset.index * 1;
     const nextValue = value.filter((item, i) => i !== index);
     onChange(nextValue, [], [value[index]]);
@@ -190,13 +190,21 @@ export default React.memo(function KeywordTextArea({
 
   async function matchTextAreaValue() {
     const text = tools.trim(textAreaValue);
-    if (text) {
-      let nextValue = await keywordService.findList(text);
-      nextValue = uniq(nextValue.map(item => value.find(v => v.label === item.label) || item));
+    let nextValue: IKeywordsTag[] = [];
+    let addedValue: IKeywordsTag[] = [];
+    let removedValue: IKeywordsTag[] = [...value];
 
+    if (text) {
+      const newValue = await keywordService.findList(text);
+      nextValue = uniq(newValue.map(item => value.find(v => v.label === item.label) || item));
+
+      addedValue = nextValue.filter(nv => !value.find(v => v.value === nv.label));
+
+      removedValue = value.filter(v => !nextValue.find(nv => nv.value === v.value));
       setTextAreaValue('');
-      onChange(nextValue, nextValue, nextValue);
     }
+
+    onChange(nextValue, addedValue, removedValue);
   }
 
   function getValueItemColor(valueItem: IKeywordsTag): string {
@@ -221,7 +229,7 @@ export default React.memo(function KeywordTextArea({
         <textarea
           placeholder={placeholder}
           className="KeywordTextArea-textarea"
-          style={{ width: wrapRef.current.clientWidth - 2, height: wrapRef.current.clientHeight - 8 }}
+          style={{ width: wrapRef.current.clientWidth - 4, height: wrapRef.current.clientHeight - 8 }}
           value={textAreaValue}
           onChange={e => setTextAreaValue(e.target.value)}
           onBlur={handleTextAreaBlur}
@@ -230,9 +238,10 @@ export default React.memo(function KeywordTextArea({
         <>
           {value.map((o, index) => (
             <Tag
+              title={o.label}
               className="KeywordTextArea-tag"
               color={getValueItemColor(o)}
-              key={o.value}
+              key={o.value + '-' + index}
               data-index={index}
               onClick={hybridClick}
               onDoubleClick={e => loop(e)}

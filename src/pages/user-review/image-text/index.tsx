@@ -13,7 +13,7 @@ import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { useSearchValue } from 'src/hooks/useSearchValue';
+import { useHeaderSearch as useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
@@ -21,7 +21,6 @@ import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/e
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
-import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -32,12 +31,10 @@ const initialData = {
   total: 0
 };
 
-function List() {
+export default React.memo(function List() {
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
-  const [keywords] = useSearchValue();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
-  const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
@@ -46,6 +43,7 @@ function List() {
     data: { list, total } = initialData,
     loading = true,
     mutate,
+    run,
     refresh
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
@@ -56,11 +54,14 @@ function List() {
       ready: !!(providerOptions && categoryOptions && allReason),
       throttleInterval: 600,
       formatResult: data => formatResult(data),
-      refreshDeps: [query, keywords]
+      refreshDeps: [query]
     }
   );
 
+  const [keywords] = useHeaderSearch(() => onRefresh());
+
   const {
+    getReasonTitle,
     showDetails,
     showLogs,
     showMiddleImage,
@@ -133,7 +134,7 @@ function List() {
           let reasonTitle: IImage['reasonTitle'] = '';
 
           if (/^3/.test(osiImageReview.qualityStatus) && (standardReason || customReason)) {
-            reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
+            reasonTitle = getReasonTitle(standardReason, customReason);
           }
 
           return {
@@ -158,16 +159,15 @@ function List() {
     }
   };
 
-  useEffect(() => {
-    if (selectedIds.length > 0) {
-      setSelectedIds([]);
-    }
-  }, [query]);
+  const onRefresh = () => {
+    setSelectedIds([]);
+    run();
+  };
 
   // TODO 待优化
   const handleChange = <K extends keyof IImage>(index: number, field: K, value: any) => {
     const { id } = list[index];
-    setList([id], { [field]: value });
+    setList([{ id, [field]: value }]);
   };
 
   // 点击某一项数据
@@ -232,10 +232,10 @@ function List() {
       mod.close();
       message.success(`设置通过成功！`);
       setList(
-        idList,
         idList.map(id => {
           const item = list.find(l => l.id === id);
           return {
+            id,
             reasonTitle: '',
             osiImageReview: {
               ...item.osiImageReview,
@@ -308,13 +308,13 @@ function List() {
       mod.close();
       message.success(`设置不通过成功！`);
 
-      const reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
+      const reasonTitle = getReasonTitle(standardReason, customReason);
 
       setList(
-        idList,
         idList.map(id => {
           const item = list.find(l => l.id === id);
           return {
+            id,
             reasonTitle,
             osiImageReview: {
               ...item.osiImageReview,
@@ -345,9 +345,12 @@ function List() {
       const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
       message.success(`设置等级成功！`);
-      setList(idList, {
-        qualityRank: value
-      });
+      setList(
+        idList.map(id => ({
+          id,
+          qualityRank: value
+        }))
+      );
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -370,9 +373,13 @@ function List() {
       const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
       message.success(`设置授权成功！`);
-      setList(idList, {
-        licenseType: value
-      });
+
+      setList(
+        idList.map(id => ({
+          id,
+          licenseType: value
+        }))
+      );
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -418,9 +425,13 @@ function List() {
       const res = await update({ body: idList, query: { type: '3', value: value } });
       mod.close();
       message.success(`设置授权成功！`);
-      setList(idList, {
-        copyright: value
-      });
+
+      setList(
+        idList.map(id => ({
+          id,
+          copyright: value
+        }))
+      );
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -448,9 +459,13 @@ function List() {
       const res = await update({ body: idList, query: { type: '4', memo: value } });
       mod.close();
       message.success(`设置授权成功！`);
-      setList(idList, {
-        memo: value
-      });
+
+      setList(
+        idList.map(id => ({
+          id,
+          memo: value
+        }))
+      );
     } catch (error) {
       mod && mod.close();
       error && message.error(error);
@@ -462,7 +477,7 @@ function List() {
       <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} initialValues={query} />
       <Toolbar
         onSelectIds={setSelectedIds}
-        onRefresh={refresh}
+        onRefresh={onRefresh}
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         pagerProps={{
@@ -518,10 +533,10 @@ function List() {
           />
         </Space>
       </Toolbar>
-      <GridList
+      <GridList<IImage>
         loading={loading}
         dataSource={list}
-        renderItem={(item: IImage, index) => (
+        renderItem={(item, index) => (
           <ListItem
             selected={selectedIds.includes(item.id)}
             dataSource={item}
@@ -533,6 +548,4 @@ function List() {
       />
     </>
   );
-}
-
-export default List;
+});

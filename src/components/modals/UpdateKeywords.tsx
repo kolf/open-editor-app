@@ -9,7 +9,7 @@ import keywordService from 'src/services/keywordService';
 import { uniq } from 'src/components/KeywordTextArea';
 import * as tools from 'src/utils/tools';
 
-export type IListItem = Pick<IImage, 'id' | 'keywordTags'>;
+export type IListItem = Required<Pick<IImage, 'id' | 'keywordTags'>>;
 
 type Props<T> = {
   defaultList: T;
@@ -17,7 +17,7 @@ type Props<T> = {
 };
 
 export default function UpdateKeywords({ defaultList, onChange }: Props<IListItem[]>): ReactElement {
-  const [keywordMode, setKeywordMode] = useState<ModeType>('kind');
+  const [keywordMode, setKeywordMode] = useState<ModeType>('source');
   const [list, setList] = useState(defaultList);
 
   const getValueByList = (list: IListItem[]): IKeywordsTag[] => {
@@ -39,11 +39,15 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
   }, []);
 
   const handleChange = <T extends IKeywordsTag[]>(nextValue: T, addedValue: T, removedValue: T) => {
+    // console.log(nextValue, addedValue, removedValue, 'value');
     const nextList = list.map(item => {
       const { keywordTags, id } = item;
-      const nextKeywordTags = uniq(
-        [...keywordTags, ...addedValue].filter(keywordTag => !removedValue.find(rv => rv.value === keywordTag.value))
-      );
+      const nextKeywordTags = uniq([
+        ...keywordTags
+          .map(k => nextValue.find(nv => nv.value === k.value) || k)
+          .filter(k => !removedValue.find(rv => rv.value === k.value)),
+        ...addedValue
+      ]);
 
       return {
         id,

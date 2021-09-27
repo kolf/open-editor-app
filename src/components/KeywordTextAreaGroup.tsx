@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react';
+import React, { ReactElement } from 'react';
 import KeywordTextArea, { getValueType, uniq } from './KeywordTextArea';
 
 export type ModeType = 'all' | 'source' | 'kind';
@@ -7,7 +7,6 @@ type Props<T> = {
   mode: ModeType;
   size?: 'small' | 'default';
   value?: T[];
-  defaultValue?: T[];
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
 };
 
@@ -34,47 +33,44 @@ const defaultKinds: Option[] = [
   }
 ];
 
+const removedSourceType = `aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKeywordsDel|userKeywordsAuditDel`;
+const removedSourceTypeReg = new RegExp(`^(${removedSourceType})$`);
+const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replaceAll('Del', '')})$`);
+
 const sourceTypes: Option[] = [
   {
     label: 'AI关键词（用户勾选）',
-    value: 0
+    value: 'aiKeywordsSelected'
   },
   {
     label: 'AI关键词（用户未勾选） ',
-    value: 1
+    value: 'aiKeywordsUnselected'
   },
   {
     label: '用户提供关键词',
-    value: 2
+    value: 'userKeywords|userKeywordsAudit'
   },
   {
     label: '编辑添加关键词',
-    value: 3
+    value: 'editorKeywordsAdd'
   },
   {
     label: '编辑删除关键词',
-    value: 4
+    value: removedSourceType
   }
 ];
 
 export default React.memo(function KeywordTextAreaGroup({
   size,
   mode,
-  value: propsValue,
-  defaultValue = [],
+  value,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
-  const [value, setValue] = useState(defaultValue || propsValue);
-
-  useEffect(() => {
-    if (propsValue && JSON.stringify(propsValue) !== JSON.stringify(value)) {
-      setValue(propsValue);
-    }
-  }, [propsValue]);
+  const filterRemovedValue = (): IKeywordsTag[] => value.filter(item => !removedSourceTypeReg.test(item.source));
 
   const getValueByKind = (kind: number): IKeywordsTag[] => {
     if (kind === -1) {
-      return value.reduce((result, item) => {
+      return filterRemovedValue().reduce((result, item) => {
         const valueType = getValueType(item);
         if (valueType != 1) {
           result.push(item);
@@ -82,15 +78,62 @@ export default React.memo(function KeywordTextAreaGroup({
         return result;
       }, []);
     }
-    return value.filter(v => v.kind === kind);
+    return filterRemovedValue().filter(v => v.kind === kind);
   };
 
-  const handleChange = <T extends IKeywordsTag>(nextValue: T[], addedValue: T[]) => {
-    const removedValue: T[] = value.filter(v => !nextValue.find(nv => v.value === nv.value)) as T[];
+  const getValueBySource = (source: string): IKeywordsTag[] => {
+    const reg = new RegExp('^(' + source + ')$');
+    return uniq(value.filter(v => reg.test(v.source)));
+  };
 
-    setValue(nextValue);
+  const updateValueSource = <T extends IKeywordsTag>(nextValue: T[]): [T[], T[], T[]] => {
+    const removedValue = value.filter(
+      v => v.source === 'editorKeywordsAdd' && !nextValue.find(nv => nv.value === v.value)
+    ) as T[];
 
-    onChange && onChange(nextValue, addedValue, removedValue);
+    const addedValue = nextValue
+      .filter(nv => !value.find(v => v.value === nv.value))
+      .map(av => ({ ...av, source: 'editorKeywordsAdd' }));
+    // const reg = new;
+    const changedValue = [
+      ...value
+        .filter(v => !nextValue.find(nv => nv.value === v.value))
+        .reduce((result, rv) => {
+          if (rv.source === 'editorKeywordsAdd') {
+            return result;
+          }
+          let nextSource: IKeywordsTag['source'] = rv.source;
+          if (addedSourceTypeReg.test(rv.source)) {
+            nextSource = (rv.source + 'Del') as IKeywordsTag['source'];
+          } else if (removedSourceTypeReg.test(rv.source)) {
+            nextSource = rv.source.replaceAll('Del', '') as IKeywordsTag['source'];
+          }
+
+          return [
+            ...result,
+            {
+              ...rv,
+              source: nextSource
+            }
+          ];
+        }, [])
+    ];
+
+    return [
+      uniq([
+        ...value
+          .filter(v => !removedValue.find(rv => rv.value === v.value))
+          .map(v => changedValue.find(cv => cv.value === v.value) || v),
+        ...addedValue
+      ]),
+      addedValue,
+      removedValue
+    ];
+  };
+
+  const handleChange = <T extends IKeywordsTag>(newValue: T[], addedValue: T[], removedValue: T[]) => {
+    const nextValue = uniq([...value, ...addedValue].filter(v => !removedValue.find(rv => rv.value === v.value)));
+    onChange && onChange(...updateValueSource(nextValue));
   };
 
   if (mode === 'source') {
@@ -98,19 +141,16 @@ export default React.memo(function KeywordTextAreaGroup({
     return (
       <>
         {sourceTypes.map(sourceType => {
-          const currentValue = getValueByKind(sourceType.value as number);
+          const currentValue = getValueBySource(sourceType.value as string);
           return (
             <div key={sourceType.value} style={{ paddingBottom: 6 }}>
               <KeywordTextArea
                 height={size === 'small' ? 60 : 80}
                 title={sourceType.label}
+                placeholder={sourceType.label}
                 value={currentValue}
                 added={!!onChange}
-                onChange={(newValue, addedValue) => {
-                  const otherValue = value.filter(v => !currentValue.find(cv => cv.value === v.value));
-                  const nextValue = uniq([...otherValue, ...newValue]);
-                  handleChange(nextValue, addedValue);
-                }}
+                onChange={handleChange}
               />
             </div>
           );
@@ -132,11 +172,7 @@ export default React.memo(function KeywordTextAreaGroup({
                 placeholder={placeholder}
                 value={currentValue}
                 added={!!onChange}
-                onChange={(newValue, addedValue) => {
-                  const otherValue = value.filter(v => !currentValue.find(cv => cv.value === v.value));
-                  const nextValue = uniq([...otherValue, ...newValue]);
-                  handleChange(nextValue, addedValue);
-                }}
+                onChange={handleChange}
               />
             </div>
           );
@@ -144,5 +180,15 @@ export default React.memo(function KeywordTextAreaGroup({
       </>
     );
   }
-  return <KeywordTextArea height={200} title="关键词" value={value} added={!!onChange} onChange={handleChange} />;
+  if (mode === 'all') {
+    return (
+      <KeywordTextArea
+        height={200}
+        title="关键词"
+        value={filterRemovedValue()}
+        added={!!onChange}
+        onChange={handleChange}
+      />
+    );
+  }
 });

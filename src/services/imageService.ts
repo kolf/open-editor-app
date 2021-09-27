@@ -3,6 +3,25 @@ import queryString from 'querystring';
 import keywordService from './keywordService';
 
 export class ImageService {
+  joinKeywordIds(data: IImage[]): IdList {
+    return [
+      ...new Set(
+        data.reduce((result, item) => {
+          const { osiKeywodsData } = item;
+          if (osiKeywodsData) {
+            return [
+              ...result,
+              ...Object.values(JSON.parse(osiKeywodsData.keywordsAll || '{}'))
+                .join(',')
+                .split(',')
+            ].filter(s => /^\d+$/.test(s));
+          }
+          return result;
+        }, [])
+      )
+    ];
+  }
+
   async getList(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImage/pageList`, data);
     const { list, total } = res.data.data;
@@ -19,8 +38,36 @@ export class ImageService {
     };
   }
   async getExif(data: any): Promise<any> {
-    const res = await Api.post(`/api/outsourcing/osiImage/getExif?${queryString.stringify(data)}`);
-    return res.data.data;
+    try {
+      const res = await Api.post(`/api/outsourcing/osiImage/getExif?${queryString.stringify(data)}`);
+      return res.data.data || {};
+    } catch (error) {
+      return {};
+    }
+  }
+  async getKeywordDetails(data: any): Promise<any> {
+    let result = {};
+    try {
+      const res = await Api.get(`/api/outsourcing/osiImage/keywordsInfoView?${queryString.stringify(data)}`);
+      const res1 = await this.getKeywordTags([res.data.data]);
+      const { title, keywordTags = [] } = res1[0];
+
+      return {
+        title,
+        ...keywordTags.reduce((result, item) => {
+          const { source, label } = item;
+          if (result[source]) {
+            result[source].push(label);
+          } else {
+            result[source] = [label];
+          }
+          return result;
+        }, {})
+      };
+    } catch (error) {
+      console.error(error);
+    }
+    return result;
   }
   async getLicenseList(data: any): Promise<any> {
     const res = await Api.get(`/api/outsourcing/osiRelease/getImageRelease?${queryString.stringify(data)}`);
@@ -33,6 +80,14 @@ export class ImageService {
     );
     return res.data.data;
   }
+  async keywordsReview(data: any): Promise<any> {
+    const res = await Api.post(
+      `/api/outsourcing/osiImage/keywordsReview?${queryString.stringify(data.query)}`,
+      data.body
+    );
+    return res.data.data;
+  }
+
   async update(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImage/update?${queryString.stringify(data.query)}`, data.body);
     return res.data.data;
@@ -41,15 +96,8 @@ export class ImageService {
     const res = await Api.post(`/api/outsourcing/log/list4image`, data);
     return res.data.data.reverse();
   }
-  async getKeywordTags(data: any): Promise<any> {
-    const idList = data.reduce((result, item) => {
-      const { keywords } = item;
-      if (keywords) {
-        const keywordList = keywords.match(/\d+/g) || [];
-        return [...new Set([...result, ...keywordList])];
-      }
-      return result;
-    }, []);
+  async getKeywordTags<T extends IImage>(data: T[]): Promise<T[]> {
+    const idList = this.joinKeywordIds(data);
     if (idList.length === 0) {
       return Promise.resolve(data);
     }
@@ -57,20 +105,36 @@ export class ImageService {
     try {
       const res = await keywordService.getList(idList.join(','));
       return data.map(item => {
-        const { keywords } = item;
-        let keywordTags = [];
-        if (keywords) {
-          keywordTags = (keywords.match(/\d+/g) || []).reduce((result, id) => {
-            const keywordObj = res.find(r => r.id + '' === id);
-            if (keywordObj) {
-              result.push({
-                value: keywordObj.id + '',
-                label: keywordObj.cnname,
-                kind: keywordObj.kind
-              });
-            }
-            return result;
-          }, []);
+        const { osiKeywodsData } = item;
+        let keywordTags: IKeywordsTag[] = [];
+        if (osiKeywodsData) {
+          const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
+          for (let key in keywordsAllObj) {
+            keywordsAllObj[key].split(',').map((k: string) => {
+              if (/^\d+$/.test(k)) {
+                const keywordObj = res.find(r => r.id + '' === k);
+                if (keywordObj && !keywordTags.find(k => k.value === keywordObj.value)) {
+                  keywordTags.push({
+                    value: keywordObj.id + '',
+                    label: keywordObj.cnname,
+                    kind: keywordObj.kind,
+                    source: key as IKeywordsTag['source'] //TODO
+                  });
+                }
+              } else {
+                const [label, id] = k.split('|');
+                const value = id ? id.replaceAll('::', ',') : label;
+
+                if (!keywordTags.find(k => k.value === value)) {
+                  keywordTags.push({
+                    value,
+                    label: label,
+                    source: key as IKeywordsTag['source'] //TODO
+                  });
+                }
+              }
+            });
+          }
         }
         return {
           ...item,
@@ -78,6 +142,7 @@ export class ImageService {
         };
       });
     } catch (error) {
+      console.log(error, 'error');
       return Promise.resolve(data);
     }
   }

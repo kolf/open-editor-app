@@ -2,10 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { setShow, openFire } from 'src/features/search/search';
 
-export const useSearchValue = () => {
+export const useHeaderSearch = run => {
   const dispatch = useDispatch();
   const { keywords, fire } = useSelector((state: any) => state.search);
-  const [value, setValue] = useState('');
 
   useEffect(() => {
     dispatch(setShow(true));
@@ -13,10 +12,10 @@ export const useSearchValue = () => {
 
   useEffect(() => {
     if (fire) {
-      setValue(keywords);
+      run();
       dispatch(openFire(false));
     }
   }, [fire]);
 
-  return [value];
+  return [keywords];
 };
