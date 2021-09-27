@@ -12,10 +12,11 @@ import options, {
   License,
   LicenseType,
   QualityStatus,
-  IfSensitveCheck,
+  IfSensitiveCheck,
   Exclusive
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
+
 
 const { Option } = Select;
 const { Search } = Input;
@@ -24,8 +25,9 @@ const qualityStatusOptions = options.get(QualityStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
 const licenseOptions = options.get(License);
-const ifSensitveCheckOptions = options.get(IfSensitveCheck);
+const ifSensitveCheckOptions = options.get(IfSensitiveCheck);
 const LicenseTypeOptions = options.get(LicenseType);
+const exclusiveOptions = options.get(Exclusive);
 
 function filterOption(input, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
@@ -44,7 +46,6 @@ export const FormList = ({ initialValues, onChange }: any) => {
         <Form
           form={form}
           layout="inline"
-          initialValues={initialValues}
           onValuesChange={values => {
             onChange({
               ...values,
@@ -52,6 +53,9 @@ export const FormList = ({ initialValues, onChange }: any) => {
             });
           }}
         >
+          <Form.Item name="qualityAuditorId" className="form-list-item">
+            <SearchSelect manual style={{ width: 160 }} placeholder="审核人" type="editUser" />
+          </Form.Item>
           <Form.Item name="createdTime" className="form-list-item">
             <RangePicker
               inputReadOnly
@@ -77,13 +81,7 @@ export const FormList = ({ initialValues, onChange }: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="osiProviderId" className="form-list-item">
-            <SearchSelect
-              type="provider"
-              manual
-              options={providerOptions}
-              style={{ width: 160 }}
-              placeholder="数据来源"
-            />
+            <SearchSelect type="provider" manual options={providerOptions} style={{ width: 160 }} placeholder="数据来源" />
           </Form.Item>
           <Form.Item name="aiQualityScore" className="form-list-item">
             <InputSplit width={106} placeholder="AI质量评分" />
@@ -127,6 +125,15 @@ export const FormList = ({ initialValues, onChange }: any) => {
               ))}
             </Select>
           </Form.Item>
+          {/* <Form.Item name="exclusive" className="form-list-item">
+            <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="独家性">
+              {exclusiveOptions.map(o => (
+                <Option key={o.value} value={o.value}>
+                  {o.label}
+                </Option>
+              ))}
+            </Select>
+          </Form.Item> */}
           <Form.Item name="licenseType" className="form-list-item">
             <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder="授权">
               {LicenseTypeOptions.map(o => (
@@ -137,13 +144,7 @@ export const FormList = ({ initialValues, onChange }: any) => {
             </Select>
           </Form.Item>
           <Form.Item name="category" className="form-list-item">
-            <SearchSelect
-              style={{ width: 120 }}
-              manual
-              options={categoryOptions}
-              placeholder="AI分类"
-              type="category"
-            />
+            <SearchSelect style={{ width: 120 }} manual options={categoryOptions} placeholder="AI分类" type="category" />
           </Form.Item>
         </Form>
       </div>
@@ -154,6 +155,21 @@ export const FormList = ({ initialValues, onChange }: any) => {
           <Button type="text" shape="circle" title="展开" icon={<DownOutlined />} onClick={e => setCollapse(true)} />
         )}
       </div>
+      {/* <div className="formList-search">
+        <Search
+          allowClear
+          placeholder="请输入关键词，多个用逗号隔开"
+          enterButton="搜索"
+          onSearch={value => {
+            setKeyword(value);
+            const values = form.getFieldsValue();
+            onChange({
+              ...values,
+              keyword: value
+            });
+          }}
+        />
+      </div> */}
     </div>
   );
 };

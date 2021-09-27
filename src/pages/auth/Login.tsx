@@ -17,7 +17,7 @@ function Login() {
   const loading = useSelector((state: any) => state.user.loading);
 
   useEffect(() => {
-    if (token) history.push(PATH.USER_REVIEW_VCG_IMAGE_TEXT);
+    if (token) history.push(PATH.USER_REVIEW_IMAGE_TEXT);
   }, [token]);
 
   const onFinish = async (values: any) => {

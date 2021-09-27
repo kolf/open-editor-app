@@ -3,10 +3,13 @@ import { Form, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import options, {
   AIDetection,
+  AIService,
   BatchAssignMode,
   BatchAssignStatus,
-  IfSensitveCheckBool,
-  Priority
+  IfSensitiveCheckBool,
+  Priority,
+  SensitiveCheckType,
+  SensitiveWordList
 } from 'src/declarations/enums/query';
 import SearchSelect from 'src/components/SearchSelect';
 import 'src/styles/FormList.less';
@@ -34,7 +37,7 @@ const FormList = (props: any) => {
           <DatePicker.RangePicker
               style={{ width: 220 }}
               separator={props.createdTime ? '~' : ''}
-              placeholder={['入库时间']}
+              placeholder={['入库时间', '']}
             />
         </Form.Item>
         <Form.Item name="assignStatus" className="form-list-item">
@@ -76,6 +79,15 @@ const FormList = (props: any) => {
             ))}
           </Select>
         </Form.Item>
+        <Form.Item name="sensitiveCheckType" className="form-list-item">
+          <Select allowClear style={{ width: 120 }} placeholder="敏感检测">
+            {options.get(SensitiveCheckType).map(o => (
+              <Option key={`${o.label}${o.value}`} value={o.value}>
+                {o.label}
+              </Option>
+            ))}
+          </Select>
+        </Form.Item>
         <Form.Item name="priority" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="优先级">
             {options.get(Priority).map(o => (
@@ -85,9 +97,9 @@ const FormList = (props: any) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="ifSensitveCheck" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="敏感检测">
-            {options.get(IfSensitveCheckBool).map(o => (
+        <Form.Item name='sensitiveKeywordsTable' className='form-list-item'>
+          <Select allowClear style={{ width: 120 }} placeholder="敏感词表">
+            {options.get(SensitiveWordList).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>
@@ -95,8 +107,8 @@ const FormList = (props: any) => {
           </Select>
         </Form.Item>
         <Form.Item name="aiDetection" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="AI检测">
-            {options.get(AIDetection).map(o => (
+          <Select allowClear style={{ width: 120 }} placeholder="AI服务">
+            {options.get(AIService).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
                 {o.label}
               </Option>

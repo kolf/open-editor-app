@@ -6,11 +6,13 @@ import { useEffect, useState, useRef } from 'react';
 import config from 'src/config';
 import options, {
   AIDetection,
+  AIService,
+  AuditType,
   BatchAssignMode,
   BatchAssignStatus,
   BatchAuditType,
   BatchStatus,
-  IfSensitveCheckBool,
+  IfSensitiveCheckBool,
   Priority
 } from 'src/declarations/enums/query';
 import bacthService from 'src/services/batchService';
@@ -26,7 +28,8 @@ function VcgImageText() {
   const [query, setQuery] = useState({ 
     pageNum: 1, 
     pageSize: 60,
-    assignStatus: BatchAssignStatus.未分配
+    assignStatus: BatchAssignStatus.未分配,
+    auditStage: AuditType.质量审核
   });
   const { providerOptions } = useContext(DataContext);
 
@@ -91,50 +94,27 @@ function VcgImageText() {
       dataIndex: 'createdTime',
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
-    { title: '名称', width: 140, align: 'center', dataIndex: 'osiDbProviderId', render: value => providerMap[value] },
-    {
-      title: '审核类型',
-      width: document.documentElement.clientWidth < 1400 && 120,
-      align: 'center',
-      dataIndex: 'auditFlow',
-      render: value => options.map(BatchAuditType)[value]
-    },
+    { title: '数据来源', width: 140, align: 'center', dataIndex: 'osiDbProviderId', render: value => providerMap[value] },
     { title: '分配', align: 'center', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
-    { title: '优先级', align: 'center', dataIndex: 'priority', render: value => options.map(Priority)[value] },
     {
       title: '敏感检测',
       width: 80,
       align: 'center',
-      dataIndex: 'ifSensitveCheck',
-      render: value => options.map(IfSensitveCheckBool)[value]
-    },
-    {
-      title: 'AI检测',
-      width: 80,
-      align: 'center',
-      render: (value, tr) => {
-        return (
-          <>
-            {tr.ifAiQualityScore && <div>AI质量评分</div>}
-            {tr.ifAiBeautyScore && <div>AI美学评分</div>}
-            {tr.ifAiCategory && <div>AI分类</div>}
-          </>
-        );
-      }
     },
     { title: '数量', align: 'center', dataIndex: 'quantity' },
+    { title: '优先级', align: 'center', dataIndex: 'priority', render: value => options.map(Priority)[value] },
+    {
+      title: '分配状态',
+      align: 'center',
+      dataIndex: 'assignStatus',
+      render: value => options.map(BatchAssignStatus)[value]
+    },
     {
       title: '分配时间',
       width: 100,
       align: 'center',
       dataIndex: 'assignTime',
       render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
-    },
-    {
-      title: '分配状态',
-      align: 'center',
-      dataIndex: 'assignStatus',
-      render: value => options.map(BatchAssignStatus)[value]
     },
     {
       title: '分配对象',
@@ -172,7 +152,6 @@ function VcgImageText() {
   ];
 
   const formListOnChange = values => {
-    console.log(values, 1111);
     const nextQuery = { ...values, pageNum: 1 };
     const result = Object.keys(nextQuery).reduce(
       (memo, q) => {
@@ -192,9 +171,11 @@ function VcgImageText() {
             Reflect.deleteProperty(memo, 'ifAiQualityScore');
             Reflect.deleteProperty(memo, 'ifAiBeautyScore');
             Reflect.deleteProperty(memo, 'ifAiCategory');
-            if (nextQuery[q] === AIDetection.AI质量评分) memo['ifAiQualityScore'] = '1';
-            if (nextQuery[q] === AIDetection.AI美学评分) memo['ifAiBeautyScore'] = '1';
-            if (nextQuery[q] === AIDetection.AI分类) memo['ifAiCategory'] = '1';
+            Reflect.deleteProperty(memo, 'ifAiKeywords');
+            if (nextQuery[q] === AIService.AI质量评分) memo['ifAiQualityScore'] = '1';
+            if (nextQuery[q] === AIService.AI美学评分) memo['ifAiBeautyScore'] = '1';
+            if (nextQuery[q] === AIService.AI分类) memo['ifAiCategory'] = '1';
+            if (nextQuery[q] === AIService['AI自动标题/关键词']) memo['ifAiKeywords'] = '1';
             break;
           case 'userList':
             memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');

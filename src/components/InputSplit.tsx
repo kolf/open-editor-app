@@ -29,7 +29,7 @@ export default function InputSplit({ placeholder, onChange }: Props): ReactEleme
         onChange={setMinValue}
         step={0.1}
         min={0}
-        max={1}
+        max={10}
         bordered={false}
         style={{ width: hasValue ? 80 : 180, textAlign: 'center' }}
         placeholder={hasValue ? '最小值' : placeholder}
@@ -41,7 +41,7 @@ export default function InputSplit({ placeholder, onChange }: Props): ReactEleme
           onChange={setMaxValue}
           step={0.1}
           min={minValue || 0}
-          max={1}
+          max={10}
           bordered={false}
           placeholder="最大值"
           style={{
