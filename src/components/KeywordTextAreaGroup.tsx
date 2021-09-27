@@ -10,6 +10,7 @@ type Props<T> = {
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
 };
 
+// 
 const defaultKinds: Option[] = [
   {
     label: '主题',

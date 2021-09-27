@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Spin } from 'antd';
 import { RootRouter } from './routes/index';
-import { setShow } from 'src/features/search/search';
+import { setShow, setKeywords } from 'src/features/search/search';
 
 import './App.less';
 
@@ -20,6 +20,7 @@ function App() {
       if (ref.current !== location.pathname) {
         ref.current = location.pathname;
         dispatch(setShow(false));
+        dispatch(setKeywords(''));
       }
     });
   }, [ref]);

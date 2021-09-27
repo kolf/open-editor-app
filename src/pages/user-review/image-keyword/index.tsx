@@ -17,7 +17,6 @@ import imageService from 'src/services/imageService';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
-import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
 
 const initialData = {
   list: [],
@@ -29,7 +28,6 @@ export default React.memo(function List() {
   const { partyId } = useCurrentUser();
 
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
-  const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
   const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
@@ -60,6 +58,7 @@ export default React.memo(function List() {
   const [keywords] = useHeaderSearch(() => onRefresh());
 
   const {
+    getReasonTitle,
     keywordTags2string,
     showDetails,
     showLogs,
@@ -104,6 +103,10 @@ export default React.memo(function List() {
       }
     );
 
+    if (!query.keywordsStatus) {
+      result['keywordsStatus'] = '14,24,34';
+    }
+
     if (keywords) {
       result['keyword'] = keywords;
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
@@ -125,7 +128,7 @@ export default React.memo(function List() {
           let reasonTitle: IImage['reasonTitle'] = '';
 
           if (/^3/.test(osiImageReview.keywordsStatus) && (standardReason || customReason)) {
-            reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
+            reasonTitle = getReasonTitle(standardReason, customReason);
           }
 
           return {
