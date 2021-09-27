@@ -13,8 +13,9 @@ import options, {
   SensitiveCheckType,
   SensitiveWordList,
 } from 'src/declarations/enums/query';
+import { ModalType } from '.';
 
-const defaultOptions = {
+const defaultOptions: any = {
   sensitiveCheckType: SensitiveCheckType,
   AIDetection: AIService,
   titleAuditDefault: KeywordAuditDefault,
@@ -24,9 +25,30 @@ export default function CreateDataModal({
   saveRef,
   initialValues = {
     assetType: AssetType.图片,
-  }
+    assignType: AssignType.人工分配
+  },
+  modalType
 }) {
   const [options, setOptions] = useState(defaultOptions);
+
+  useEffect(() => {
+    // 如果弹窗为修改数据来源 且 审核类型只勾选质量审核、关键词审核其中一个
+    if (modalType === ModalType.修改数据来源 && initialValues?.auditFlows?.length === 1) {
+      if (initialValues?.auditFlows?.includes(AuditType.质量审核)) {
+        setOptions({
+          sensitiveCheckType: QualitySensitiveCheckType,
+          AIDetection: AIDetection,
+        })
+      } else if (initialValues?.auditFlows?.includes(AuditType.关键词审核)) {
+        setOptions({
+          sensitiveCheckType: KeywordSensitiveCheckType,
+          AIDetection: KeywordAIService,
+          titleAuditDefault: KeywordAuditDefault,
+          keywordAuditDefault: KeywordAuditDefault
+        })
+      }
+    }
+  }, [])
 
   // 审核类型不同导致的选项不同
   const onFieldsChange = v => {
@@ -89,7 +111,7 @@ export default function CreateDataModal({
         <Form.Item label="资源类型" name="assetType" rules={[{ required: true, message: '请选择资源类型！' }]}>
           <Radio.Group>
             {Object.keys(AssetType).map((t, i) => (
-              <Radio key={`${t}${i}`} value={AssetType[t]} disabled={AssetType.图片 !== AssetType[t]}>
+              <Radio key={`${t}${i}`} value={AssetType[t]} disabled={AssetType[t] !== AssetType.图片}>
                 {t}
               </Radio>
             ))}
@@ -109,7 +131,7 @@ export default function CreateDataModal({
         <Form.Item label="分配" name="assignType" rules={[{ required: true, message: '请选择分配！' }]}>
           <Radio.Group>
             {Object.keys(AssignType).map((t, i) => (
-              <Radio value={AssignType[t]} key={`${t}${i}`}>
+              <Radio value={AssignType[t]} key={`${t}${i}`} disabled={AssignType[t] !== AssignType.人工分配}>
                 {AssignType[t] === AssignType.系统分配 ? `${t}（全部资源）` : t}
               </Radio>
             ))}

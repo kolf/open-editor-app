@@ -14,7 +14,7 @@ import providerService from 'src/services/providerService';
 import modal from 'src/utils/modal';
 import CreateDataModal from './DataSourceForm';
 
-enum ModalType {
+export enum ModalType {
   创建数据来源,
   修改数据来源
 }
@@ -70,7 +70,7 @@ function List() {
         case 'sensitiveKeywordsTable':
         case 'keywordsReivewTitle':
         case 'keywordsReviewKeywords':
-          memo[key] = v.split(',');
+          memo[key] = v?.split(',');
           break;
         // AI服务因字段原因单独处理
         case 'ifAiQualityScore':
@@ -105,7 +105,7 @@ function List() {
     const mod = modal({
       width: 720,
       title: `${modalType === ModalType.修改数据来源 ? '编辑' : '创建'}数据来源`,
-      content: <CreateDataModal saveRef={f => (form = f)} initialValues={initialValues} />,
+      content: <CreateDataModal saveRef={f => (form = f)} initialValues={initialValues} modalType={modalType}/>,
       onOk
     });
 
