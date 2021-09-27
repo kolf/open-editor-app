@@ -28,7 +28,7 @@ export default function CreateDataModal({
     assignType: AssignType.人工分配
   },
   modalType
-}) {
+}: { saveRef: any, initialValues: any, modalType: ModalType }) {
   const [options, setOptions] = useState(defaultOptions);
 
   useEffect(() => {
