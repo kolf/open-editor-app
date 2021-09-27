@@ -2,32 +2,49 @@ import React, { createContext } from 'react';
 import { useRequest } from 'ahooks';
 import commonService from 'src/services/commonService';
 
-interface IDataContextInitValue {
-  providerOptions?: any,
-  categoryOptions?: any,
-  allReason?: any
+interface IReason {}
+
+interface Props {
+  providerOptions?: Option[];
+  categoryOptions?: Option[];
+  allReason?: any[];
+  reasonMap: Map<string, string>;
 }
 
-export const DataContext = createContext<IDataContextInitValue>({});
+function getReasonMap(treeData): Map<string, string> {
+  let result = new Map();
+  const loop = data => {
+    data.forEach(item => {
+      const key = item.id + '';
+      result.set(key, item.desc);
+      if (item.childNodes) {
+        loop(item.childNodes);
+      }
+    });
+  };
+  if (treeData) {
+    loop(treeData);
+  }
+
+  return result;
+}
+
+export const DataContext = createContext<Props>(null);
 
 export const DataProvider = ({ children }) => {
-  const { data, loading } = useRequest(
-    async () => {
-      const [providerOptions, categoryOptions, allReason] = await Promise.all([
-        commonService.getOptions({ type: 'provider' }),
-        commonService.getOptions({ type: 'category' }),
-        commonService.getImageAllReason()
-      ]);
-      return {
-        providerOptions,
-        categoryOptions,
-        allReason
-      };
-    },
-    {
-      initialData: {}
-    }
-  );
+  const { data = [], loading } = useRequest(async () => {
+    const [providerOptions, categoryOptions, allReason] = await Promise.all([
+      commonService.getOptions({ type: 'provider' }),
+      commonService.getOptions({ type: 'category' }),
+      commonService.getImageAllReason()
+    ]);
+    return {
+      providerOptions,
+      categoryOptions,
+      allReason,
+      reasonMap: getReasonMap(allReason)
+    };
+  });
 
-  return <DataContext.Provider value={data}>{children}</DataContext.Provider>;
+  return <DataContext.Provider value={data as Props}>{children}</DataContext.Provider>;
 };

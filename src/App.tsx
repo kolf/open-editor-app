@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, useState, Suspense, useRef } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Spin } from 'antd';
@@ -10,12 +10,19 @@ import './App.less';
 function App() {
   const history = useHistory();
   const dispatch = useDispatch();
+  const ref = useRef(null);
 
   useEffect(() => {
     history.listen(location => {
-      dispatch(setShow(false));
+      if (!ref.current) {
+        ref.current = location.pathname;
+      }
+      if (ref.current !== location.pathname) {
+        ref.current = location.pathname;
+        dispatch(setShow(false));
+      }
     });
-  }, []);
+  }, [ref]);
 
   return (
     <Suspense fallback={<Spin size="large" />}>

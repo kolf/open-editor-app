@@ -65,7 +65,7 @@ export function parse(dataSource) {
   }, {});
 }
 
-export function stringify(dataSource) {
+export function stringify(dataSource): string {
   const data = parse(dataSource);
   if (!data) {
     return '';
@@ -84,7 +84,7 @@ export function stringify(dataSource) {
 }
 
 export const useSentiveKeywords = dataSource => {
-  const text = stringify(dataSource);
+  const text: string = stringify(dataSource);
 
   const showDetails = async () => {
     const mod = modal({
