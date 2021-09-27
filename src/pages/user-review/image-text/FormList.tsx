@@ -12,7 +12,7 @@ import options, {
   License,
   LicenseType,
   QualityStatus,
-  IfSensitveCheck,
+  IfSensitiveCheck,
   Exclusive
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
@@ -24,7 +24,7 @@ const qualityStatusOptions = options.get(QualityStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
 const licenseOptions = options.get(License);
-const ifSensitveCheckOptions = options.get(IfSensitveCheck);
+const ifSensitveCheckOptions = options.get(IfSensitiveCheck);
 const LicenseTypeOptions = options.get(LicenseType);
 
 function filterOption(input, option) {

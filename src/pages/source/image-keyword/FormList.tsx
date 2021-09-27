@@ -79,7 +79,7 @@ const FormList = (props: any) => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name="sensitiveCheckType" className="form-list-item">
+        <Form.Item name="ifSensitveCheck" className="form-list-item">
           <Select allowClear style={{ width: 120 }} placeholder="敏感检测">
             {options.get(SensitiveCheckType).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>

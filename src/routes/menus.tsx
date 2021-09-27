@@ -16,7 +16,7 @@ export const menus: Menu[] = [
         icon: 'icon-data',
         path: PATH.SOURCE_LIST,
         breadcrumbName: '数据来源管理',
-        hidden: true
+        hidden: false,
       },
       {
         key: '_SOURCE_IMAGE',
@@ -40,7 +40,7 @@ export const menus: Menu[] = [
             hasChild: true,
             path: PATH.SOURCE_IMAGE_KEYWORD,
             breadcrumbName: '关键词审核',
-            hidden: true
+            hidden: false
           },
           {
             key: PATH.SOURCE_IMAGE_SENSITIVE,
