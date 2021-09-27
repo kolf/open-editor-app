@@ -99,7 +99,7 @@ export class ImageService {
   async getKeywordTags<T extends IImage>(data: T[]): Promise<T[]> {
     const idList = this.joinKeywordIds(data);
     if (idList.length === 0) {
-      return Promise.resolve(data);
+      return Promise.resolve(data.map(item => ({ ...item, keywordTags: [] })));
     }
 
     try {
@@ -143,7 +143,7 @@ export class ImageService {
       });
     } catch (error) {
       console.log(error, 'error');
-      return Promise.resolve(data);
+      return Promise.resolve(data.map(item => ({ ...item, keywordTags: [] })));
     }
   }
   async getSentiveWordByImageIds(data: any): Promise<any> {

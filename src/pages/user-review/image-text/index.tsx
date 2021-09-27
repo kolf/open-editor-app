@@ -13,7 +13,7 @@ import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useCurrentUser } from 'src/hooks/useCurrentUser';
-import { useHeaderSearch as useHeaderSearch } from 'src/hooks/useHeaderSearch';
+import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
@@ -43,8 +43,7 @@ export default React.memo(function List() {
     data: { list, total } = initialData,
     loading = true,
     mutate,
-    run,
-    refresh
+    run
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));

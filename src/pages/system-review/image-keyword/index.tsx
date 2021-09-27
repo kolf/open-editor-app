@@ -14,25 +14,23 @@ import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
-import { getReasonTitle, getReasonMap } from 'src/utils/getReasonTitle';
 
 const initialData = {
   list: [],
   total: 0
 };
 
-function List() {
+export default React.memo(function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
-  const reasonMap = getReasonMap(allReason);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
 
   const {
     data: { list, total } = initialData,
     loading = true,
-    run,
-    refresh
+    mutate,
+    run
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
@@ -51,9 +49,9 @@ function List() {
     }
   );
 
-  const [keywords] = useHeaderSearch(run);
+  const [keywords] = useHeaderSearch(() => onRefresh());
 
-  const { showDetails, showLogs, openLicense, showMiddleImage, openOriginImage } = useImage({
+  const { getReasonTitle, showDetails, showLogs, openLicense, showMiddleImage, openOriginImage } = useImage({
     list
   });
 
@@ -99,7 +97,7 @@ function List() {
           let reasonTitle: IImage['reasonTitle'] = '';
 
           if (/^3/.test(osiImageReview.keywordsStatus) && (standardReason || customReason)) {
-            reasonTitle = getReasonTitle(reasonMap, standardReason, customReason);
+            reasonTitle = getReasonTitle(standardReason, customReason);
           }
 
           return {
@@ -118,6 +116,9 @@ function List() {
     }
   };
 
+  const onRefresh = () => {
+    run();
+  };
   // 点击某一项数据
   const handleClick = (index: number, field: IImageActionType) => {
     switch (field) {
@@ -145,7 +146,7 @@ function List() {
     <>
       <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} />
       <Toolbar
-        onRefresh={refresh}
+        onRefresh={onRefresh}
         pagerProps={{
           total,
           current: query.pageNum,
@@ -183,6 +184,4 @@ function List() {
       />
     </>
   );
-}
-
-export default List;
+});
