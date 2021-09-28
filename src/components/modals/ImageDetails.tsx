@@ -7,7 +7,7 @@ interface Props {
   dataSource: any;
 }
 
-const propsNames = {
+const exifMap = {
   model: '机型',
   dateTimeOriginal: '原始日期时间',
   dateModified: '修改时间',
@@ -55,17 +55,14 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
             <Col span={18}>
               {dataSource.aiKeywordsUnselected ? dataSource.aiKeywordsUnselected.join('，') : defaultName}
             </Col>
-            <Col span={6}>用户</Col>{' '}
+            <Col span={6}>用户</Col>
             <Col span={18}>{dataSource.aiKeywordsUnselected ? dataSource.userKeywords.join('，') : defaultName}</Col>
           </Row>
         </Col>
       </Row>
       <Row>
         <Col span={12}>
-          <div
-            style={{ paddingRight: 24, paddingTop: 64, textAlign: 'center' }}
-            onClick={e => open(dataSource.urlYuan)}
-          >
+          <div style={{ paddingRight: 24, textAlign: 'center' }} onClick={e => open(dataSource.urlYuan)}>
             <img src={dataSource.imgUrl || defaultUrl} style={{ maxWidth: '100%' }} />
           </div>
         </Col>
@@ -73,9 +70,9 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
           {dataSource && (
             <div>
               <h3 style={{ textAlign: 'center' }}>EXIF</h3>
-              {Object.keys(propsNames).map(key => (
+              {Object.keys(exifMap).map(key => (
                 <div className="ant-row" key={key}>
-                  <div className="ant-col-8">{propsNames[key]}</div>
+                  <div className="ant-col-8">{exifMap[key]}</div>
                   <div className="ant-col-16">{dataSource.exif[key] || '---'}</div>
                 </div>
               ))}

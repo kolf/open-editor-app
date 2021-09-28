@@ -1,5 +1,5 @@
 import React, { useEffect, useState, Suspense, useRef } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Spin } from 'antd';
 import { RootRouter } from './routes/index';

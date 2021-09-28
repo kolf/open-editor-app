@@ -1,5 +1,12 @@
 import Api from './config';
 import queryString from 'querystring';
+import { IKeyword } from '../components/modals/PersonKeywords';
+
+export interface ICheckAmbiguityKeywords {
+  ambiguityKeywordsIds?: IdList;
+  key: string;
+  keywordsIds?: string;
+}
 
 export class KeywordService {
   async findList(data: string): Promise<Array<any>> {
@@ -7,14 +14,14 @@ export class KeywordService {
       const nameList = [...new Set(data.split(/,|，/g).filter(name => name))];
       const res = await Api.post(`/api/editor/proxy/post?url=gc/kw/find/batch`, { name: nameList });
       return nameList.map(name => {
-        const data = JSON.parse(res.data[name] || '[]');
+        const data: IKeyword[] = JSON.parse(res.data[name] || '[]');
         if (data.length === 0) {
-          return { label: name, value: name };
+          return { label: name, value: name, type: 0 };
         } else if (data.length === 1) {
           const oneData = data[0];
-          return { label: oneData.cnname, value: oneData.id + '', kind: oneData.kind };
+          return { label: oneData.cnname, value: oneData.id + '', type: 1, kind: oneData.kind };
         } else {
-          return { label: name, value: data.map(item => item.id).join(',') };
+          return { label: name, value: data.map(item => item.id).join(','), type: 2 };
         }
       });
     } catch (error) {
@@ -34,6 +41,15 @@ export class KeywordService {
       const idList = [...new Set(data.split(/,|，/g).filter(id => /\d+/g.test(id)))];
       const res = await Api.post(`/api/editor/proxy/post?url=gc/keyword/get/ids`, { data: idList.join(',') });
       return res.data;
+    } catch (error) {
+      return [];
+    }
+  }
+  async checkAmbiguity<T extends ICheckAmbiguityKeywords>(data: T[]): Promise<T[]> {
+    try {
+      const res = await Api.post(`/api/editor/param/checkAmbiguity`, data);
+      console.log(res.data,'da')
+      return res.data.data || [];
     } catch (error) {
       return [];
     }

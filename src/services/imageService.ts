@@ -1,6 +1,6 @@
 import Api from './config';
 import queryString from 'querystring';
-import keywordService from './keywordService';
+import keywordService, { ICheckAmbiguityKeywords } from './keywordService';
 
 export class ImageService {
   joinKeywordIds(data: IImage[]): IdList {
@@ -96,6 +96,39 @@ export class ImageService {
     const res = await Api.post(`/api/outsourcing/log/list4image`, data);
     return res.data.data.reverse();
   }
+  async checkAmbiguityKeywords<T extends IImage>(data: T[]): Promise<T[]> {
+    const params: ICheckAmbiguityKeywords[] = data
+      .map(item => ({
+        key: item.id + '',
+        keywordsIds: item.keywordTags
+          .filter(t => t.type === 1 && t.kind == 4)
+          .map(k => k.value)
+          .join(',')
+      }))
+      .filter(item => /,/g.test(item.keywordsIds));
+
+    let checkedList: ICheckAmbiguityKeywords[] = data.map(item => ({
+      key: item.id + '',
+      ambiguityKeywordsIds: []
+    }));
+
+    if (params.length > 0) {
+      checkedList = await keywordService.checkAmbiguity(params);
+    }
+
+    return data.map(item => {
+      const checkedItem = checkedList.find(c => c.key === item.id + '');
+      const nextKeywordTags = item.keywordTags.map(k => ({
+        ...k,
+        color: checkedItem && checkedItem.ambiguityKeywordsIds.find(id => id + '' === k.value) ? '#03a9f4' : null
+      }));
+
+      return {
+        ...item,
+        keywordTags: nextKeywordTags
+      };
+    });
+  }
   async getKeywordTags<T extends IImage>(data: T[]): Promise<T[]> {
     const idList = this.joinKeywordIds(data);
     if (idList.length === 0) {
@@ -118,7 +151,8 @@ export class ImageService {
                     value: keywordObj.id + '',
                     label: keywordObj.cnname,
                     kind: keywordObj.kind,
-                    source: key as IKeywordsTag['source'] //TODO
+                    source: key as IKeywordsTag['source'], //TODO
+                    type: 1
                   });
                 }
               } else {
@@ -129,7 +163,8 @@ export class ImageService {
                   keywordTags.push({
                     value,
                     label: label,
-                    source: key as IKeywordsTag['source'] //TODO
+                    source: key as IKeywordsTag['source'], //TODO
+                    type: 2
                   });
                 }
               }

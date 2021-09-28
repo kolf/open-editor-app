@@ -14,6 +14,7 @@ declare interface IKeywordsTag extends Option {
   value: string;
   color?: string;
   kind?: number;
+  type: 0 | 1 | 2;
   source?: keyof IKeywordsAll;
 }
 

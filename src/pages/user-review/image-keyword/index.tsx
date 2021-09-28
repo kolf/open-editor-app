@@ -154,9 +154,14 @@ export default React.memo(function List() {
   };
 
   // TODO
-  const handleChange = <K extends keyof IImage>(index: number, field: K, value: any) => {
+  const handleChange = async <K extends keyof IImage>(index: number, field: K, value: any) => {
     const { id } = list[index];
-    setList([{ id, [field]: value }]);
+    let nextList: IImage[] = [{ id, [field]: value }];
+    if (field === 'keywordTags') {
+      nextList = await imageService.checkAmbiguityKeywords(nextList);
+    }
+
+    setList(nextList);
   };
 
   // 点击某一项数据

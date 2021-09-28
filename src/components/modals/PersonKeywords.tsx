@@ -5,7 +5,7 @@ import Loading from 'src/components/common/LoadingBlock';
 import keywordService from 'src/services/keywordService';
 import dataSource from 'src/assets/json/personKeywordList.json';
 
-export interface IKeywordProps {
+export interface IKeyword {
   id: number;
   kind: number;
   cnname: string;
@@ -13,7 +13,7 @@ export interface IKeywordProps {
 }
 
 //
-interface IPersonKeywordProps {
+interface IPersonKeyword {
   vcg_keyword_id: number;
   getty_keyword_id: number;
   cnname: string;
@@ -22,18 +22,18 @@ interface IPersonKeywordProps {
 
 interface Props {
   value: IdList;
-  onChange: (checked: boolean, clickedKeyword: IKeywordProps) => void; // TODO 无法使用onClick?
+  onChange: (checked: boolean, clickedKeyword: IKeyword) => void; // TODO 无法使用onClick?
 }
 
 const keywordIdList: IdList = (
-  dataSource as Array<{ name: string; id: number; children: Array<IPersonKeywordProps> }>
+  dataSource as Array<{ name: string; id: number; children: Array<IPersonKeyword> }>
 ).reduce((result, item) => {
   const idList = item.children.map(c => c.vcg_keyword_id);
   return [...result, ...idList];
 }, []);
 
 export default function PersonKeywords({ value: propsValue, onChange: onClick }: Props): ReactElement {
-  const { data = [], loading = true }: { data: IKeywordProps[]; loading: boolean } = useRequest(
+  const { data = [], loading = true }: { data: IKeyword[]; loading: boolean } = useRequest(
     () => keywordService.getList(keywordIdList.join(',')),
     {
       throwOnError: true
@@ -41,18 +41,18 @@ export default function PersonKeywords({ value: propsValue, onChange: onClick }:
   );
 
   const isKeyword = (id: number): boolean => {
-    return !!data.find((item: IKeywordProps) => item.id === id);
+    return !!data.find((item: IKeyword) => item.id === id);
   };
 
-  const getKeywordList = (idList: IdList): IKeywordProps[] => {
+  const getKeywordList = (idList: IdList): IKeyword[] => {
     return data.filter(item => idList.includes(item.id));
   };
 
-  const isChecked = (value: IKeywordProps[], id: number): boolean => {
+  const isChecked = (value: IKeyword[], id: number): boolean => {
     return !!value.find(v => v.id === id);
   };
 
-  const handleClick = (id: IPersonKeywordProps['vcg_keyword_id'], e: React.MouseEvent<HTMLSpanElement>): void => {
+  const handleClick = (id: IPersonKeyword['vcg_keyword_id'], e: React.MouseEvent<HTMLSpanElement>): void => {
     e.preventDefault();
 
     const checked = !isChecked(value, id);
@@ -72,7 +72,7 @@ export default function PersonKeywords({ value: propsValue, onChange: onClick }:
         <div key={item.id} style={{ padding: '6px 0' }}>
           {item.children
             .filter(keyword => isKeyword(keyword.vcg_keyword_id))
-            .map((keyword: IPersonKeywordProps) => (
+            .map((keyword: IPersonKeyword) => (
               <Tag
                 color={isChecked(value, keyword.vcg_keyword_id) ? '#ccc' : null}
                 key={keyword.vcg_keyword_id}
