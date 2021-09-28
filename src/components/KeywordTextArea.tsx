@@ -9,8 +9,6 @@ import { useDoubleClick } from 'src/hooks/useDoubleClick';
 import keywordService from 'src/services/keywordService';
 import 'src/styles/KeywordTextArea.less';
 
-type valueType = 0 | 1 | 2;
-
 type Props<T> = {
   title: string;
   placeholder?: string;
@@ -31,18 +29,6 @@ export function uniq<T extends IKeywordsTag>(value: T[]): T[] {
     }
     return result;
   }, []);
-}
-
-export function getValueType(valueItem: IKeywordsTag): valueType {
-  if (valueItem.value === valueItem.label) {
-    return 0;
-  }
-  if (/^\d+$/g.test(valueItem.value)) {
-    return 1;
-  }
-  if (/,/g.test(valueItem.value)) {
-    return 2;
-  }
 }
 
 export default React.memo(function KeywordTextArea({
@@ -91,15 +77,14 @@ export default React.memo(function KeywordTextArea({
 
   async function showDetails(e) {
     const index: number = e.target.dataset.index * 1;
-    const valueItem = value[index];
-    const valueType = getValueType(valueItem);
+    const { value: id, type } = value[index];
 
-    if (valueType === 0) {
+    if (type === 0) {
       message.info(`关键词不存在！`);
       return;
     }
 
-    if (valueType === 2) {
+    if (type === 2) {
       onSelectValue(index);
       return;
     }
@@ -112,7 +97,7 @@ export default React.memo(function KeywordTextArea({
     });
 
     try {
-      const res = await keywordService.getList(valueItem.value);
+      const res = await keywordService.getList(id);
       mod.update({
         content: <KeywordDetails dataSource={res[0]} />
       });
@@ -142,7 +127,7 @@ export default React.memo(function KeywordTextArea({
       function onOk() {
         const addedValue = res
           .filter(r => contentValue.includes(r.id))
-          .map(item => ({ value: item.id + '', label: item.cnname, kind: item.kind }));
+          .map(item => ({ value: item.id + '', label: item.cnname, kind: item.kind, type: 1 as IKeywordsTag['type'] }));
         const nextValue = value.reduce((result, item, i) => {
           if (index === i) {
             result.push(...addedValue);
@@ -208,12 +193,11 @@ export default React.memo(function KeywordTextArea({
   }
 
   function getValueItemColor(valueItem: IKeywordsTag): string {
-    const valueType = getValueType(valueItem);
     const colorMap = {
       0: '#d15b47',
       2: '#82af6f'
     };
-    return colorMap[valueType] || valueItem.color || '';
+    return colorMap[valueItem.type] || valueItem.color || '';
   }
 
   return (

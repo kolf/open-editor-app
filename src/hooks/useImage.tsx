@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useRequest } from 'ahooks';
 import { Row, Col, Button, message } from 'antd';
 import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
@@ -8,10 +7,12 @@ import UpdateKeywords, { IListItem as IKeywordsInListItem } from 'src/components
 import UpdateTitle, { PositionType } from 'src/components/modals/UpdateTitle';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import imageService from 'src/services/imageService';
+import keywordService, { ICheckAmbiguityKeywords } from 'src/services/keywordService';
 import modal from 'src/utils/modal';
 import * as tools from 'src/utils/tools';
 
 type ITitleInListItem = Required<Pick<IImage, 'id' | 'title'>>;
+
 interface Props<T> {
   list: T;
   onChange?: (list: T) => void;
@@ -27,7 +28,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   }, [list]);
 
   const keywordTags2string = React.useCallback(
-    (keywordTags: IKeywordsTag[]) => {
+    (keywordTags: IKeywordsTag[]): { keywords: string; keywordsAudit: string; keywordsAll: string } => {
       console.log(keywordTags, 'keywordTags');
       return {
         keywords: '',
@@ -65,20 +66,25 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       autoIndex: false,
       content: (
         <UpdateKeywords
-          onChange={setSelectedList}
+          onChange={update}
           defaultList={listRef.current
             .filter(item => idList.includes(item.id))
             .map(
               item =>
                 ({
                   id: item.id,
-                  keywordTags: item.keywordTags
+                  keywordTags: item.keywordTags.map(k => ({ ...k, color: null }))
                 } as IKeywordsInListItem)
             )}
         />
       ),
       footer: null
     });
+
+    async function update(list) {
+      const nextList = await imageService.checkAmbiguityKeywords(list);
+      setSelectedList(nextList);
+    }
   };
 
   // 修改标题
@@ -119,21 +125,20 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       setSelectedList(changedList);
     }
 
-    function onReplace(findText: string, replaceText: string) {
-      if (!findText) {
+    function onReplace(searchValue: string, replaceValue: string) {
+      if (!searchValue) {
         message.info(`请输入查找内容！`);
         return;
       }
       const currentList = listRef.current;
       const changedList: ITitleInListItem[] = idList.map(id => {
         const item = currentList.find(c => c.id === id);
-        return { id, title: tools.trim(item.title).replaceAll(tools.trim(findText), tools.trim(replaceText)) };
+        return { id, title: tools.trim(item.title).replaceAll(tools.trim(searchValue), tools.trim(replaceValue)) };
       });
 
       setSelectedList(changedList);
     }
   };
-
   // 显示图片详情
   const showDetails = async (index: number) => {
     const mod = modal({
@@ -146,12 +151,11 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
     update(index);
 
     async function update(index: number) {
-      const length = listRef.current.length;
-
       mod.update({
         content: <Loading />
       });
 
+      const length = listRef.current.length;
       const { id, urlSmall, urlYuan } = listRef.current[index];
       try {
         const res = await Promise.all([imageService.getKeywordDetails({ id }), imageService.getExif({ id })]);

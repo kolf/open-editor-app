@@ -1,5 +1,5 @@
 import React, { ReactElement } from 'react';
-import KeywordTextArea, { getValueType, uniq } from './KeywordTextArea';
+import KeywordTextArea, { uniq } from './KeywordTextArea';
 
 export type ModeType = 'all' | 'source' | 'kind';
 
@@ -10,7 +10,7 @@ type Props<T> = {
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
 };
 
-// 
+//
 const defaultKinds: Option[] = [
   {
     label: '主题',
@@ -72,8 +72,7 @@ export default React.memo(function KeywordTextAreaGroup({
   const getValueByKind = (kind: number): IKeywordsTag[] => {
     if (kind === -1) {
       return filterRemovedValue().reduce((result, item) => {
-        const valueType = getValueType(item);
-        if (valueType != 1) {
+        if (item.type != 1) {
           result.push(item);
         }
         return result;

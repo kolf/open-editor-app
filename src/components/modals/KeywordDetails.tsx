@@ -3,7 +3,6 @@ import { Form, Input, Radio, Select } from 'antd';
 
 const FormItem = Form.Item;
 const RadioGroup = Radio.Group;
-const SelectOption = Select.Option;
 
 interface Props {
   dataSource: any;
@@ -55,7 +54,7 @@ export default function KeywordDetails({ dataSource }: Props): ReactElement {
   }
 
   return (
-    <Form initialValues={makeInitialValues(dataSource)}>
+    <Form initialValues={makeInitialValues(dataSource)} className="form-readonly">
       <FormItem label="中文名" {...formItemLayout} name="cnname">
         <Input disabled />
       </FormItem>

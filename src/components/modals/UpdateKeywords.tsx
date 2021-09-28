@@ -4,7 +4,7 @@ import { DownOutlined, LineOutlined, FileSearchOutlined, UnorderedListOutlined }
 
 import KeywordTextAreaGroup, { ModeType } from 'src/components/KeywordTextAreaGroup';
 import FindAndReplace from 'src/components/modals/FindAndReplace';
-import PersonKeywords, { IKeywordProps } from 'src/components/modals/PersonKeywords';
+import PersonKeywords, { IKeyword } from 'src/components/modals/PersonKeywords';
 import keywordService from 'src/services/keywordService';
 import { uniq } from 'src/components/KeywordTextArea';
 import * as tools from 'src/utils/tools';
@@ -21,12 +21,20 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
   const [list, setList] = useState(defaultList);
 
   const getValueByList = (list: IListItem[]): IKeywordsTag[] => {
-    return uniq(
-      list.reduce((result, item) => {
-        const { keywordTags } = item;
-        return [...result, ...keywordTags];
-      }, [])
-    );
+    return list.reduce((result, item) => {
+      const { keywordTags } = item;
+      keywordTags.forEach(k => {
+        const index = result.findIndex(r => r.value === k.value);
+        if (index !== -1) {
+          if (k.type === 1) {
+            result[index] = { ...k, color: 'gold' };
+          }
+        } else {
+          result.push(k);
+        }
+      });
+      return result;
+    }, []);
   };
 
   const value = getValueByList(list);
@@ -51,7 +59,7 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
 
       return {
         id,
-        keywordTags: nextKeywordTags
+        keywordTags: nextKeywordTags.map(k => ({ ...k, color: null }))
       };
     });
 
@@ -60,20 +68,20 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
     onChange(nextList);
   };
 
-  const onReplace = async (findText: string, replaceText: string) => {
-    const findLabelList = tools
-      .trim(findText)
+  const onReplace = async (searchValue: string, replaceValue: string) => {
+    const searchLabelList: string[] = tools
+      .trim(searchValue)
       .split(/,|，/)
       .filter(str => str);
-    const newKeywordTags = await keywordService.findList(tools.trim(replaceText));
-    if (findLabelList.length === 0) {
+    const newKeywordTags = await keywordService.findList(tools.trim(replaceValue));
+    if (searchLabelList.length === 0) {
       message.info(`请输入要查找的关键词！`);
       return;
     }
 
     const nextList = list.map(item => {
       const { keywordTags, id } = item;
-      const nextKeywordTags = uniq([...keywordTags.filter(k => !findLabelList.includes(k.label)), ...newKeywordTags]);
+      const nextKeywordTags = uniq([...keywordTags.filter(k => !searchLabelList.includes(k.label)), ...newKeywordTags]);
       return {
         id,
         keywordTags: nextKeywordTags
@@ -85,11 +93,11 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
     onChange(nextList);
   };
 
-  const handlePersonKeywordClick = (checked: boolean, keyword: IKeywordProps) => {
+  const handlePersonKeywordClick = (checked: boolean, keyword: IKeyword) => {
     let addedValue = [];
     let removedValue = [];
 
-    const newValue: IKeywordsTag[] = [{ value: keyword.id + '', label: keyword.cnname, kind: keyword.kind }];
+    const newValue: IKeywordsTag[] = [{ value: keyword.id + '', label: keyword.cnname, kind: keyword.kind, type: 1 }];
 
     if (checked) {
       addedValue = newValue;

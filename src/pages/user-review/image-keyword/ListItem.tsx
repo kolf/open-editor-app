@@ -48,96 +48,97 @@ function getHeight(keywordMode: KeywordModeType): number {
   return 572;
 }
 
-export default React.memo(
-  function ListItem({ dataSource, selected, keywordMode, index, onClick, onChange }: Props<IImage>): ReactElement {
-    const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
+export default React.memo(function ListItem({
+  dataSource,
+  selected,
+  keywordMode,
+  index,
+  onClick,
+  onChange
+}: Props<IImage>): ReactElement {
+  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
 
-    return (
-      <GridItem
-        cover={<img src={dataSource.urlSmall} />}
-        indexProps={{ ...getIndexProps(dataSource.osiImageReview.keywordsStatus), text: index + 1 + '' }}
-        height={getHeight(keywordMode)}
-        onClick={field => onClick(index, field)}
-        selected={selected}
-        actions={[
-          {
-            icon: <CheckOutlined />,
-            value: 'resolve',
-            label: '通过',
-            disabled: dataSource.osiImageReview.callbackStatus === 2
-          },
-          { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
-        ]}
-      >
-        <GridItemRow>
-          <Row>
-            <Col title="入库时间" flex="auto">
-              {dataSource.createdTime}
-            </Col>
-            <Col title="编辑时间" style={{ textAlign: 'right' }}>
-              {dataSource.osiImageReview.qualityEditTime}
-            </Col>
-          </Row>
-        </GridItemRow>
-        <GridItemRow label={<IconFont type="icon-ic_image" />}>
-          <a style={{ color: '#337ab7' }} onClick={e => onClick(index, 'id')}>
-            {dataSource.id}
-          </a>
-          {dataSource.osiImageReview.priority === 2 && (
-            <IconFont
-              title="加急"
-              type="icon-xing"
-              style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }}
-            />
-          )}
-        </GridItemRow>
-        <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName as string}</GridItemRow>
-        <GridItemRow>
-          <Space>
-            <span>LAI</span>
-            <span title="AI质量评分">{dataSource.aiQualityScore}</span>
-            <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
-            <span>{dataSource.categoryNames}</span>
-          </Space>
-        </GridItemRow>
-
-        <GridItemRow>
-          <Input.TextArea
-            title={dataSource.title}
-            rows={2}
-            value={dataSource.title}
-            placeholder="标题"
-            onChange={e => onChange(index, 'title', e.target.value)}
+  return (
+    <GridItem
+      cover={<img src={dataSource.urlSmall} />}
+      indexProps={{ ...getIndexProps(dataSource.osiImageReview.keywordsStatus), text: index + 1 + '' }}
+      height={getHeight(keywordMode)}
+      onClick={field => onClick(index, field)}
+      selected={selected}
+      actions={[
+        {
+          icon: <CheckOutlined />,
+          value: 'resolve',
+          label: '通过',
+          disabled: dataSource.osiImageReview.callbackStatus === 2
+        },
+        { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
+      ]}
+    >
+      <GridItemRow>
+        <Row>
+          <Col title="入库时间" flex="auto">
+            {dataSource.createdTime}
+          </Col>
+          <Col title="编辑时间" style={{ textAlign: 'right' }}>
+            {dataSource.osiImageReview.qualityEditTime}
+          </Col>
+        </Row>
+      </GridItemRow>
+      <GridItemRow label={<IconFont type="icon-ic_image" />}>
+        <a style={{ color: '#337ab7' }} onClick={e => onClick(index, 'id')}>
+          {dataSource.id}
+        </a>
+        {dataSource.osiImageReview.priority === 2 && (
+          <IconFont
+            title="加急"
+            type="icon-xing"
+            style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }}
           />
-        </GridItemRow>
-        <Divider style={{ margin: '6px 0' }} />
-
-        <GridItemRow>
-          <KeywordTextAreaGroup
-            mode={keywordMode}
-            value={dataSource.keywordTags}
-            onChange={value => {
-              onChange(index, 'keywordTags', value);
-            }}
-          />
-        </GridItemRow>
-
-        {dataSource.reasonTitle && (
-          <GridItem.TopTag align="right" color="rgb(255, 85, 0)">
-            {dataSource.reasonTitle}
-          </GridItem.TopTag>
         )}
+      </GridItemRow>
+      <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName as string}</GridItemRow>
+      <GridItemRow>
+        <Space>
+          <span>LAI</span>
+          <span title="AI质量评分">{dataSource.aiQualityScore}</span>
+          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
+          <span>{dataSource.categoryNames}</span>
+        </Space>
+      </GridItemRow>
 
-        {dataSource.sensitiveList.length > 0 && (
-          <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
-            {sensitiveListTitle as string}
-          </GridItem.TopTag>
-        )}
-      </GridItem>
-    );
-  }
-  // (prevProps, nextProps) => {
-  //   console.log(prevProps, nextProps, 'props');
-  //   return false
-  // }
-);
+      <GridItemRow>
+        <Input.TextArea
+          title={dataSource.title}
+          rows={2}
+          value={dataSource.title}
+          placeholder="标题"
+          onChange={e => onChange(index, 'title', e.target.value)}
+        />
+      </GridItemRow>
+      <Divider style={{ margin: '6px 0' }} />
+
+      <GridItemRow>
+        <KeywordTextAreaGroup
+          mode={keywordMode}
+          value={dataSource.keywordTags}
+          onChange={value => {
+            onChange(index, 'keywordTags', value);
+          }}
+        />
+      </GridItemRow>
+
+      {dataSource.reasonTitle && (
+        <GridItem.TopTag align="right" color="rgb(255, 85, 0)">
+          {dataSource.reasonTitle}
+        </GridItem.TopTag>
+      )}
+
+      {dataSource.sensitiveList.length > 0 && (
+        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
+          {sensitiveListTitle as string}
+        </GridItem.TopTag>
+      )}
+    </GridItem>
+  );
+});
