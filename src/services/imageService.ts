@@ -120,12 +120,12 @@ export class ImageService {
       const checkedItem = checkedList.find(c => c.key === item.id + '');
       const nextKeywordTags = item.keywordTags.map(k => ({
         ...k,
-        color: checkedItem && checkedItem.ambiguityKeywordsIds.find(id => id + '' === k.value) ? '#03a9f4' : null
+        color: checkedItem && checkedItem.ambiguityKeywordsIds.find(id => id + '' === k.value) ? 'blue' : null
       }));
 
       return {
         ...item,
-        keywordTags: nextKeywordTags
+        keywordTags: keywordService.sort(nextKeywordTags)
       };
     });
   }
@@ -181,6 +181,7 @@ export class ImageService {
       return Promise.resolve(data.map(item => ({ ...item, keywordTags: [] })));
     }
   }
+
   async getSentiveWordByImageIds(data: any): Promise<any> {
     try {
       const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);

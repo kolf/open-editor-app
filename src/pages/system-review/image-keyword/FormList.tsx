@@ -9,8 +9,8 @@ import options, {
   Quality,
   License,
   LicenseType,
-  QualityStatus,
-  IfSensitiveCheck
+  KeywordsStatus,
+  IfSensitveCheck
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
 
@@ -21,7 +21,7 @@ interface Props {
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-const qualityStatusOptions = options.get(QualityStatus);
+const qualityStatusOptions = options.get(KeywordsStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
 const licenseOptions = options.get(License);

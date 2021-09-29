@@ -6,6 +6,7 @@ export type ModeType = 'all' | 'source' | 'kind';
 type Props<T> = {
   mode: ModeType;
   size?: 'small' | 'default';
+  readOnly?: boolean;
   value?: T[];
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
 };
@@ -64,6 +65,7 @@ const sourceTypes: Option[] = [
 export default React.memo(function KeywordTextAreaGroup({
   size,
   mode,
+  readOnly,
   value,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
@@ -149,7 +151,9 @@ export default React.memo(function KeywordTextAreaGroup({
                 title={sourceType.label}
                 placeholder={sourceType.label}
                 value={currentValue}
-                action={sourceType.value === removedSourceType ? ['remove'] : ['add', 'remove', 'select']}
+                action={
+                  readOnly ? [] : sourceType.value === removedSourceType ? ['remove'] : ['add', 'remove', 'select']
+                }
                 onChange={handleChange}
               />
             </div>
@@ -171,6 +175,7 @@ export default React.memo(function KeywordTextAreaGroup({
                 title={kind.label + '关键词'}
                 placeholder={placeholder}
                 value={currentValue}
+                action={readOnly ? [] : ['add', 'remove', 'select']}
                 onChange={handleChange}
               />
             </div>
@@ -180,6 +185,14 @@ export default React.memo(function KeywordTextAreaGroup({
     );
   }
   if (mode === 'all') {
-    return <KeywordTextArea height={200} title="关键词" value={filterRemovedValue()} onChange={handleChange} />;
+    return (
+      <KeywordTextArea
+        height={200}
+        title="关键词"
+        value={filterRemovedValue()}
+        action={readOnly ? [] : ['add', 'remove', 'select']}
+        onChange={handleChange}
+      />
+    );
   }
 });

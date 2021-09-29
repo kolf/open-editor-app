@@ -37,7 +37,7 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
     }, []);
   };
 
-  const value = getValueByList(list);
+  const value = keywordService.sort(getValueByList(list));
 
   const personKeywordIdList: Array<number> = value.reduce((result, valueItem) => {
     if (/^\d+$/.test(valueItem.value)) {

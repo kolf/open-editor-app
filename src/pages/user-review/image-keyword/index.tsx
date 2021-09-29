@@ -14,6 +14,7 @@ import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
+import keywordService from 'src/services/keywordService';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
@@ -35,8 +36,8 @@ export default React.memo(function List() {
   const {
     data: { list, total } = initialData,
     loading = true,
-    mutate,
-    run
+    run,
+    mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
@@ -82,6 +83,10 @@ export default React.memo(function List() {
     }
   });
 
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [query]);
+
   // 格式化查询参数
   const formatQuery = query => {
     let result = Object.keys(query).reduce(
@@ -100,12 +105,12 @@ export default React.memo(function List() {
         return result;
       },
       {
-        qualityAuditorId: partyId
+        keywordsAuditorId: partyId
       }
     );
 
     if (!query.keywordsStatus) {
-      result['keywordsStatus'] = '14,24,34';
+      result['keywordsStatus'] = '14,15,24,34';
     }
 
     if (keywords) {
@@ -150,7 +155,6 @@ export default React.memo(function List() {
   };
 
   const onRefresh = () => {
-    setSelectedIds([]);
     setQuery({ ...query, pageNum: 1 });
   };
 
