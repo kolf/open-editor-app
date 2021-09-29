@@ -207,8 +207,8 @@ export default React.memo(function KeywordTextArea({
 
   function getValueItemColor(valueItem: IKeywordsTag): string {
     const colorMap = {
-      0: '#d15b47',
-      2: '#82af6f'
+      0: 'red',
+      2: 'green'
     };
     return colorMap[valueItem.type] || valueItem.color || '';
   }

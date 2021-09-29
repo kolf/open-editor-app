@@ -80,6 +80,9 @@ export default React.memo(function List() {
     }
   });
 
+  useEffect(() => {
+    setSelectedIds([]);
+  }, [query]);
   // 格式化查询参数
   const formatQuery = query => {
     let result = Object.keys(query).reduce(
@@ -159,7 +162,6 @@ export default React.memo(function List() {
   };
 
   const onRefresh = () => {
-    setSelectedIds([]);
     setQuery({ ...query, pageNum: 1 });
   };
 

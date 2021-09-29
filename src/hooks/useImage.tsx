@@ -8,8 +8,10 @@ import { removedSourceTypeReg } from 'src/components/KeywordTextAreaGroup';
 import UpdateTitle, { PositionType } from 'src/components/modals/UpdateTitle';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import imageService from 'src/services/imageService';
+import keywordService from 'src/services/keywordService';
 import modal from 'src/utils/modal';
 import * as tools from 'src/utils/tools';
+
 
 type ITitleInListItem = Required<Pick<IImage, 'id' | 'title'>>;
 
@@ -61,7 +63,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
         keywordsAll: JSON.stringify(keywordsAllObj)
       };
     },
-    [list]
+    []
   );
 
   const getReasonTitle = React.useCallback(
@@ -107,7 +109,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
     });
 
     async function update(list) {
-      const nextList = await imageService.checkAmbiguityKeywords(list);
+      let nextList = await imageService.checkAmbiguityKeywords(list);
       setSelectedList(nextList);
     }
   };

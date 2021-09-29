@@ -53,6 +53,32 @@ export class KeywordService {
       return [];
     }
   }
+  sort<T extends IKeywordsTag>(data: T[]): T[] {
+    return data.sort((a, b) => {
+      let n: number = a.type;
+      let m: number = b.type;
+
+      if (n === 1) {
+        n = -2;
+      }
+      if (m === 1) {
+        m = -2;
+      }
+      if (a.color === 'gold') {
+        n = -1;
+      }
+      if (b.color === 'gold') {
+        m = -1;
+      }
+      if (a.color === 'blue') {
+        n = 3;
+      }
+      if (b.color === 'blue') {
+        m = 3;
+      }
+      return m - n;
+    });
+  }
 }
 
 const keywordService = new KeywordService();

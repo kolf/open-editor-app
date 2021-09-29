@@ -13,6 +13,7 @@ import { useDocumentTitle } from 'src/hooks/useDom';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
+
 import config from 'src/config';
 
 const initialData = {
@@ -26,12 +27,7 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
 
-  const {
-    data: { list, total } = initialData,
-    loading = true,
-    mutate,
-    run
-  }: FetchResult<IImageResponse, any> = useRequest(
+  const { data: { list, total } = initialData, loading = true }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
       let nextList = await imageService.getKeywordTags(res.list);
@@ -74,7 +70,7 @@ export default React.memo(function List() {
     }, {});
 
     if (!query.keywordsStatus) {
-      result['keywordsStatus'] = '14,24,34';
+      result['keywordsStatus'] = '14,15,24,34';
     }
 
     if (keywords) {
