@@ -2,7 +2,7 @@ import { Col, Row, Spin } from 'antd';
 import React from 'react';
 import './styles.less';
 
-function Loading() {
+export default React.memo(function Loading() {
   return (
     <Row align="middle" justify="center" style={{ height: '100vh', width: '100vw' }}>
       <Col span={24} flex="row">
@@ -12,6 +12,4 @@ function Loading() {
       </Col>
     </Row>
   );
-}
-
-export default Loading;
+});

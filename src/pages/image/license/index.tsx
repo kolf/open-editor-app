@@ -28,7 +28,7 @@ export default function LicenseType({}: Props): ReactElement {
   const [index, setIndex] = useState(-1);
 
   const [page, setPage] = useState(1);
-  const canvasRef = useRef(null);
+  const canvasRef = useRef();
 
   const columns = [
     {
@@ -60,7 +60,6 @@ export default function LicenseType({}: Props): ReactElement {
   const handleRowClick = row => {
     const index = data.findIndex(item => item.id === row.id);
     setIndex(index);
-    console.log(index, 'res');
   };
 
   const getRowClassName = (row, i) => {

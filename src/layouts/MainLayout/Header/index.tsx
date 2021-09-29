@@ -13,9 +13,10 @@ import modal from 'src/utils/modal';
 import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
 const { Search } = Input;
+
 export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const user = useSelector((state: RootState) => state.user.user);
-  const { show: showSearch } = useSelector(state => state.search);
+  const { show: showSearch } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -84,7 +85,8 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
             allowClear
             placeholder="请输入关键词或ID，多个用逗号隔开"
             onChange={e => {
-              dispatch(setKeywords(e.target.value));
+              const value = e.target.value.replaceAll('，', ',');
+              dispatch(setKeywords(value));
             }}
             onSearch={e => {
               dispatch(openFire(true));

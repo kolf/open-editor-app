@@ -144,6 +144,13 @@ export enum QualityStatus {
   '不通过' = '34'
 }
 
+export enum KeywordsStatus{
+  '待编审' = '14',
+  '待编审(免审)' = '15',
+  '已通过' = '24',
+  '不通过' = '34'
+}
+
 export enum IfHaveRelease {
   无 = '0',
   有 = '1'
@@ -181,7 +188,7 @@ class Options {
       return result;
     }, {});
   }
-  get(enumObj): { value: string | number; label: string }[] {
+  get<T>(enumObj): Option[] {
     return Object.keys(enumObj).reduce((result, key) => {
       result.push({
         value: enumObj[key],

@@ -1,0 +1,86 @@
+[
+  {
+    "name": "人数",
+    "id": 1,
+    "children": [
+      { "vcg_keyword_id": 12109, "getty_keyword_id": 99907, "cnname": "无人", "enname": "No People" },
+      { "vcg_keyword_id": 4233, "getty_keyword_id": 65803, "cnname": "一个人", "enname": "One Person" },
+      { "vcg_keyword_id": 4215, "getty_keyword_id": 96496, "cnname": "两个人", "enname": "Two Person" },
+      { "vcg_keyword_id": 4222, "getty_keyword_id": 96482, "cnname": "三个人", "enname": "Three Person" },
+      { "vcg_keyword_id": 4221, "getty_keyword_id": 96483, "cnname": "四个人", "enname": "Four People" },
+      { "vcg_keyword_id": 4220, "getty_keyword_id": 115715, "cnname": "五个人", "enname": "Five People" },
+      {
+        "vcg_keyword_id": 4223,
+        "getty_keyword_id": 96480,
+        "cnname": "中等数量人群",
+        "enname": "Medium Group Of People"
+      },
+      { "vcg_keyword_id": 4224, "getty_keyword_id": 96479, "cnname": "大量人群", "enname": "Large Group Of People" }
+    ]
+  },
+  {
+    "name": "年龄性别",
+    "id": 2,
+    "children": [
+      { "vcg_keyword_id": 4186, "getty_keyword_id": 96572, "cnname": "男婴", "enname": "Baby Boys" },
+      { "vcg_keyword_id": 4183, "getty_keyword_id": 96569, "cnname": "男孩", "enname": "Boys" },
+      { "vcg_keyword_id": 4180, "getty_keyword_id": 96566, "cnname": "少男", "enname": "Teenage Boys" },
+      { "vcg_keyword_id": 4166, "getty_keyword_id": 96552, "cnname": "青年男人", "enname": "Young Men" },
+      { "vcg_keyword_id": 4169, "getty_keyword_id": 96555, "cnname": "中年男人", "enname": "Mid Adult Men" },
+      { "vcg_keyword_id": 4175, "getty_keyword_id": 96561, "cnname": "中老年男人", "enname": "Mature Men" },
+      { "vcg_keyword_id": 4172, "getty_keyword_id": 96558, "cnname": "老年男人", "enname": "Senior Men" },
+      { "vcg_keyword_id": 4211, "getty_keyword_id": 96599, "cnname": "女婴", "enname": "Baby Girls" },
+      { "vcg_keyword_id": 4208, "getty_keyword_id": 96596, "cnname": "女孩", "enname": "Girls" },
+      { "vcg_keyword_id": 4205, "getty_keyword_id": 96593, "cnname": "少女", "enname": "Teenage Girls" },
+      { "vcg_keyword_id": 4191, "getty_keyword_id": 96581, "cnname": "青年女人", "enname": "Young Women" },
+      { "vcg_keyword_id": 4194, "getty_keyword_id": 96584, "cnname": "中年女人", "enname": "Mid Adult Women" },
+      { "vcg_keyword_id": 4197, "getty_keyword_id": 96587, "cnname": "中老年女人", "enname": "Mature Women" },
+      { "vcg_keyword_id": 4200, "getty_keyword_id": 96590, "cnname": "老年女人", "enname": "Senior Women" },
+      { "vcg_keyword_id": 664773, "getty_keyword_id": 14864098, "cnname": "非二元性别", "enname": "Non-binary" },
+      { "vcg_keyword_id": 664774, "getty_keyword_id": 8566419, "cnname": "变性女", "enname": "Transgender Woman" },
+      { "vcg_keyword_id": 664775, "getty_keyword_id": 28428329, "cnname": "变性男", "enname": "Transgender Man" },
+      { "vcg_keyword_id": 664776, "getty_keyword_id": "", "cnname": "女同性恋者", "enname": "Cisgender Woman" },
+      { "vcg_keyword_id": 664777, "getty_keyword_id": "", "cnname": "男同性恋者", "enname": "Cisgender Man" },
+      { "vcg_keyword_id": 664780, "getty_keyword_id": "", "cnname": "其他", "enname": "Other - Gender" },
+      { "vcg_keyword_id": 2805, "getty_keyword_id": 67254, "cnname": "婴儿", "enname": "Baby" },
+      { "vcg_keyword_id": 2789, "getty_keyword_id": 67255, "cnname": "儿童", "enname": "Child" },
+      { "vcg_keyword_id": 2782, "getty_keyword_id": 67256, "cnname": "青少年", "enname": "Teenager" },
+      { "vcg_keyword_id": 2777, "getty_keyword_id": 67258, "cnname": "青年人", "enname": "Young Adult" },
+      { "vcg_keyword_id": 2773, "getty_keyword_id": 67259, "cnname": "中年人", "enname": "Mid Adult" },
+      { "vcg_keyword_id": 2766, "getty_keyword_id": 67260, "cnname": "中老年人", "enname": "Mature Adult" },
+      { "vcg_keyword_id": 2759, "getty_keyword_id": 67261, "cnname": "老年人", "enname": "Senior Adult" }
+    ]
+  },
+  {
+    "name": "种族",
+    "id": 3,
+    "children": [
+      { "vcg_keyword_id": 67172, "getty_keyword_id": 61189, "cnname": "白人", "enname": "Caucasian" },
+      { "vcg_keyword_id": 2722, "getty_keyword_id": 61202, "cnname": "亚洲人", "enname": "Asian and Indian" },
+      {
+        "vcg_keyword_id": 2743,
+        "getty_keyword_id": 61237,
+        "cnname": "拉美人及西班牙裔人",
+        "enname": "Latin American and Hispanic"
+      },
+      { "vcg_keyword_id": 2708, "getty_keyword_id": 113736, "cnname": "非洲人", "enname": "African Ethnicity" },
+      { "vcg_keyword_id": 2698, "getty_keyword_id": 61260, "cnname": "混血儿", "enname": "Mixed Race Person" },
+      { "vcg_keyword_id": 2699, "getty_keyword_id": 61258, "cnname": "多种族群", "enname": "Multi-Ethnic Group" },
+      { "vcg_keyword_id": 67733, "getty_keyword_id": 61236, "cnname": "非裔美国人", "enname": "African American" },
+      { "vcg_keyword_id": 9095, "getty_keyword_id": 66012, "cnname": "穆斯林", "enname": "Muslim" },
+      { "vcg_keyword_id": 2714, "getty_keyword_id": 61230, "cnname": "中东人", "enname": "Middle Eastern" },
+      { "vcg_keyword_id": 67732, "getty_keyword_id": 99895, "cnname": "印第安人", "enname": "Native American" },
+      { "vcg_keyword_id": 2711, "getty_keyword_id": 67432, "cnname": "太平洋岛民", "enname": "Pacific Islander" },
+      {
+        "vcg_keyword_id": 2727,
+        "getty_keyword_id": 61221,
+        "cnname": "印度次大陆人",
+        "enname": "Indian Subcontinent Ethnicity"
+      },
+      { "vcg_keyword_id": 664779, "getty_keyword_id": "", "cnname": "拉丁美洲人", "enname": "Latin American" },
+      { "vcg_keyword_id": 664772, "getty_keyword_id": 23001207, "cnname": "土著人", "enname": "Indiginous people" },
+      { "vcg_keyword_id": 664778, "getty_keyword_id": "", "cnname": "拉美移民或后裔", "enname": "LatinX" },
+      { "vcg_keyword_id": 74341, "getty_keyword_id": "", "cnname": "亚洲人", "enname": "Asian" }
+    ]
+  }
+]
