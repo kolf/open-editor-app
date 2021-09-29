@@ -60,7 +60,6 @@ export default function LicenseType({}: Props): ReactElement {
   const handleRowClick = row => {
     const index = data.findIndex(item => item.id === row.id);
     setIndex(index);
-    console.log(index, 'res');
   };
 
   const getRowClassName = (row, i) => {

@@ -160,7 +160,7 @@ export default React.memo(function List() {
 
   const onRefresh = () => {
     setSelectedIds([]);
-    run();
+    setQuery({ ...query, pageNum: 1 });
   };
 
   // TODO 待优化

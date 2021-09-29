@@ -4,10 +4,10 @@ import ImageDetails from 'src/components/modals/ImageDetails';
 import Loading from 'src/components/common/LoadingBlock';
 import ImageLogs from 'src/components/modals/ImageLogs';
 import UpdateKeywords, { IListItem as IKeywordsInListItem } from 'src/components/modals/UpdateKeywords';
+import { removedSourceTypeReg } from 'src/components/KeywordTextAreaGroup';
 import UpdateTitle, { PositionType } from 'src/components/modals/UpdateTitle';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import imageService from 'src/services/imageService';
-import keywordService, { ICheckAmbiguityKeywords } from 'src/services/keywordService';
 import modal from 'src/utils/modal';
 import * as tools from 'src/utils/tools';
 
@@ -29,11 +29,36 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
 
   const keywordTags2string = React.useCallback(
     (keywordTags: IKeywordsTag[]): { keywords: string; keywordsAudit: string; keywordsAll: string } => {
-      console.log(keywordTags, 'keywordTags');
+      let keywordArr = [];
+      let keywordsAuditArr = [];
+      const keywordsAllObj = keywordTags.reduce((result, item) => {
+        const { value, label, source, type } = item;
+        let keywordStr = '';
+        if (type === 0) {
+          keywordStr = `${label}||0|0`;
+          if (!removedSourceTypeReg.test(source)) {
+            keywordsAuditArr.push(keywordStr);
+          }
+        } else if (type === 1) {
+          keywordStr = value;
+          if (!removedSourceTypeReg.test(source)) {
+            keywordArr.push(keywordStr);
+          }
+        } else if (type === 2) {
+          keywordStr = `${label}|${value.replaceAll(',', '::')}|2|0`;
+          if (!removedSourceTypeReg.test(source)) {
+            keywordsAuditArr.push(keywordStr);
+          }
+        }
+
+        result[source] = result[source] ? result[source] + ',' + keywordStr : keywordStr;
+        return result;
+      }, {});
+
       return {
-        keywords: '',
-        keywordsAudit: '',
-        keywordsAll: ''
+        keywords: keywordArr.join(','),
+        keywordsAudit: keywordsAuditArr.join(','),
+        keywordsAll: JSON.stringify(keywordsAllObj)
       };
     },
     [list]

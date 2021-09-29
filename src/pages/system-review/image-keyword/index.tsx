@@ -35,6 +35,7 @@ export default React.memo(function List() {
     async () => {
       const res = await imageService.getList(formatQuery(query));
       let nextList = await imageService.getKeywordTags(res.list);
+      nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
         total: res.total,
@@ -90,7 +91,7 @@ export default React.memo(function List() {
       return {
         total: data.total,
         list: data.list.map(item => {
-          const { osiImageReview, osiProviderId, category, standardReason, customReason } = item;
+          const { osiImageReview, osiProviderId, category, standardReason, customReason, keywordTags } = item;
           const categoryList: IImage['categoryNames'][] = (category || '')
             .split(',')
             .filter((item, index) => item && index < 2);
@@ -103,6 +104,7 @@ export default React.memo(function List() {
           return {
             ...item,
             reasonTitle,
+            keywordTags: keywordTags || [],
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
@@ -117,7 +119,8 @@ export default React.memo(function List() {
   };
 
   const onRefresh = () => {
-    run();
+    setSelectedIds([]);
+    setQuery({ ...query, pageNum: 1 });
   };
   // 点击某一项数据
   const handleClick = (index: number, field: IImageActionType) => {

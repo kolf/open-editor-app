@@ -41,6 +41,7 @@ export default React.memo(function List() {
     async () => {
       const res = await imageService.getList(formatQuery(query));
       let nextList = await imageService.getKeywordTags(res.list);
+      nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
         total: res.total,
@@ -137,7 +138,7 @@ export default React.memo(function List() {
             keywordTags: keywordTags || [],
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value + ''))
+              .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
               .join(',')
           };
@@ -150,7 +151,7 @@ export default React.memo(function List() {
 
   const onRefresh = () => {
     setSelectedIds([]);
-    run();
+    setQuery({ ...query, pageNum: 1 });
   };
 
   // TODO
@@ -207,11 +208,17 @@ export default React.memo(function List() {
       mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
 
       const imageList = list
-        // .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
+        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
         .map(item => {
-          console.log(keywordTags2string(item.keywordTags));
+          const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
           return {
             ...item,
+            keywords,
+            osiKeywodsData: {
+              ...item.osiKeywodsData,
+              keywordsAudit,
+              keywordsAll
+            },
             keywordTags: undefined,
             osiImageReview: undefined,
             createdTime: undefined,

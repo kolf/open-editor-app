@@ -15,13 +15,13 @@ export class KeywordService {
       const res = await Api.post(`/api/editor/proxy/post?url=gc/kw/find/batch`, { name: nameList });
       return nameList.map(name => {
         const data: IKeyword[] = JSON.parse(res.data[name] || '[]');
-        if (data.length === 0) {
-          return { label: name, value: name, type: 0 };
-        } else if (data.length === 1) {
+        if (data.length === 1) {
           const oneData = data[0];
           return { label: oneData.cnname, value: oneData.id + '', type: 1, kind: oneData.kind };
-        } else {
+        } else if (data.length > 1) {
           return { label: name, value: data.map(item => item.id).join(','), type: 2 };
+        } else {
+          return { label: name, value: name, type: 0 };
         }
       });
     } catch (error) {
@@ -48,7 +48,6 @@ export class KeywordService {
   async checkAmbiguity<T extends ICheckAmbiguityKeywords>(data: T[]): Promise<T[]> {
     try {
       const res = await Api.post(`/api/editor/param/checkAmbiguity`, data);
-      console.log(res.data,'da')
       return res.data.data || [];
     } catch (error) {
       return [];

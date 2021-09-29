@@ -110,7 +110,7 @@ export default React.memo(function List() {
   };
 
   const onRefresh = () => {
-    run();
+    setQuery({ ...query, pageNum: 1 });
   };
   // 点击某一项数据
   const handleClick = (index: number, field: IImageActionType) => {
