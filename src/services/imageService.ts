@@ -164,7 +164,7 @@ export class ImageService {
                     value,
                     label: label,
                     source: key as IKeywordsTag['source'], //TODO
-                    type: 2
+                    type: id ? 2 : 0
                   });
                 }
               }

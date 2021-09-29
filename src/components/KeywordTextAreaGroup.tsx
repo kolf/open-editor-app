@@ -35,7 +35,7 @@ const defaultKinds: Option[] = [
 ];
 
 const removedSourceType = `aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKeywordsDel|userKeywordsAuditDel`;
-const removedSourceTypeReg = new RegExp(`^(${removedSourceType})$`);
+export const removedSourceTypeReg = new RegExp(`^(${removedSourceType})$`);
 const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replaceAll('Del', '')})$`);
 
 const sourceTypes: Option[] = [
@@ -149,7 +149,7 @@ export default React.memo(function KeywordTextAreaGroup({
                 title={sourceType.label}
                 placeholder={sourceType.label}
                 value={currentValue}
-                added={!!onChange}
+                action={sourceType.value === removedSourceType ? ['remove'] : ['add', 'remove', 'select']}
                 onChange={handleChange}
               />
             </div>
@@ -171,7 +171,6 @@ export default React.memo(function KeywordTextAreaGroup({
                 title={kind.label + '关键词'}
                 placeholder={placeholder}
                 value={currentValue}
-                added={!!onChange}
                 onChange={handleChange}
               />
             </div>
@@ -181,14 +180,6 @@ export default React.memo(function KeywordTextAreaGroup({
     );
   }
   if (mode === 'all') {
-    return (
-      <KeywordTextArea
-        height={200}
-        title="关键词"
-        value={filterRemovedValue()}
-        added={!!onChange}
-        onChange={handleChange}
-      />
-    );
+    return <KeywordTextArea height={200} title="关键词" value={filterRemovedValue()} onChange={handleChange} />;
   }
 });

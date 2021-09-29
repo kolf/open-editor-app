@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useCallback, useRef, useEffect, MouseEventHandler } from 'react';
-import { message, Tag } from 'antd';
+import { Button, message, Tag } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import KeywordDetails from 'src/components/modals/KeywordDetails';
 import KeywordSelectTable from 'src/components/modals/KeywordSelectTable';
@@ -9,12 +9,14 @@ import { useDoubleClick } from 'src/hooks/useDoubleClick';
 import keywordService from 'src/services/keywordService';
 import 'src/styles/KeywordTextArea.less';
 
+type actionType = 'add' | 'remove' | 'select';
+
 type Props<T> = {
   title: string;
   placeholder?: string;
   height?: number;
   value: T[];
-  added?: boolean;
+  action?: actionType[];
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
 };
 
@@ -31,12 +33,14 @@ export function uniq<T extends IKeywordsTag>(value: T[]): T[] {
   }, []);
 }
 
+const defaultAction: actionType[] = ['add', 'remove', 'select'];
+
 export default React.memo(function KeywordTextArea({
   value,
-  added,
   title,
   placeholder = '请输入关键词',
   height = 100,
+  action = defaultAction,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -46,6 +50,7 @@ export default React.memo(function KeywordTextArea({
   const [inputValue, setInputValue] = useState<string>('');
   const [textAreaValue, setTextAreaValue] = useState<string>('');
   const hybridClick = useDoubleClick(showDetails, onDeleteValue);
+  const added = action.includes('add');
 
   useEffect(() => {
     if (inputRef.current) {
@@ -112,7 +117,8 @@ export default React.memo(function KeywordTextArea({
     const mod = modal({
       width: 800,
       title: '选择关键词',
-      content: <Loading />
+      content: <Loading />,
+      footer: null
     });
 
     try {
@@ -121,7 +127,14 @@ export default React.memo(function KeywordTextArea({
 
       mod.update({
         content: <KeywordSelectTable dataSource={res} onChange={value => (contentValue = value)} />,
-        onOk
+        footer: action.includes('select') ? (
+          <>
+            <Button onClick={mod.close}>取消</Button>
+            <Button type="primary" onClick={onOk}>
+              确定
+            </Button>
+          </>
+        ) : null
       });
 
       function onOk() {
