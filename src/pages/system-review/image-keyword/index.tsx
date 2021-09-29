@@ -119,7 +119,6 @@ export default React.memo(function List() {
   };
 
   const onRefresh = () => {
-    setSelectedIds([]);
     setQuery({ ...query, pageNum: 1 });
   };
   // 点击某一项数据
