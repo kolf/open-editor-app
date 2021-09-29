@@ -10,7 +10,7 @@ import options, {
   License,
   LicenseType,
   KeywordsStatus,
-  IfSensitveCheck
+  IfSensitiveCheck
 } from 'src/declarations/enums/query';
 import 'src/styles/FormList.less';
 interface Props {
