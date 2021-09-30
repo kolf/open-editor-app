@@ -166,6 +166,13 @@ export default React.memo(function KeywordTextArea({
 
   async function handleInputKeydown(e) {
     const { keyCode } = e;
+
+    if (keyCode === 8 && !inputValue) {
+      const lastValue = value.pop();
+      onChange([...value], [], [lastValue]);
+      return;
+    }
+
     if (keyCode === 13 || keyCode === 188) {
       matchInputValue();
     }

@@ -11,7 +11,7 @@ interface Props {
   reasonMap: Map<string, string>;
 }
 
-function getReasonMap(treeData): Map<string, string> {
+function getReasonMap(treeData): Props['reasonMap'] {
   let result = new Map();
   const loop = data => {
     data.forEach(item => {
