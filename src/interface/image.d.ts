@@ -53,7 +53,7 @@ interface IOsiKeywodsData {
 declare interface IOsiImageReview {
   osiImageId: number;
   qualityStatus: '14' | '24' | '34';
-  keywordsStatus: '14' | '24' | '34';
+  keywordsStatus: '14' | '15' | '24' | '34';
   securityStatus?: any;
   qualityAuditorId?: number;
   keywordsAuditorId: number;

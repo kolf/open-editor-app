@@ -54,7 +54,7 @@ export default React.memo(function FormList({ initialValues, onChange }: Props) 
             />
           </Form.Item>
           <Form.Item name="qualityEditTime" className="form-list-item">
-            <RangePicker
+            <RangePicker 
               style={{ width: 190 }}
               separator={values.qualityEditTime ? '~' : ''}
               placeholder={['审核时间', '']}

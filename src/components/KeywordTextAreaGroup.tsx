@@ -62,6 +62,56 @@ const sourceTypes: Option[] = [
   }
 ];
 
+export const updateValueSource = <T extends IKeywordsTag>(value: T[], nextValue: T[]): [T[], T[], T[]] => {
+  const addedValue = nextValue
+    .filter(nv => !value.find(v => v.value === nv.value))
+    .map(av => ({ ...av, source: 'editorKeywordsAdd' }));
+
+  const removedValue = value.filter(v => {
+    if (v.type === 2 && addedValue.length > 0 && addedValue.every(av => v.value.split(',').includes(av.value))) {
+      return true;
+    }
+    return v.source === 'editorKeywordsAdd' && !nextValue.find(nv => nv.value === v.value);
+  }) as T[];
+
+  // console.log(addedValue, value, nextValue, removedValue, 'value');
+  // const reg = new;
+  const changedValue = [
+    ...value
+      .filter(v => !nextValue.find(nv => nv.value === v.value))
+      .reduce((result, rv) => {
+        if (rv.source === 'editorKeywordsAdd') {
+          return result;
+        }
+        let nextSource: IKeywordsTag['source'] = rv.source;
+        if (addedSourceTypeReg.test(rv.source)) {
+          nextSource = (rv.source + 'Del') as IKeywordsTag['source'];
+        } else if (removedSourceTypeReg.test(rv.source)) {
+          nextSource = rv.source.replaceAll('Del', '') as IKeywordsTag['source'];
+        }
+
+        return [
+          ...result,
+          {
+            ...rv,
+            source: nextSource
+          }
+        ];
+      }, [])
+  ];
+
+  return [
+    uniq([
+      ...value
+        .filter(v => !removedValue.find(rv => rv.value === v.value))
+        .map(v => changedValue.find(cv => cv.value === v.value) || v),
+      ...addedValue
+    ]),
+    addedValue,
+    removedValue
+  ];
+};
+
 export default React.memo(function KeywordTextAreaGroup({
   size,
   mode,
@@ -88,54 +138,9 @@ export default React.memo(function KeywordTextAreaGroup({
     return uniq(value.filter(v => reg.test(v.source)));
   };
 
-  const updateValueSource = <T extends IKeywordsTag>(nextValue: T[]): [T[], T[], T[]] => {
-    const removedValue = value.filter(
-      v => v.source === 'editorKeywordsAdd' && !nextValue.find(nv => nv.value === v.value)
-    ) as T[];
-
-    const addedValue = nextValue
-      .filter(nv => !value.find(v => v.value === nv.value))
-      .map(av => ({ ...av, source: 'editorKeywordsAdd' }));
-    // const reg = new;
-    const changedValue = [
-      ...value
-        .filter(v => !nextValue.find(nv => nv.value === v.value))
-        .reduce((result, rv) => {
-          if (rv.source === 'editorKeywordsAdd') {
-            return result;
-          }
-          let nextSource: IKeywordsTag['source'] = rv.source;
-          if (addedSourceTypeReg.test(rv.source)) {
-            nextSource = (rv.source + 'Del') as IKeywordsTag['source'];
-          } else if (removedSourceTypeReg.test(rv.source)) {
-            nextSource = rv.source.replaceAll('Del', '') as IKeywordsTag['source'];
-          }
-
-          return [
-            ...result,
-            {
-              ...rv,
-              source: nextSource
-            }
-          ];
-        }, [])
-    ];
-
-    return [
-      uniq([
-        ...value
-          .filter(v => !removedValue.find(rv => rv.value === v.value))
-          .map(v => changedValue.find(cv => cv.value === v.value) || v),
-        ...addedValue
-      ]),
-      addedValue,
-      removedValue
-    ];
-  };
-
   const handleChange = <T extends IKeywordsTag>(newValue: T[], addedValue: T[], removedValue: T[]) => {
     const nextValue = uniq([...value, ...addedValue].filter(v => !removedValue.find(rv => rv.value === v.value)));
-    onChange && onChange(...updateValueSource(nextValue));
+    onChange && onChange(...updateValueSource(value, nextValue));
   };
 
   if (mode === 'source') {
