@@ -105,7 +105,7 @@ function List() {
     const mod = modal({
       width: 720,
       title: `${modalType === ModalType.修改数据来源 ? '编辑' : '创建'}数据来源`,
-      content: <CreateDataModal saveRef={f => (form = f)} initialValues={initialValues} modalType={modalType}/>,
+      content: <CreateDataModal saveRef={f => (form = f)} initialValues={initialValues} modalType={modalType} />,
       onOk
     });
 

@@ -5,6 +5,7 @@ export type ModeType = 'all' | 'source' | 'kind';
 
 type Props<T> = {
   mode: ModeType;
+  langType?: IImage['osiKeywodsData']['langType'];
   size?: 'small' | 'default';
   readOnly?: boolean;
   value?: T[];
@@ -115,6 +116,7 @@ export const updateValueSource = <T extends IKeywordsTag>(value: T[], nextValue:
 export default React.memo(function KeywordTextAreaGroup({
   size,
   mode,
+  langType,
   readOnly,
   value,
   onChange
@@ -152,6 +154,7 @@ export default React.memo(function KeywordTextAreaGroup({
           return (
             <div key={sourceType.value} style={{ paddingBottom: 6 }}>
               <KeywordTextArea
+                langType={langType}
                 height={size === 'small' ? 60 : 80}
                 title={sourceType.label}
                 placeholder={sourceType.label}
@@ -176,6 +179,7 @@ export default React.memo(function KeywordTextAreaGroup({
           return (
             <div key={kind.value} style={{ paddingBottom: 6 }}>
               <KeywordTextArea
+                langType={langType}
                 height={size === 'small' ? 60 : 80}
                 title={kind.label + '关键词'}
                 placeholder={placeholder}
@@ -192,6 +196,7 @@ export default React.memo(function KeywordTextAreaGroup({
   if (mode === 'all') {
     return (
       <KeywordTextArea
+        langType={langType}
         height={200}
         title="关键词"
         value={filterRemovedValue()}
