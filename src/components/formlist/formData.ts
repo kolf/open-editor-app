@@ -4,7 +4,7 @@ import options, {
   License,
   LicenseType,
   KeywordsStatus,
-  IfSensitveCheck
+  IfSensitiveCheck
 } from 'src/declarations/enums/query';
 
 export type FormType = 'TimeRange' | 'Select' | 'SearchSelect' | 'InputSplit';
@@ -23,7 +23,7 @@ const qualityStatusOptions = options.get(KeywordsStatus);
 const priorityOptions = options.get(Priority);
 const qualityOptions = options.get(Quality);
 const licenseOptions = options.get(License);
-const ifSensitveCheckOptions = options.get(IfSensitveCheck);
+const ifSensitveCheckOptions = options.get(IfSensitiveCheck);
 const LicenseTypeOptions = options.get(LicenseType);
 
 const formData: IFormItem[] = [
