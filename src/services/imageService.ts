@@ -147,7 +147,7 @@ export class ImageService {
               if (/^\d+$/.test(k)) {
                 const keywordObj = res.find(r => r.id + '' === k);
                 if (keywordObj && !keywordTags.find(k => k.value === keywordObj.value)) {
-                  const label = keywordObj[osiKeywodsData.langType === 2 ? 'enname' : 'cnname'];
+                  const label = keywordObj[osiKeywodsData?.langType === 2 ? 'enname' : 'cnname'];
                   if (label) {
                     keywordTags.push({
                       value: keywordObj.id + '',

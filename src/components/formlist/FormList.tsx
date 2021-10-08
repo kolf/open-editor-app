@@ -3,10 +3,13 @@ import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import SearchSelect from 'src/components/SearchSelect';
 import InputSplit from 'src/components/InputSplit';
+import formData from 'src/components/formlist/formData.json';
 import 'src/styles/FormList.less';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
+
+type IFormItemKey = number | { key: number; options: Option[] };
 
 export type IFormType = 'TimeRange' | 'Select' | 'SearchSelect' | 'InputSplit';
 
@@ -20,7 +23,7 @@ export type IFormItem = {
 };
 
 interface Props {
-  formItems: IFormItem[];
+  itemKeys: IFormItemKey[];
   onChange: (values: any) => void;
   initialValues?: any;
 }
@@ -29,14 +32,27 @@ function filterOption(input: string, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
-export default React.memo(function FormList({ initialValues, onChange, formItems }: Props): ReactElement {
-  console.log(formItems, 'formItems');
+function getFormItems(formItemKeys: IFormItemKey[]): IFormItem[] {
+  return formItemKeys.map(key => {
+    if (typeof key === 'number') {
+      return (formData as IFormItem[]).find(item => item.key === key);
+    } else {
+      return {
+        ...(formData as IFormItem[]).find(item => item.key === key.key),
+        ...key
+      };
+    }
+  });
+}
 
+export default React.memo(function FormList({ initialValues, onChange, itemKeys = [] }: Props): ReactElement {
   const [form] = Form.useForm(null);
   const [collapse, setCollapse] = useState(false);
+  const formItems = getFormItems(itemKeys);
   const values = form.getFieldsValue();
 
-  const renderFormItem = ({ formType, field, placeholder, options }: IFormItem): ReactElement => {
+  const renderFormItem = ({ restProps, formType, field, placeholder, options = [] }: IFormItem): ReactElement => {
+    console.log(options, 'options');
     switch (formType) {
       case 'TimeRange':
         return (
@@ -49,7 +65,7 @@ export default React.memo(function FormList({ initialValues, onChange, formItems
         );
       case 'Select':
         return (
-          <Select allowClear filterOption={filterOption} showSearch style={{ width: 100 }} placeholder={placeholder}>
+          <Select allowClear filterOption={filterOption} showSearch style={{ width: 110 }} placeholder={placeholder}>
             {options.map(o => (
               <Option key={o.value} value={o.value}>
                 {o.label}
@@ -59,7 +75,13 @@ export default React.memo(function FormList({ initialValues, onChange, formItems
         );
       case 'SearchSelect':
         return (
-          <SearchSelect type="provider" manual options={options} style={{ width: 160 }} placeholder={placeholder} />
+          <SearchSelect
+            type={restProps.type}
+            manual
+            options={options}
+            style={{ width: 160 }}
+            placeholder={placeholder}
+          />
         );
       case 'InputSplit':
         return <InputSplit placeholder={placeholder} />;

@@ -120,7 +120,7 @@ export default React.memo(function ListItem({
 
       <GridItemRow>
         <KeywordTextAreaGroup
-          langType={dataSource.osiKeywodsData.langType}
+          langType={dataSource.osiKeywodsData?.langType}
           mode={keywordMode}
           value={dataSource.keywordTags}
           onChange={value => {
