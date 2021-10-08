@@ -1,5 +1,5 @@
 import { Menu } from 'antd';
-import React, { memo } from 'react';
+import React, { memo, useState, useEffect } from 'react';
 import { NavLink, withRouter } from 'react-router-dom';
 import Iconfont from 'src/components/Iconfont';
 import { menus } from '../../routes/menus';
@@ -7,25 +7,25 @@ import './styles.less';
 
 const { SubMenu } = Menu;
 
-const getMenuActive = (path: string) => {
-  const paths = path.split('/');
-  return {
-    menuActive: `/${paths[1]}` || '/',
-    subMenuActive: paths[2]
-  };
-};
-
 const MenuLink: React.FC<any> = ({ location, menuKey, siderbarKey }) => {
   const menuList = menus.find(menu => menu.key === menuKey)?.children || [];
-  const menu = getMenuActive(location.pathname);
+  const [openKey, setOpenKey] = useState([siderbarKey]);
+
+  useEffect(() => {
+    setOpenKey([siderbarKey]);
+  }, [siderbarKey]);
+
+  const handleClick = e => {
+    setOpenKey(e);
+  };
 
   return (
     <Menu
       className="dashboard-menu"
       mode="inline"
       selectedKeys={[location.pathname]}
-      // defaultOpenKeys={[menu.menuActive]}
-      defaultOpenKeys={[siderbarKey]}
+      openKeys={openKey}
+      onOpenChange={handleClick}
     >
       {menuList
         .filter(sub => !sub.hidden)
