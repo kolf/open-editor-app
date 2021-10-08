@@ -8,7 +8,7 @@ import options, {
   AssetFamily,
   AssetType,
   AssignType,
-  IfSensitveCheck,
+  IfSensitiveCheck,
   OsiDbProviderStatus
 } from 'src/declarations/enums/query';
 import providerService from 'src/services/providerService';
@@ -48,7 +48,7 @@ const columns: Column[] = [
   {
     title: '敏感检测',
     dataIndex: 'ifSensitveCheck',
-    render: value => options.map(IfSensitveCheck)[value]
+    render: value => options.map(IfSensitiveCheck)[value]
   },
   {
     title: 'AI检测',
@@ -118,8 +118,8 @@ function CreateDataModal({ getFormData }) {
         </Form.Item>
         <Form.Item label="敏感检测" name="ifSensitveCheck" rules={[{ required: true, message: '请选择敏感检测！' }]}>
           <Radio.Group>
-            {Object.keys(IfSensitveCheck).map((t, i) => (
-              <Radio key={`${t}${i}`} value={IfSensitveCheck[t]}>
+            {Object.keys(IfSensitiveCheck).map((t, i) => (
+              <Radio key={`${t}${i}`} value={IfSensitiveCheck[t]}>
                 {t}
               </Radio>
             ))}

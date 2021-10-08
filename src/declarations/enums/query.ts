@@ -20,7 +20,7 @@ export enum Priority {
 }
 
 // 敏感检测
-export enum IfSensitveCheck {
+export enum IfSensitiveCheck {
   未命中敏感词 = '0',
   命中敏感词 = '1'
 }

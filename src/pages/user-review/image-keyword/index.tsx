@@ -14,7 +14,6 @@ import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
-import keywordService from 'src/services/keywordService';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
@@ -36,7 +35,6 @@ export default React.memo(function List() {
   const {
     data: { list, total } = initialData,
     loading = true,
-    run,
     mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {

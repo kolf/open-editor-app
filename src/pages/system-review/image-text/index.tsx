@@ -8,9 +8,11 @@ import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
+import { useFormList } from 'src/hooks/useFormList';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
+
 const initialData = {
   list: [],
   total: 0
@@ -20,6 +22,7 @@ export default React.memo(function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
 
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
+  const [formItems] = useFormList([1, 2]);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {

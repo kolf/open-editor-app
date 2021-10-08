@@ -1,0 +1,14 @@
+[
+  {
+    "key": 1,
+    "field": "createdTime",
+    "formType": "TimeRange",
+    "placeholder": "入库时间"
+  },
+  {
+    "key": 2,
+    "field": "qualityEditTime",
+    "formType": "TimeRange",
+    "placeholder": "审核时间"
+  }
+]

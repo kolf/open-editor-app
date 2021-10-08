@@ -95,7 +95,12 @@ export default React.memo(function ListItem({ dataSource, keywordMode, index, on
       <Divider style={{ margin: '6px 0' }} />
 
       <GridItemRow>
-        <KeywordTextAreaGroup readOnly mode={keywordMode} value={dataSource.keywordTags} />
+        <KeywordTextAreaGroup
+          langType={dataSource.osiKeywodsData.langType}
+          readOnly
+          mode={keywordMode}
+          value={dataSource.keywordTags}
+        />
       </GridItemRow>
 
       {dataSource.reasonTitle && (

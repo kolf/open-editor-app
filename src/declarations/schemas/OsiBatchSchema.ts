@@ -1,4 +1,4 @@
-import { BatchAssignMode, BatchAssignStatus, BatchAuditType, IfSensitveCheck, Priority } from '../enums/query';
+import { BatchAssignMode, BatchAssignStatus, BatchAuditType, IfSensitiveCheck, Priority } from '../enums/query';
 
 export namespace OsiBatchSchema {
   // 图片数据分配列表
@@ -9,7 +9,7 @@ export namespace OsiBatchSchema {
     auditFlow: BatchAuditType; // 审核类型
     assignMode: BatchAssignMode; // 分配类型
     priority: Priority; // 优先级
-    ifSensitveCheck: IfSensitveCheck; // 敏感检测
+    ifSensitveCheck: IfSensitiveCheck; // 敏感检测
     ifAiQualityScore: boolean; // AI质量评分
     ifAiBeautyScore: boolean; // AI美学评分
     ifAiCategory: boolean; // AI分类

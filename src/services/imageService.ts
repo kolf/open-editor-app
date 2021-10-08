@@ -147,13 +147,16 @@ export class ImageService {
               if (/^\d+$/.test(k)) {
                 const keywordObj = res.find(r => r.id + '' === k);
                 if (keywordObj && !keywordTags.find(k => k.value === keywordObj.value)) {
-                  keywordTags.push({
-                    value: keywordObj.id + '',
-                    label: keywordObj.cnname,
-                    kind: keywordObj.kind,
-                    source: key as IKeywordsTag['source'], //TODO
-                    type: 1
-                  });
+                  const label = keywordObj[osiKeywodsData.langType === 2 ? 'enname' : 'cnname'];
+                  if (label) {
+                    keywordTags.push({
+                      value: keywordObj.id + '',
+                      label,
+                      kind: keywordObj.kind,
+                      source: key as IKeywordsTag['source'], //TODO
+                      type: 1
+                    });
+                  }
                 }
               } else {
                 const [label, id] = k.split('|');

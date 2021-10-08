@@ -15,6 +15,7 @@ type Props<T> = {
   title: string;
   placeholder?: string;
   height?: number;
+  langType?: IImage['osiKeywodsData']['langType'];
   value: T[];
   action?: actionType[];
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
@@ -41,6 +42,7 @@ export default React.memo(function KeywordTextArea({
   placeholder = '请输入关键词',
   height = 100,
   action = defaultAction,
+  langType,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -140,7 +142,12 @@ export default React.memo(function KeywordTextArea({
       function onOk() {
         const addedValue = res
           .filter(r => contentValue.includes(r.id))
-          .map(item => ({ value: item.id + '', label: item.cnname, kind: item.kind, type: 1 as IKeywordsTag['type'] }));
+          .map(item => ({
+            value: item.id + '',
+            label: item[langType === 2 ? 'enname' : 'cnname'],
+            kind: item.kind,
+            type: 1 as IKeywordsTag['type']
+          }));
         const nextValue = value.reduce((result, item, i) => {
           if (index === i) {
             result.push(...addedValue);
@@ -186,7 +193,7 @@ export default React.memo(function KeywordTextArea({
   async function matchInputValue() {
     const text = tools.trim(inputValue);
     if (text) {
-      const addedValue = await keywordService.findList(text);
+      const addedValue = await keywordService.findList(text, langType);
       const nextValue = uniq([...value, ...addedValue]);
       setInputValue('');
       onChange(nextValue, addedValue, []);
@@ -200,7 +207,7 @@ export default React.memo(function KeywordTextArea({
     let removedValue: IKeywordsTag[] = [...value];
 
     if (text) {
-      const newValue = await keywordService.findList(text);
+      const newValue = await keywordService.findList(text, langType);
       nextValue = uniq(newValue.map(item => value.find(v => v.label === item.label) || item));
 
       addedValue = nextValue.filter(nv => !value.find(v => v.value === nv.label));
