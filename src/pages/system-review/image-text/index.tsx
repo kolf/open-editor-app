@@ -3,12 +3,11 @@ import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from './FormList';
+import FormList from 'src/components/formlist/FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
-import { useFormList } from 'src/hooks/useFormList';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
@@ -22,7 +21,6 @@ export default React.memo(function List() {
   useDocumentTitle(`全部资源-VCG内容审核管理平台`);
 
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
-  const [formItems] = useFormList([1, 2]);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {
@@ -140,7 +138,24 @@ export default React.memo(function List() {
 
   return (
     <>
-      <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} />
+      <FormList
+        itemKeys={[
+          3,
+          1,
+          2,
+          4,
+          { key: 5, options: providerOptions },
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          { key: 13, options: categoryOptions }
+        ]}
+        onChange={value => setQuery({ ...query, ...value, pageNum: 1 })}
+      />
       <Toolbar
         onRefresh={onRefresh}
         pagerProps={{

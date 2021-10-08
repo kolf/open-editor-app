@@ -96,7 +96,7 @@ export default React.memo(function ListItem({ dataSource, keywordMode, index, on
 
       <GridItemRow>
         <KeywordTextAreaGroup
-          langType={dataSource.osiKeywodsData.langType}
+          langType={dataSource.osiKeywodsData?.langType}
           readOnly
           mode={keywordMode}
           value={dataSource.keywordTags}
