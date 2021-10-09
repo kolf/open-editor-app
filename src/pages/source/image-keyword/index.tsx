@@ -20,9 +20,8 @@ import AssignForm from './AssignForm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Toolbar from 'src/components/list/Toolbar';
 import { DataContext } from 'src/components/contexts/DataProvider';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { getTableDisplay } from 'src/utils/tools';
-import { useLanguage } from 'src/hooks/useLanguage';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -33,7 +32,7 @@ function VcgImageText() {
     auditStage: AuditType.关键词审核
   });
   const { providerOptions } = useContext(DataContext);
-  const isChinese = useLanguage();
+  const intl = useIntl();
 
   const {
     data = { list: [], total: 0 },
@@ -72,12 +71,13 @@ function VcgImageText() {
         await bacthService
           .assign(values)
           .then(() => {
-            message.success(`${isChinese ? '设置分配成功！' : 'Distribution Success'}`);
+            message.success(intl.formatMessage({ id: 'Distribution Success' }));
             refresh();
           })
           .catch(err => {
             message.error(err.message);
-          }).finally(mod.close);
+          })
+          .finally(mod.close);
       } catch (e) {
         mod && mod.close();
         e && message.error(e);
@@ -103,7 +103,7 @@ function VcgImageText() {
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
     {
-      title: <FormattedMessage id="Source" />,
+      title: <FormattedMessage id="Data Source" />,
       width: 140,
       align: 'center',
       dataIndex: 'osiDbProviderId',
@@ -143,13 +143,13 @@ function VcgImageText() {
       title: <FormattedMessage id="Priority" />,
       align: 'center',
       dataIndex: 'priority',
-      render: value => value && <FormattedMessage id={getTableDisplay(value, Priority)}/>
+      render: value => value && <FormattedMessage id={getTableDisplay(value, Priority)} />
     },
     {
       title: <FormattedMessage id="Distribution Stats" />,
       align: 'center',
       dataIndex: 'assignStatus',
-      render: value => value && <FormattedMessage id={getTableDisplay(value, BatchAssignStatus)}/>
+      render: value => value && <FormattedMessage id={getTableDisplay(value, BatchAssignStatus)} />
     },
     {
       title: <FormattedMessage id="Distribution Date" />,
@@ -175,7 +175,7 @@ function VcgImageText() {
     },
     { title: <FormattedMessage id="Administrators" />, align: 'center', dataIndex: 'assignerName' },
     {
-      title: <FormattedMessage id="Action" />,
+      title: <FormattedMessage id="Actions" />,
       align: 'center',
       fixed: 'right',
       render: (value, tr) => {

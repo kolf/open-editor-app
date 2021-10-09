@@ -20,9 +20,8 @@ import AssignForm from './AssignForm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Toolbar from 'src/components/list/Toolbar';
 import { DataContext } from 'src/components/contexts/DataProvider';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { getTableDisplay } from 'src/utils/tools';
-import { useLanguage } from 'src/hooks/useLanguage';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -33,7 +32,7 @@ function VcgImageText() {
     auditStage: AuditType.质量审核
   });
   const { providerOptions } = useContext(DataContext);
-  const isChinese = useLanguage();
+  const intl = useIntl();
 
   const {
     data = { list: [], total: 0 },
@@ -72,7 +71,7 @@ function VcgImageText() {
         await bacthService
           .assign(values)
           .then(() => {
-            message.success(`${isChinese ? '设置分配成功！' : 'Distribution Success'}`);
+            message.success(intl.formatMessage({ id: 'Distribution Success' }))
             refresh();
           })
           .catch(err => {
@@ -103,7 +102,7 @@ function VcgImageText() {
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
     {
-      title: <FormattedMessage id="Source" />,
+      title: <FormattedMessage id="Data Source" />,
       width: 140,
       align: 'center',
       dataIndex: 'osiDbProviderId',
@@ -175,7 +174,7 @@ function VcgImageText() {
     },
     { title: <FormattedMessage id="Administrators" />, align: 'center', dataIndex: 'assignerName' },
     {
-      title: <FormattedMessage id="Action" />,
+      title: <FormattedMessage id="Actions" />,
       align: 'center',
       fixed: 'right',
       render: (value, tr) => {

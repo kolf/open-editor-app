@@ -66,20 +66,20 @@ export const menus: Menu[] = [
     children: [
       {
         key: '_SYSTEM_REVIEW_IMAGE',
-        name: '图片审核',
+        name: <FormattedMessage id='Photo Review'/>,
         hasChild: true,
         icon: 'icon-ic_image',
         breadcrumbName: '图片审核',
         children: [
           {
             key: PATH.SYSTEM_REVIEW_IMAGE_TEXT,
-            name: '质量审核',
+            name: <FormattedMessage id='Quality Review'/>,
             path: PATH.SYSTEM_REVIEW_IMAGE_TEXT,
             breadcrumbName: '质量审核'
           },
           {
             key: PATH.SYSTEM_REVIEW_IMAGE_KEYWORD,
-            name: '关键词审核',
+            name: <FormattedMessage id='Metadata Review'/>,
             path: PATH.SYSTEM_REVIEW_IMAGE_KEYWORD,
             breadcrumbName: '关键词审核'
           },

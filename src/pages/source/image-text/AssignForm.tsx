@@ -5,7 +5,7 @@ import options, { BatchAssignTarget, Priority } from 'src/declarations/enums/que
 import { useState } from 'react';
 import SearchSelect from 'src/components/SearchSelect';
 import { FormattedMessage } from 'react-intl';
-import zhCN from 'src/locales/zhCN';
+import { zhCNMap } from 'src/locales/zhCN';
 
 interface Props {
   saveRef?: any;
@@ -38,13 +38,13 @@ const AssignForm = ({ saveRef }: Props): ReactElement => {
           <Radio.Group>
             {options.get(BatchAssignTarget).map((t, i) => (
               <Radio value={t.value} key={`${t.label}${i}`} disabled={t.value === BatchAssignTarget.全部资源}>
-                <FormattedMessage id={options.map(zhCN)[t.label]}/>
+                <FormattedMessage id={zhCNMap[t.label]}/>
               </Radio>
             ))}
           </Radio.Group>
         </Form.Item>
         {formData.assignType === BatchAssignTarget.编辑 && (
-          <Form.Item name="userList" className="form-list-item" rules={[{ required: true, message: '请选择/输入分配对象!' }]}>
+          <Form.Item name="userList" className="form-list-item" rules={[{ required: true, message: <FormattedMessage id='Please Enter Distribution Editor!'/> }]}>
           <SearchSelect style={{ width: 160 }} placeholder={<FormattedMessage id='Editors'/>} type="editUser" mode='multiple' manual/>
         </Form.Item>
         )}
@@ -53,7 +53,7 @@ const AssignForm = ({ saveRef }: Props): ReactElement => {
         <Radio.Group>
           {options.get(Priority).map((t, i) => (
             <Radio value={t.value} key={`${t.label}${i}`}>
-              <FormattedMessage id={options.map(zhCN)[t.label]}/>
+              <FormattedMessage id={zhCNMap[t.label]}/>
             </Radio>
           ))}
         </Radio.Group>

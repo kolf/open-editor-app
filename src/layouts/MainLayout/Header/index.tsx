@@ -13,7 +13,7 @@ import modal from 'src/utils/modal';
 import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
 import { setLanguage } from 'src/features/language/language';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useLanguage } from 'src/hooks/useLanguage';
 
 const { Search } = Input;
@@ -24,6 +24,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const dispatch = useDispatch();
   const history = useHistory();
   const isChinese = useLanguage();
+  const intl = useIntl();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -97,7 +98,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
         <div className="header-search">
           <Search
             allowClear
-            placeholder="请输入关键词或ID，多个用逗号隔开"
+            placeholder={intl.formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
             onChange={e => {
               const value = e.target.value.replaceAll('，', ',');
               dispatch(setKeywords(value));
@@ -106,7 +107,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
               dispatch(openFire(true));
             }}
             enterButton="搜索"
-            style={{ width: 320 }}
+            style={{ width: 390 }}
           />
         </div>
       )}

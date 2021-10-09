@@ -1,6 +1,8 @@
 import React, { ReactElement } from 'react';
 import { Row, Col } from 'antd';
 import defaultUrl from 'src/assets/img/image.png';
+import { FormattedMessage } from 'react-intl';
+import { zhCNMap } from 'src/locales/zhCN';
 const defaultName = '---';
 
 interface Props {
@@ -42,12 +44,14 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
           </div>
         </Col>
         <Col span={12}>
-          <h3 style={{ textAlign: 'center' }}>标题</h3>
+          <h3 style={{ textAlign: 'center' }}><FormattedMessage id='Headline'/></h3>
           <Row>
-            <Col span={4}>AI</Col> <Col span={19}>{dataSource.aiTitle || defaultName}</Col>
-            <Col span={4}>用户</Col> <Col span={19}>{dataSource.title || defaultName}</Col>
+            <Col span={4}><FormattedMessage id='AI'/></Col>
+            <Col span={19}>{dataSource.aiTitle || defaultName}</Col>
+            <Col span={4}><FormattedMessage id='User'/></Col>
+            <Col span={19}>{dataSource.title || defaultName}</Col>
           </Row>
-          <h3 style={{ textAlign: 'center' }}>关键词</h3>
+          <h3 style={{ textAlign: 'center' }}><FormattedMessage id='Keywords'/></h3>
           <Row>
             <Col span={6}>AI用户点选</Col>
             <Col span={18}>
@@ -65,7 +69,9 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
               <h3 style={{ textAlign: 'center' }}>EXIF</h3>
               {Object.keys(exifMap).map(key => (
                 <div className="ant-row" key={key}>
-                  <div className="ant-col-8">{exifMap[key]}</div>
+                  <div className="ant-col-8">
+                    <FormattedMessage id={zhCNMap[exifMap[key]]}/>
+                  </div>
                   <div className="ant-col-16">{dataSource.exif[key] || '---'}</div>
                 </div>
               ))}

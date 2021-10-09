@@ -1,3 +1,5 @@
+import options from "src/declarations/enums/query"
+
 // 导航
 export const menuPart = {
   'Data Distribution': '数据分配',
@@ -8,6 +10,7 @@ export const menuPart = {
   'Video Distribution': '视频数据分配',
 
   'All Resources': '全部资源',
+  'Photo Review': '图片审核',
   'My Tasks': '我的审核',
   Stats: '数据统计',
 }
@@ -23,7 +26,7 @@ export const selectPart = {
 
   Editors: '分配对象',
 
-  Source: '数据来源',
+  'Data Source': '数据来源',
 
   Distribution: '分配',
   Auto: '系统',
@@ -56,7 +59,9 @@ const otherPart = {
 
   Exit: '退出',
   Login: '登录',
-  'Remember Username': '记住用户名'
+  'Remember Username': '记住用户名',
+
+  'Enter Keywords or ID, using "," to search multiples': '请输入关键词或ID，多个用逗号隔开'
 }
 
 const table = {
@@ -65,15 +70,14 @@ const table = {
   Amount: '数量',
   'Distribution Date': '分配时间',
   Administrators: '分配人',
-  Action: '操作',
+  Actions: '操作',
 
-  'Create Source': '创建数据来源',
-  'Edit Source': '编辑数据来源',
-  'CreatedTime': '创建时间',
-  'Source Name': '数据来源名称',
-  'Audit Flow': '审核类型',
-  'Asset Type': '资源类型',
-  Image: '图片',
+  'Create Data Source': '创建数据来源',
+  'Edit Data Source': '编辑数据来源',
+  'Created Date': '创建时间',
+  'Inspection Type': '审核类型',
+  'Resource Type': '资源类型',
+  Photo: '图片',
   Video: '视频',
   Audio: '音频',
   Creator: '创建人',
@@ -83,18 +87,54 @@ const table = {
   Edit: '编辑',
   'Confirm Close?': '是否确认关闭？',
   'Confirm Open?': '是否确认开通？',
-  'Distribution Success': '设置分配成功',
+  'Distribution Success': '设置分配成功！',
 
-  Name: '名称',
-  'Keywords Reivew Title': '标题审核默认数据',
-  'Keywords Review Keywords': '关键词审核默认数据',
+  Title: '名称',
+  'Please enter the data source name, no more than 200 characters': '请输入数据来源名称，不超过200个字符',
+  'Title Reivew Default Data': '标题审核默认数据',
+  'Keywords Review Default Data': '关键词审核默认数据',
+  AI: 'AI',
+  'Please Enter Title!': '请输入名称！',
+  'Please Select Inspection Type!': '请选择审核类型！',
+  'Please Select NSFW Keywords!': '请选择敏感词表！',
+  'Please Select NSFW Scan!': '请选择敏感检测！',
+  'Please Select Title Reivew Default Data': '请选择标题审核默认数据！',
+  'Please Select Keywords Review Default Data': '请选择关键词审核默认数据！',
 
-  AI: 'AI'
+  'Please Enter Distribution Editor!': '请选择/输入分配对象！',
+
+  'Photo Info/EXIF':'图片详情',
+  Headline: '标题',
+  Keywords: '关键词',
+  User: '用户',
+  
+  Model: '机型',
+  'Shooting Date': '原始日期时间',
+  'Edited Date': '修改时间',
+  'Edited Program': '修改程序',
+  'Exposure Mode': '曝光模式',
+  'Focal Length': '焦距',
+  Flash: '闪光灯',
+  'Metering Mode': '测光模式',
+  'White Balance': '白平衡',
+  Resolution: '分辨率',
+  Dimensions: '尺寸',
+  'Color Space': '色彩空间',
+  Size: '大小',
+  Sensitivity: '感光度',
+  'Shutter Speed': '快门速度',
+  Aperture: '光圈值',
+  Brand: '相机制造商',
+  Lens: '镜头'
 }
 
-export default {
+const exp = {
   ...menuPart,
   ...selectPart,
   ...otherPart,
-  ...table
-};
+  ...table,
+}
+
+export const zhCNMap = options.map(exp);
+
+export default exp;

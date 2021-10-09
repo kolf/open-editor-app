@@ -4,7 +4,7 @@ import { Modal, ConfigProvider } from 'antd';
 import { ModalFuncProps } from 'antd/lib/modal/Modal';
 import zhCN from 'antd/lib/locale/zh_CN';
 import enUS from 'antd/lib/locale/en_US';
-import { FormattedMessage, IntlProvider } from 'react-intl';
+import { IntlProvider } from 'react-intl';
 import zhCNLocal from 'src/locales/zhCN';
 import enUSLocal from 'src/locales/enUS';
 import { store } from 'src/store';
