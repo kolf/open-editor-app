@@ -5,7 +5,7 @@ import { Radio, Button, Space, Input, message } from 'antd';
 import { CheckOutlined, LineOutlined, FileSearchOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from './FormList';
+import FormList from 'src/components/formlist/FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup';
@@ -14,7 +14,6 @@ import { useCurrentUser } from 'src/hooks/useCurrentUser';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
-import keywordService from 'src/services/keywordService';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
@@ -36,7 +35,6 @@ export default React.memo(function List() {
   const {
     data: { list, total } = initialData,
     loading = true,
-    run,
     mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
@@ -258,7 +256,25 @@ export default React.memo(function List() {
 
   return (
     <>
-      <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} initialValues={query} />
+      <FormList
+        itemKeys={[
+          3,
+          1,
+          2,
+          14,
+          { key: 5, options: providerOptions },
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          { key: 13, options: categoryOptions }
+        ]}
+        initialValues={query}
+        onChange={value => setQuery({ ...query, ...value, pageNum: 1 })}
+      />
       <Toolbar
         onSelectIds={setSelectedIds}
         onRefresh={onRefresh}

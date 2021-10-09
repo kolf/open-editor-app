@@ -42,6 +42,7 @@ declare interface IKeywordsAll {
 }
 
 interface IOsiKeywodsData {
+  langType: 1 | 2; // 语言类型：1=中午；2=英文
   osiImageId: number;
   aiTitle: string;
   keywordsAudit: string;
@@ -53,7 +54,7 @@ interface IOsiKeywodsData {
 declare interface IOsiImageReview {
   osiImageId: number;
   qualityStatus: '14' | '24' | '34';
-  keywordsStatus: '14' | '24' | '34';
+  keywordsStatus: '14' | '15' | '24' | '34';
   securityStatus?: any;
   qualityAuditorId?: number;
   keywordsAuditorId: number;

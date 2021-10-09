@@ -2,7 +2,11 @@ import React, { ReactElement, useState } from 'react';
 import { Menu, Dropdown, Radio, message } from 'antd';
 import { DownOutlined, LineOutlined, FileSearchOutlined, UnorderedListOutlined } from '@ant-design/icons';
 
-import KeywordTextAreaGroup, { ModeType } from 'src/components/KeywordTextAreaGroup';
+import KeywordTextAreaGroup, {
+  ModeType,
+  removedSourceTypeReg,
+  updateValueSource
+} from 'src/components/KeywordTextAreaGroup';
 import FindAndReplace from 'src/components/modals/FindAndReplace';
 import PersonKeywords, { IKeyword } from 'src/components/modals/PersonKeywords';
 import keywordService from 'src/services/keywordService';
@@ -69,11 +73,11 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
   };
 
   const onReplace = async (searchValue: string, replaceValue: string) => {
-    const searchLabelList: string[] = tools
+    const searchLabelList: IKeywordsTag['label'][] = tools
       .trim(searchValue)
       .split(/,|，/)
       .filter(str => str);
-    const newKeywordTags = await keywordService.findList(tools.trim(replaceValue));
+    const newKeywordTags: IKeywordsTag[] = await keywordService.findList(tools.trim(replaceValue));
     if (searchLabelList.length === 0) {
       message.info(`请输入要查找的关键词！`);
       return;
@@ -81,10 +85,22 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
 
     const nextList = list.map(item => {
       const { keywordTags, id } = item;
-      const nextKeywordTags = uniq([...keywordTags.filter(k => !searchLabelList.includes(k.label)), ...newKeywordTags]);
+
+      const removedKeywordTags = keywordTags.filter(
+        k => searchLabelList.includes(k.label) && !removedSourceTypeReg.test(k.source)
+      );
+
+      const addedKeywordTags = newKeywordTags.filter(nk => !keywordTags.find(k => k.value === nk.value));
+
+      const nextKeywordTags = [
+        ...keywordTags.filter(k => !removedKeywordTags.find(rv => rv.value === k.value)),
+        ...addedKeywordTags
+      ];
+
+      // const nextKeywordTags = uniq([...keywordTags.filter(k => !searchLabelList.includes(k.label)), ...newKeywordTags]);
       return {
         id,
-        keywordTags: nextKeywordTags
+        keywordTags: updateValueSource(keywordTags, nextKeywordTags)[0]
       };
     });
 
@@ -94,18 +110,9 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
   };
 
   const handlePersonKeywordClick = (checked: boolean, keyword: IKeyword) => {
-    let addedValue = [];
-    let removedValue = [];
-
-    const newValue: IKeywordsTag[] = [{ value: keyword.id + '', label: keyword.cnname, kind: keyword.kind, type: 1 }];
-
-    if (checked) {
-      addedValue = newValue;
-    } else {
-      removedValue = newValue;
-    }
-
-    handleChange([], addedValue, removedValue);
+    const newValue: IKeywordsTag = { value: keyword.id + '', label: keyword.cnname, kind: keyword.kind, type: 1 };
+    const nextValue = checked ? [...value, newValue] : value.filter(v => v.value !== newValue.value);
+    handleChange(...updateValueSource(value, nextValue));
   };
 
   const personKeywordsOverlay = (

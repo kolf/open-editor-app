@@ -9,7 +9,7 @@ export interface ICheckAmbiguityKeywords {
 }
 
 export class KeywordService {
-  async findList(data: string): Promise<Array<any>> {
+  async findList(data: string, langType?: IImage['osiKeywodsData']['langType']): Promise<Array<any>> {
     try {
       const nameList = [...new Set(data.split(/,|，/g).filter(name => name))];
       const res = await Api.post(`/api/editor/proxy/post?url=gc/kw/find/batch`, { name: nameList });
@@ -17,7 +17,12 @@ export class KeywordService {
         const data: IKeyword[] = JSON.parse(res.data[name] || '[]');
         if (data.length === 1) {
           const oneData = data[0];
-          return { label: oneData.cnname, value: oneData.id + '', type: 1, kind: oneData.kind };
+          return {
+            label: oneData[langType === 2 ? 'enname' : 'cnname'],
+            value: oneData.id + '',
+            type: 1,
+            kind: oneData.kind
+          };
         } else if (data.length > 1) {
           return { label: name, value: data.map(item => item.id).join(','), type: 2 };
         } else {

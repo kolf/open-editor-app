@@ -1,13 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
-import moment from 'moment';
 import { Radio, Button, Space, Input, message } from 'antd';
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Iconfont from 'src/components/Iconfont';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from './FormList';
+import FormList from 'src/components/formlist/FormList';
 import ListItem from './ListItem';
 import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';
@@ -475,7 +474,25 @@ export default React.memo(function List() {
 
   return (
     <>
-      <FormList onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} initialValues={query} />
+      <FormList
+        itemKeys={[
+          3,
+          1,
+          2,
+          4,
+          { key: 5, options: providerOptions },
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          { key: 13, options: categoryOptions }
+        ]}
+        initialValues={query}
+        onChange={value => setQuery({ ...query, ...value, pageNum: 1 })}
+      />
       <Toolbar
         onSelectIds={setSelectedIds}
         onRefresh={onRefresh}
