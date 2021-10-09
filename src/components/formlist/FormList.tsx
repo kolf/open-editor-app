@@ -52,7 +52,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
   const values = form.getFieldsValue();
 
   const renderFormItem = ({ restProps, formType, field, placeholder, options = [] }: IFormItem): ReactElement => {
-    console.log(options, 'options');
+    // console.log(options, 'options');
     switch (formType) {
       case 'TimeRange':
         return (

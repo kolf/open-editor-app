@@ -1,12 +1,12 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
 
 interface LanguageState {
-  language: string
+  language: string;
 }
 
 const initialState: LanguageState = {
-  language: (localStorage.getItem('language') || navigator.language).toLowerCase()
-}
+  language: (localStorage.getItem('language') || navigator.language)
+};
 
 export const languageSlice = createSlice({
   name: 'language',
@@ -14,11 +14,11 @@ export const languageSlice = createSlice({
   reducers: {
     setLanguage: state => {
       if (state.language.includes('zh')) {
-        state.language = 'en-US'
+        state.language = 'en-US';
       } else {
-        state.language = 'zh-CN'
+        state.language = 'zh-CN';
       }
-      localStorage.setItem('language', state.language)
+      localStorage.setItem('language', state.language);
     }
   }
 });

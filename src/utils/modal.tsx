@@ -3,9 +3,10 @@ import ReactDOM from 'react-dom';
 import { Modal, ConfigProvider } from 'antd';
 import { ModalFuncProps } from 'antd/lib/modal/Modal';
 import zhCN from 'antd/lib/locale/zh_CN';
+import enUS from 'antd/lib/locale/en_US';
 import { FormattedMessage, IntlProvider } from 'react-intl';
 import zhCNLocal from 'src/locales/zhCN';
-import enUS from 'src/locales/enUS';
+import enUSLocal from 'src/locales/enUS';
 import { store } from 'src/store';
 
 const IS_REACT_16 = !!ReactDOM.createPortal;
@@ -128,22 +129,14 @@ class Mod extends React.Component<IModleProps> {
     }
   };
 
-  getLanguagePkg = lang => {
-    const languageLowerCase = lang.toLowerCase();
-    let languagePkg: any = zhCNLocal;
-    if (languageLowerCase.includes('en')) {
-      languagePkg = enUS;
-    }
-    return languagePkg;
-  };
-
   render() {
     const { language } = store.getState().language;
+    const isEn = language === 'en-US';
 
     const { children, autoIndex, style, ...restProps } = this.props;
     return (
-      <ConfigProvider locale={zhCN}>
-        <IntlProvider locale={language} messages={this.getLanguagePkg(language)}>
+      <ConfigProvider locale={isEn ? enUS : zhCN}>
+        <IntlProvider locale={language} messages={isEn ? enUSLocal : zhCNLocal}>
           <Modal
             {...restProps}
             wrapClassName={`${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
