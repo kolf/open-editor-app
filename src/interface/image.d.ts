@@ -67,7 +67,8 @@ declare interface IOsiImageReview {
   providerResId: string;
   osiBatchId: number;
   osiProviderId: number;
-  callbackStatus: number;
+  callbackStatus: 1 | 2;
+  keywordsCallbackStatus: 1 | 2;
 }
 
 // 图片操作方法
