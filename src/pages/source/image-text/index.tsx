@@ -2,18 +2,16 @@ import { useRequest } from 'ahooks';
 import { Table, Button, message } from 'antd';
 import moment from 'moment';
 import React, { useContext } from 'react';
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import config from 'src/config';
-import options, {
-  AIDetection,
+import {
   AIService,
   AuditType,
   BatchAssignMode,
   BatchAssignStatus,
-  BatchAuditType,
   BatchStatus,
-  IfSensitiveCheckBool,
-  Priority
+  Priority,
+  SensitiveCheckType
 } from 'src/declarations/enums/query';
 import bacthService from 'src/services/batchService';
 import modal from 'src/utils/modal';
@@ -22,16 +20,20 @@ import AssignForm from './AssignForm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Toolbar from 'src/components/list/Toolbar';
 import { DataContext } from 'src/components/contexts/DataProvider';
+import { FormattedMessage } from 'react-intl';
+import { getTableDisplay } from 'src/utils/tools';
+import { useLanguage } from 'src/hooks/useLanguage';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
-  const [query, setQuery] = useState({ 
-    pageNum: 1, 
+  const [query, setQuery] = useState({
+    pageNum: 1,
     pageSize: 60,
     assignStatus: BatchAssignStatus.未分配,
     auditStage: AuditType.质量审核
   });
   const { providerOptions } = useContext(DataContext);
+  const isChinese = useLanguage();
 
   const {
     data = { list: [], total: 0 },
@@ -52,11 +54,12 @@ function VcgImageText() {
     let formRef = null;
     const mod = modal({
       width: 500,
-      title: '数据分配',
+      title: <FormattedMessage id="Data Distribution" />,
       content: <AssignForm saveRef={r => (formRef = r)} />,
-      onOk,
+      onOk
       // autoIndex: false
     });
+
     async function onOk() {
       const values = await formRef.validateFields();
       if (values.errorFields) return;
@@ -66,10 +69,15 @@ function VcgImageText() {
           values.userList = values.userList.map(u => ({ id: u.value, name: u.label }));
         }
         values.osiBatchId = osiBatchId;
-        await bacthService.assign(values);
-        mod.close();
-        message.success(`设置分配成功！`);
-        refresh();
+        await bacthService
+          .assign(values)
+          .then(() => {
+            message.success(`${isChinese ? '设置分配成功！' : 'Distribution Success'}`);
+            refresh();
+          })
+          .catch(err => {
+            message.error(err.message);
+          }).finally(mod.close);
       } catch (e) {
         mod && mod.close();
         e && message.error(e);
@@ -85,55 +93,89 @@ function VcgImageText() {
     }, {});
 
   const columns: Column[] = [
-    { title: '序号', align: 'center', dataIndex: 'index' },
+    { title: <FormattedMessage id="No." />, align: 'center', dataIndex: 'index' },
     { title: 'ID', align: 'center', dataIndex: 'id' },
     {
-      title: '入库时间',
+      title: <FormattedMessage id="Submission Date" />,
       width: 100,
       align: 'center',
       dataIndex: 'createdTime',
       render: value => moment(value).format(config.data.SECOND_FORMAT)
     },
-    { title: '数据来源', width: 140, align: 'center', dataIndex: 'osiDbProviderId', render: value => providerMap[value] },
-    { title: '分配', align: 'center', dataIndex: 'assignMode', render: value => options.map(BatchAssignMode)[value] },
     {
-      title: '敏感检测',
+      title: <FormattedMessage id="Source" />,
+      width: 140,
+      align: 'center',
+      dataIndex: 'osiDbProviderId',
+      render: value => providerMap[value]
+    },
+    {
+      title: <FormattedMessage id="Distribution" />,
+      align: 'center',
+      dataIndex: 'assignMode',
+      render: value => {
+        const text = getTableDisplay(value, BatchAssignMode);
+        return text && <FormattedMessage id={text} />;
+      }
+    },
+    {
+      title: <FormattedMessage id="NSFW Scan" />,
       width: 80,
       align: 'center',
+      dataIndex: 'sensitiveCheckType',
+      render: value => {
+        const texts = (value && value.split(',').map(v => getTableDisplay(v, SensitiveCheckType))) || [];
+        return (
+          (texts.length &&
+            texts.map((t, i) => {
+              return (
+                <div key={i}>
+                  <FormattedMessage id={t} />
+                </div>
+              );
+            })) ||
+          ''
+        );
+      }
     },
-    { title: '数量', align: 'center', dataIndex: 'quantity' },
-    { title: '优先级', align: 'center', dataIndex: 'priority', render: value => options.map(Priority)[value] },
+    { title: <FormattedMessage id="Amount" />, align: 'center', dataIndex: 'quantity' },
     {
-      title: '分配状态',
+      title: <FormattedMessage id="Priority" />,
+      align: 'center',
+      dataIndex: 'priority',
+      render: value => value && <FormattedMessage id={getTableDisplay(value, Priority)}/>
+    },
+    {
+      title: <FormattedMessage id="Distribution Stats" />,
       align: 'center',
       dataIndex: 'assignStatus',
-      render: value => options.map(BatchAssignStatus)[value]
+      render: value => value && <FormattedMessage id={getTableDisplay(value, BatchAssignStatus)}/>
     },
     {
-      title: '分配时间',
+      title: <FormattedMessage id="Distribution Date" />,
       width: 100,
       align: 'center',
       dataIndex: 'assignTime',
       render: value => (value && moment(value).format(config.data.SECOND_FORMAT)) || '-'
     },
     {
-      title: '分配对象',
+      title: <FormattedMessage id="Editors" />,
       align: 'center',
       dataIndex: 'auditorName',
       render: value => {
         return (
           value &&
-          value.split(',').map(name => (
+          value.split(',').map((name, i) => (
             <>
-              <div>{name}</div>
+              <div key={i}>{name}</div>
             </>
           ))
         );
       }
     },
-    { title: '分配人', align: 'center', dataIndex: 'assignerName' },
+    { title: <FormattedMessage id="Administrators" />, align: 'center', dataIndex: 'assignerName' },
     {
-      title: '操作',
+      title: <FormattedMessage id="Action" />,
       align: 'center',
       fixed: 'right',
       render: (value, tr) => {
@@ -144,7 +186,7 @@ function VcgImageText() {
             type="text"
             onClick={() => assignData(tr.id)}
           >
-            分配
+            <FormattedMessage id="Distribution" />
           </Button>
         );
       }
@@ -195,7 +237,7 @@ function VcgImageText() {
 
   return (
     <>
-      <FormList onChange={formListOnChange} {...query}/>
+      <FormList onChange={formListOnChange} {...query} />
       <Toolbar
         pagerProps={{
           total: data.total,

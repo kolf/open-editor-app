@@ -6,6 +6,9 @@ import { login } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
 import logoUrl from 'src/assets/img/logo.svg';
 import './styles.less';
+import { FormattedMessage } from 'react-intl';
+import { useLanguage } from 'src/hooks/useLanguage';
+import { setLanguage } from 'src/features/language/language';
 
 Login.propTypes = {};
 
@@ -15,6 +18,7 @@ function Login() {
   const [forgot, setForgot] = useState(true);
   const token = useSelector((state: any) => state.user.token);
   const loading = useSelector((state: any) => state.user.loading);
+  const isChinese = useLanguage();
 
   useEffect(() => {
     if (token) history.push(PATH.USER_REVIEW_IMAGE_TEXT);
@@ -45,7 +49,9 @@ function Login() {
     >
       <div className="login-form">
         <div className="login-brand">
-          <h1>内容审核管理平台</h1>
+          <h1>
+            <FormattedMessage id="Inspection Platform" />
+          </h1>
         </div>
         <Form initialValues={{ userName: localStorage.getItem('userName') }} onFinish={onFinish}>
           <Form.Item name="userName" rules={[{ required: true, message: '请输入用户名！' }]}>
@@ -56,17 +62,24 @@ function Login() {
           </Form.Item>
           <Form.Item>
             <Button size="large" type="primary" htmlType="submit" loading={loading} block>
-              登录
+              <FormattedMessage id="Login" />
             </Button>
           </Form.Item>
           <Form.Item name="remember" valuePropName="checked">
-            <Checkbox
-              onChange={e => {
-                setForgot(e.target.checked);
-              }}
-            >
-              记住用户名
-            </Checkbox>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+              <div>
+                <Checkbox
+                  onChange={e => {
+                    setForgot(e.target.checked);
+                  }}
+                >
+                  <FormattedMessage id="Remember Username" />
+                </Checkbox>
+              </div>
+              <div style={{ cursor: 'pointer' }} onClick={() => dispatch(setLanguage())}>
+                {isChinese ? 'English' : '中文'}
+              </div>
+            </div>
           </Form.Item>
         </Form>
       </div>

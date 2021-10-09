@@ -37,7 +37,7 @@ const defaultKinds: Option[] = [
 
 const removedSourceType = `aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKeywordsDel|userKeywordsAuditDel`;
 export const removedSourceTypeReg = new RegExp(`^(${removedSourceType})$`);
-const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replaceAll('Del', '')})$`);
+const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replace(/Del/g, '')})$`);
 
 const sourceTypes: Option[] = [
   {

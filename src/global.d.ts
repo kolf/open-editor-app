@@ -10,7 +10,7 @@ declare type AlignType = 'left' | 'center' | 'right';
 declare type FixedType = 'left' | 'right' | boolean;
 
 declare interface Column<T = any> {
-  title: string;
+  title: ReactElement;
   dataIndex?: string;
   width?: number;
   fixed?: FixedType;
@@ -20,11 +20,11 @@ declare interface Column<T = any> {
 
 declare interface Menu {
   key: string;
-  name: string;
+  name: ReactElement;
   hasChild?: boolean;
   icon?: string;
   path?: string;
-  breadcrumbName: string;
+  breadcrumbName: ReactElement;
   hidden?: boolean;
   children?: Menu[];
 }

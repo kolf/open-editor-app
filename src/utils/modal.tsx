@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom';
 import { Modal, ConfigProvider } from 'antd';
 import { ModalFuncProps } from 'antd/lib/modal/Modal';
 import zhCN from 'antd/lib/locale/zh_CN';
+import { FormattedMessage, IntlProvider } from 'react-intl';
+import zhCNLocal from 'src/locales/zhCN';
+import enUS from 'src/locales/enUS';
+import { store } from 'src/store';
 
 const IS_REACT_16 = !!ReactDOM.createPortal;
 
@@ -124,33 +128,46 @@ class Mod extends React.Component<IModleProps> {
     }
   };
 
+  getLanguagePkg = lang => {
+    const languageLowerCase = lang.toLowerCase();
+    let languagePkg: any = zhCNLocal;
+    if (languageLowerCase.includes('en')) {
+      languagePkg = enUS;
+    }
+    return languagePkg;
+  };
+
   render() {
+    const { language } = store.getState().language;
+
     const { children, autoIndex, style, ...restProps } = this.props;
     return (
       <ConfigProvider locale={zhCN}>
-        <Modal
-          {...restProps}
-          wrapClassName={`${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
-          mask={!autoIndex}
-          maskClosable={false}
-          style={
-            (autoIndex && {
-              top: 0,
-              left: 0,
-              width: 'auto',
-              height: 'auto',
-              paddingBottom: 0,
-              display: 'inline-block'
-            }) ||
-            style
-          }
-          bodyStyle={{
-            maxHeight: this.bodyMaxHeight,
-            overflowY: 'auto'
-          }}
-        >
-          {children}
-        </Modal>
+        <IntlProvider locale={language} messages={this.getLanguagePkg(language)}>
+          <Modal
+            {...restProps}
+            wrapClassName={`${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
+            mask={!autoIndex}
+            maskClosable={false}
+            style={
+              (autoIndex && {
+                top: 0,
+                left: 0,
+                width: 'auto',
+                height: 'auto',
+                paddingBottom: 0,
+                display: 'inline-block'
+              }) ||
+              style
+            }
+            bodyStyle={{
+              maxHeight: this.bodyMaxHeight,
+              overflowY: 'auto'
+            }}
+          >
+            {children}
+          </Modal>
+        </IntlProvider>
       </ConfigProvider>
     );
   }

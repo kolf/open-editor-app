@@ -1,6 +1,7 @@
 import React, { memo, ReactElement } from 'react';
 import { Form, Input } from 'antd';
 import { useEffect } from 'react';
+import { FormattedMessage, injectIntl } from 'react-intl';
 
 interface IUpdatePasswordModalProps {
   saveRef?: any;
@@ -10,7 +11,7 @@ const formItemLayout = {
   // 表单布局
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 }
+    sm: { span: 7 }
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -31,7 +32,7 @@ const UpdatePasswordModal = ({ saveRef }: IUpdatePasswordModalProps): ReactEleme
     <Form form={form} {...formItemLayout}>
       <Form.Item
         name="password"
-        label="新密码"
+        label={<FormattedMessage id='New Password'/>}
         rules={[
           {
             required: true,
@@ -48,7 +49,7 @@ const UpdatePasswordModal = ({ saveRef }: IUpdatePasswordModalProps): ReactEleme
       </Form.Item>
       <Form.Item
         name="confirm"
-        label="确认新密码"
+        label={<FormattedMessage id='Confirm New Password'/>}
         dependencies={['password']}
         rules={[
           {

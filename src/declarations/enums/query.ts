@@ -9,8 +9,8 @@ export enum InStorageTime {
 
 // 分配模式
 export enum AssignType {
-  人工分配 = '1',
-  系统分配 = '2'
+  人工 = '1',
+  系统 = '2'
 }
 
 // 优先级

@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 import { Select, Pagination, Space } from 'antd';
+import { useLanguage } from 'src/hooks/useLanguage';
 const { Option } = Select;
 
 export interface Props {
@@ -9,13 +10,15 @@ export interface Props {
   pageSize: number;
 }
 
-const pageOptions: Option[] = [
-  { value: 60, label: '60条/页' },
-  { value: 100, label: '100条/页' },
-  { value: 200, label: '200条/页' }
+const pageOptions = [
+  { value: 60, label: '60条/页', usLabel: '60/page' },
+  { value: 100, label: '100条/页', usLabel: '100/page' },
+  { value: 200, label: '200条/页', usLabel: '200/page' }
 ];
 
 function Pager({ onChange, ...restProps }: Props): ReactElement {
+  const isChinese = useLanguage();
+
   const pageProps = {
     simple: true,
     ...restProps,
@@ -27,7 +30,7 @@ function Pager({ onChange, ...restProps }: Props): ReactElement {
   };
   return (
     <Space>
-      <span>共{restProps.total}条</span>
+      <span>{isChinese ? `共${restProps.total}条` : `${restProps.total} results`}</span>
       <Pagination {...pageProps} />
       <Select
         size="small"
@@ -36,7 +39,7 @@ function Pager({ onChange, ...restProps }: Props): ReactElement {
       >
         {pageOptions.map(o => (
           <Option key={o.value} value={o.value}>
-            {o.label}
+            {isChinese ? o.label : o.usLabel}
           </Option>
         ))}
       </Select>

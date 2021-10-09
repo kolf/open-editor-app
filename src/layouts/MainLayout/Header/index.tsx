@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Menu, Input, message } from 'antd';
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -12,6 +12,10 @@ import { RootState } from 'src/store';
 import modal from 'src/utils/modal';
 import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
+import { setLanguage } from 'src/features/language/language';
+import { FormattedMessage } from 'react-intl';
+import { useLanguage } from 'src/hooks/useLanguage';
+
 const { Search } = Input;
 
 export const Header: React.FC<any> = ({ menuKey, onChange }) => {
@@ -19,6 +23,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const { show: showSearch } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
   const history = useHistory();
+  const isChinese = useLanguage();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -29,7 +34,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
     let formRef = null;
     const mod = modal({
       width: 500,
-      title: '修改密码',
+      title: <FormattedMessage id='Modify Password'/>,
       content: <UpdatePasswordModal saveRef={r => (formRef = r)} />,
       onOk,
       autoIndex: false
@@ -59,15 +64,24 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const menu = (
     <Menu>
       <Menu.Item>
-        <div onClick={updatePassword}>修改密码</div>
+        <div onClick={updatePassword}>
+          <FormattedMessage id='Modify Password'/>
+        </div>
       </Menu.Item>
-      <Menu.Item onClick={handleLogout}>退出</Menu.Item>
+      <Menu.Item onClick={() => dispatch(setLanguage())}>
+        {isChinese ? 'English' : '中文'}
+      </Menu.Item>
+      <Menu.Item onClick={handleLogout}>
+        <FormattedMessage id='Exit'/>
+      </Menu.Item>
     </Menu>
   );
 
   return (
     <div className="header">
-      <h1 className="header-logo">内容审核管理平台</h1>
+      <h1 className="header-logo">
+        <FormattedMessage id='Inspection Platform'/>
+      </h1>
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
           {menus
