@@ -70,7 +70,7 @@ export default React.memo(function ListItem({
           icon: <CheckOutlined />,
           value: 'resolve',
           label: '通过',
-          disabled: dataSource.osiImageReview.callbackStatus === 2
+          disabled: dataSource.osiImageReview.keywordsCallbackStatus === 2
         },
         { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
       ]}

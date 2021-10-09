@@ -210,7 +210,7 @@ export default React.memo(function List() {
       mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
 
       const imageList = list
-        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
+        .filter(item => idList.includes(item.id) && item.osiImageReview.keywordsCallbackStatus !== 2)
         .map(item => {
           const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
           return {
