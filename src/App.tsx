@@ -4,8 +4,6 @@ import { useHistory } from 'react-router';
 import { ConfigProvider, Spin } from 'antd';
 import { RootRouter } from './routes/index';
 import { setShow, setKeywords } from 'src/features/search/search';
-import zhCN from 'antd/lib/locale/zh_CN';
-import enUS from 'antd/lib/locale/en_US';
 import './App.less';
 import { IntlProvider } from 'react-intl';
 import { useLanguagePkg } from './hooks/useLanguage';
@@ -31,7 +29,7 @@ function App() {
 
   return (
     <Suspense fallback={<Spin size="large" />}>
-      <ConfigProvider locale={language === 'zh-CN' ? zhCN : enUS}>
+      <ConfigProvider locale={languagePkg}>
         <IntlProvider locale={language} messages={languagePkg}>
           <RootRouter />
         </IntlProvider>
