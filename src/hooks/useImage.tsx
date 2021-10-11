@@ -192,13 +192,13 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
           footer: (
             <div style={{ display: 'flex' }}>
               <Button disabled={index === 0} onClick={e => update(index - 1)}>
-                上一个
+                <FormattedMessage id='Prev'/>
               </Button>
               <div style={{ flex: 1, textAlign: 'center', paddingTop: 6 }}>
                 {index + 1}/{length}
               </div>
               <Button disabled={index === length - 1} onClick={e => update(index + 1)}>
-                下一个
+                <FormattedMessage id='Next'/>
               </Button>
             </div>
           )
