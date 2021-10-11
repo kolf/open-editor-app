@@ -25,7 +25,7 @@ export class ImageService {
   async getList(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImage/pageList`, data);
     const { list, total } = res.data.data;
-    const res1 = await this.getSentiveWordByImageIds(list.map(item => item.id));
+    const res1 = await this.getSentiveWordList(list.map(item => item.id));
 
     return {
       total,
@@ -45,7 +45,7 @@ export class ImageService {
       return {};
     }
   }
-  async getKeywordDetails(data: any): Promise<any> {
+  async getKeywords(data: any): Promise<any> {
     let result = {};
     try {
       const res = await Api.get(`/api/outsourcing/osiImage/keywordsInfoView?${queryString.stringify(data)}`);
@@ -185,7 +185,7 @@ export class ImageService {
     }
   }
 
-  async getSentiveWordByImageIds(data: any): Promise<any> {
+  async getSentiveWordList(data: any): Promise<any> {
     try {
       const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);
       return res.data.data;
@@ -193,7 +193,7 @@ export class ImageService {
       return {};
     }
   }
-  async getSentiveWordDetails(keywordsList: any): Promise<any> {
+  async getSentiveWord(keywordsList: any): Promise<any> {
     const ids = keywordsList.map(item => item.elephantSensitiveWordId).filter(id => id);
     if (ids.length === 0) {
       return Promise.resolve(keywordsList);

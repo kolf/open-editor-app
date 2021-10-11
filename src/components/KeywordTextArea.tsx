@@ -1,4 +1,5 @@
-import React, { ReactElement, useState, useCallback, useRef, useEffect, MouseEventHandler } from 'react';
+import React, { ReactElement, useState, useCallback, useRef, useEffect } from 'react';
+import { useIntl, FormattedDate } from 'react-intl';
 import { Button, message, Tag } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import KeywordDetails from 'src/components/modals/KeywordDetails';
@@ -8,6 +9,7 @@ import * as tools from 'src/utils/tools';
 import { useDoubleClick } from 'src/hooks/useDoubleClick';
 import keywordService from 'src/services/keywordService';
 import 'src/styles/KeywordTextArea.less';
+import { useLanguagePkg } from 'src/hooks/useLanguage';
 
 type actionType = 'add' | 'remove' | 'select';
 
@@ -45,6 +47,7 @@ export default React.memo(function KeywordTextArea({
   langType,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
+  const intl = useIntl();
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputMirrorRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +56,8 @@ export default React.memo(function KeywordTextArea({
   const [textAreaValue, setTextAreaValue] = useState<string>('');
   const hybridClick = useDoubleClick(showDetails, onDeleteValue);
   const added = action.includes('add');
+
+  console.log(intl.formatMessage({ id: 'China{name}' }), 'languagePkg');
 
   useEffect(() => {
     if (inputRef.current) {

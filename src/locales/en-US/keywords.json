@@ -1,0 +1,11 @@
+{
+  "keywords": "关键词",
+  "keywords.type.theme": "主题",
+  "keywords.type.concept": "概念",
+  "keywords.type.size": "规格",
+  "keywords.type.person": "人物",
+  "keywords.type.address": "地点",
+  "keywords.modal.details": "关键词详情",
+  "keywords.modal.select": "选择关键词",
+  "keywords.textarea.placeholder": "请输入"
+}

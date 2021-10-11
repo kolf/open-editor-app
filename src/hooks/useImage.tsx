@@ -13,7 +13,6 @@ import modal from 'src/utils/modal';
 import * as tools from 'src/utils/tools';
 import { FormattedMessage } from 'react-intl';
 
-
 type ITitleInListItem = Required<Pick<IImage, 'id' | 'title'>>;
 
 interface Props<T> {
@@ -170,7 +169,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   // 显示图片详情
   const showDetails = async (index: number) => {
     const mod = modal({
-      title: <FormattedMessage id='Photo Info/EXIF' />,
+      title: <FormattedMessage id="Photo Info/EXIF" />,
       width: 680,
       content: <Loading />,
       footer: null
@@ -186,7 +185,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       const length = listRef.current.length;
       const { id, urlSmall, urlYuan } = listRef.current[index];
       try {
-        const res = await Promise.all([imageService.getKeywordDetails({ id }), imageService.getExif({ id })]);
+        const res = await Promise.all([imageService.getKeywords({ id }), imageService.getExif({ id })]);
         mod.update({
           content: <ImageDetails dataSource={{ ...res[0], imgUrl: urlSmall, urlYuan, exif: res[1] }} />,
           footer: (

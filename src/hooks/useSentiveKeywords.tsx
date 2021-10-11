@@ -95,7 +95,7 @@ export const useSentiveKeywords = dataSource => {
     });
     let data = [];
     try {
-      data = await imageService.getSentiveWordDetails(dataSource).then(res =>
+      data = await imageService.getSentiveWord(dataSource).then(res =>
         res.map(item => {
           if (/^(0|1)$/.test(item.checkType)) {
             return {
