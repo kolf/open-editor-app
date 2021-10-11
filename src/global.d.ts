@@ -18,17 +18,6 @@ declare interface Column<T = any> {
   render?: (value: any, tr: T) => React.ReactNode;
 }
 
-declare interface Menu {
-  key: string;
-  name: ReactElement;
-  hasChild?: boolean;
-  icon?: string;
-  path?: string;
-  breadcrumbName: ReactElement;
-  hidden?: boolean;
-  children?: Menu[];
-}
-
 declare interface AntdOptions {
   value: string;
   label: string;

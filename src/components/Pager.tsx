@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Select, Pagination, Space } from 'antd';
-import { useLanguage } from 'src/hooks/useLanguage';
 const { Option } = Select;
 
 export interface Props {
@@ -10,15 +10,9 @@ export interface Props {
   pageSize: number;
 }
 
-const pageOptions = [
-  { value: 60, label: '60条/页', usLabel: '60/page' },
-  { value: 100, label: '100条/页', usLabel: '100/page' },
-  { value: 200, label: '200条/页', usLabel: '200/page' }
-];
+const pageOptions = [60, 100, 200];
 
-function Pager({ onChange, ...restProps }: Props): ReactElement {
-  const isChinese = useLanguage();
-
+export default React.memo(function Pager({ onChange, ...restProps }: Props): ReactElement {
   const pageProps = {
     simple: true,
     ...restProps,
@@ -28,23 +22,24 @@ function Pager({ onChange, ...restProps }: Props): ReactElement {
       });
     }
   };
+
   return (
     <Space>
-      <span>{isChinese ? `共${restProps.total}条` : `${restProps.total} results`}</span>
+      <span>
+        <FormattedMessage id="pager.result.total" values={{ total: restProps.total }} />
+      </span>
       <Pagination {...pageProps} />
       <Select
         size="small"
-        defaultValue={pageOptions[0].value}
+        defaultValue={pageOptions[0]}
         onChange={(pageSize: number) => onChange({ pageSize: pageSize })}
       >
         {pageOptions.map(o => (
-          <Option key={o.value} value={o.value}>
-            {isChinese ? o.label : o.usLabel}
+          <Option key={o} value={o}>
+            <FormattedMessage id="pager.result.size" values={{ size: o }} />
           </Option>
         ))}
       </Select>
     </Space>
   );
-}
-
-export default Pager;
+});

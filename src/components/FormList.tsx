@@ -3,24 +3,12 @@ import { Form, Input, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import SearchSelect from 'src/components/SearchSelect';
 import InputSplit from 'src/components/InputSplit';
-import formData from 'src/components/formlist/formData.json';
+import useFormItems, { IFormItem, IFormItemKey } from 'src/hooks/useFormItems';
+
 import 'src/styles/FormList.less';
 
 const { Option } = Select;
 const { RangePicker } = DatePicker;
-
-type IFormItemKey = number | { key: number; options: Option[] };
-
-export type IFormType = 'TimeRange' | 'Select' | 'SearchSelect' | 'InputSplit';
-
-export type IFormItem = {
-  key: number;
-  field: string;
-  formType: IFormType;
-  placeholder: string;
-  options?: Option[];
-  restProps?: any;
-};
 
 interface Props {
   itemKeys: IFormItemKey[];
@@ -32,23 +20,10 @@ function filterOption(input: string, option) {
   return option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
-function getFormItems(formItemKeys: IFormItemKey[]): IFormItem[] {
-  return formItemKeys.map(key => {
-    if (typeof key === 'number') {
-      return (formData as IFormItem[]).find(item => item.key === key);
-    } else {
-      return {
-        ...(formData as IFormItem[]).find(item => item.key === key.key),
-        ...key
-      };
-    }
-  });
-}
-
 export default React.memo(function FormList({ initialValues, onChange, itemKeys = [] }: Props): ReactElement {
   const [form] = Form.useForm(null);
+  const formItems = useFormItems(itemKeys);
   const [collapse, setCollapse] = useState(false);
-  const formItems = getFormItems(itemKeys);
   const values = form.getFieldsValue();
 
   const renderFormItem = ({ restProps, formType, field, placeholder, options = [] }: IFormItem): ReactElement => {
@@ -58,7 +33,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
         return (
           <RangePicker
             inputReadOnly
-            style={{ width: 190 }}
+            style={{ width: restProps?.width || 190 }}
             separator={values[field] ? '~' : ''}
             placeholder={[placeholder, '']}
           />

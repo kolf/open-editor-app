@@ -5,7 +5,7 @@ import { Radio, Button, Space, Input, message } from 'antd';
 import { CheckOutlined, LineOutlined, FileSearchOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from 'src/components/formlist/FormList';
+import FormList from 'src/components/FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup';

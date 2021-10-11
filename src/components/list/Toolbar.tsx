@@ -1,13 +1,12 @@
 import React, { ReactElement } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Affix, Space, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import Pager, { Props as IPager } from 'src/components/Pager';
+import { useLanguagePkg } from 'src/hooks/useLanguage';
 import './Toolbar.less';
 
-const selectOptions: Option[] = ['全选', '反选', '取消'].map((o, i) => ({
-  value: i + '',
-  label: o
-}));
+type ISelectType = '0' | '1' | '2';
 
 interface Props {
   selectedIds?: IdList;
@@ -19,7 +18,7 @@ interface Props {
   extraContent?: React.ReactNode;
 }
 
-function Toolbar({
+export default React.memo(function Toolbar({
   selectedIds = [],
   idList,
   children,
@@ -28,7 +27,23 @@ function Toolbar({
   pagerProps,
   extraContent
 }: Props): ReactElement {
-  const handleClick = key => {
+  const { languagePkg } = useLanguagePkg();
+  const options = [
+    {
+      label: languagePkg['pager.select.all'],
+      value: '0'
+    },
+    {
+      label: languagePkg['pager.select.invert'],
+      value: '1'
+    },
+    {
+      label: languagePkg['pager.select.cancel'],
+      value: '2'
+    }
+  ];
+
+  const handleClick = (key: ISelectType) => {
     let nextSelectedIds = [];
     switch (key) {
       case '0':
@@ -41,18 +56,21 @@ function Toolbar({
 
     onSelectIds(nextSelectedIds);
   };
+
   return (
     <Affix offsetTop={64}>
       <div className="toolbar-root">
         <div className="toolbar-left">
           {onSelectIds && (
             <Space style={{ paddingRight: 6 }}>
-              {selectOptions.map(o => (
-                <a key={o.value} onClick={e => handleClick(o.value)}>
+              {options.map(o => (
+                <a key={o.value} onClick={e => handleClick(o.value as ISelectType)}>
                   {o.label}
                 </a>
               ))}
-              <span>已选中{selectedIds.length}个</span>
+              <span>
+                <FormattedMessage id="pager.select.total" values={{ total: selectedIds.length }} />
+              </span>
             </Space>
           )}
           {onRefresh && (
@@ -74,6 +92,4 @@ function Toolbar({
       </div>
     </Affix>
   );
-}
-
-export default Toolbar;
+});

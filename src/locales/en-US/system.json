@@ -1,7 +1,7 @@
 {
-  "menu.image.review": "图片审核",
-  "menu.image.quality": "质量审核",
-  "menu.image.keywords": "关键词审核",
+  "menu.image.review": "Photo Review",
+  "menu.image.quality": "Quality Review",
+  "menu.image.keywords": "Metadata Review",
   "header.search.button": "Search",
-  "header.search.placeholder": "请输入关键词或ID，多个用逗号隔开"
+  "header.search.placeholder": "Enter Keywords or ID, using ',' to search multiples"
 }

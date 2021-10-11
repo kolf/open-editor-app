@@ -1,7 +1,7 @@
 {
   "formItem.dropdown.up": "收缩",
   "formItem.dropdown.down": "展开",
-  "formItem.editUser": "审核人",
+  "formItem.qualityAuditorId": "审核人",
   "formItem.createdTime": "入库时间",
   "formItem.editTime": "审核时间",
   "formItem.qualityStatus": "审核状态",
@@ -14,5 +14,12 @@
   "formItem.haveSensitve": "敏感词",
   "formItem.licenseType": "授权",
   "formItem.category": "AI分类",
-  "formItem.keywordsStatus": "审核状态"
+  "formItem.keywordsStatus": "审核状态",
+
+  "pager.result.total": "共{total}条",
+  "pager.result.size": "{size}条/页",
+  "pager.select.total": "已选中{total}条",
+  "pager.select.all": "全选",
+  "pager.select.invert": "反选",
+  "pager.select.cancel": "取消"
 }

@@ -6,7 +6,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Iconfont from 'src/components/Iconfont';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from 'src/components/formlist/FormList';
+import FormList from 'src/components/FormList';
 import ListItem from './ListItem';
 import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';

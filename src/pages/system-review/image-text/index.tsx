@@ -3,7 +3,7 @@ import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from 'src/components/formlist/FormList';
+import FormList from 'src/components/FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { useDocumentTitle } from 'src/hooks/useDom';

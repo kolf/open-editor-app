@@ -1,4 +1,8 @@
-import options from "src/declarations/enums/query"
+import options from 'src/declarations/enums/query';
+import component from './zh-CN/component.json';
+import image from './zh-CN/image.json';
+import keywords from './zh-CN/keywords.json';
+import system from './zh-CN/system.json';
 
 // 导航
 export const menuPart = {
@@ -12,8 +16,8 @@ export const menuPart = {
   'All Resources': '全部资源',
   'Photo Review': '图片审核',
   'My Tasks': '我的审核',
-  Stats: '数据统计',
-}
+  Stats: '数据统计'
+};
 
 // 选择器
 export const selectPart = {
@@ -48,25 +52,25 @@ export const selectPart = {
   'LAI Quality': 'AI质量评分',
   'AAI Aesthetic': 'AI美学评分',
   'AI Categories': 'AI分类',
-  'AI Title-Keywords' :'AI自动标题/关键词'
-}
+  'AI Title-Keywords': 'AI自动标题/关键词'
+};
 
 const otherPart = {
   'Inspection Platform': '内容审核管理平台',
   'Modify Password': '修改密码',
-  'New Password':'新密码',
-  'Confirm New Password':'新密码',
+  'New Password': '新密码',
+  'Confirm New Password': '新密码',
 
   Exit: '退出',
   Login: '登录',
   'Remember Username': '记住用户名',
 
   'Enter Keywords or ID, using "," to search multiples': '请输入关键词或ID，多个用逗号隔开'
-}
+};
 
 const table = {
   'No.': '序号',
-  'ID': 'ID',
+  ID: 'ID',
   Amount: '数量',
   'Distribution Date': '分配时间',
   Administrators: '分配人',
@@ -103,11 +107,11 @@ const table = {
 
   'Please Enter Distribution Editor!': '请选择/输入分配对象！',
 
-  'Photo Info/EXIF':'图片详情',
+  'Photo Info/EXIF': '图片详情',
   Headline: '标题',
   Keywords: '关键词',
   User: '用户',
-  
+
   Model: '机型',
   'Shooting Date': '原始日期时间',
   'Edited Date': '修改时间',
@@ -126,15 +130,15 @@ const table = {
   Aperture: '光圈值',
   Brand: '相机制造商',
   Lens: '镜头'
-}
+};
 
 const exp = {
   ...menuPart,
   ...selectPart,
   ...otherPart,
-  ...table,
-}
+  ...table
+};
 
 export const zhCNMap = options.map(exp);
 
-export default exp;
+export default { ...component, ...image, ...keywords, ...system, ...exp };
