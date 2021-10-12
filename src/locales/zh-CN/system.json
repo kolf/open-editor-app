@@ -1,7 +1,12 @@
 {
+  "app.language": "中文",
+  "app.title": "VCG内容审核管理平台",
+
   "menu.image.review": "图片审核",
   "menu.image.quality": "质量审核",
   "menu.image.keywords": "关键词审核",
   "header.search.button": "搜索",
-  "header.search.placeholder": "请输入关键词或ID，多个用逗号隔开"
+  "header.search.placeholder": "请输入关键词或ID，多个用逗号隔开",
+
+  "message.api.error": "接口请求错误"
 }

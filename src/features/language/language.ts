@@ -1,11 +1,11 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 interface LanguageState {
-  language: string;
+  language: 'en-US' | 'zh-CN';
 }
 
 const initialState: LanguageState = {
-  language: (localStorage.getItem('language') || navigator.language)
+  language: (localStorage.getItem('language') || navigator.language) as LanguageState['language']
 };
 
 export const languageSlice = createSlice({

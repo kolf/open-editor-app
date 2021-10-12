@@ -12,9 +12,15 @@
   "formItem.priority": "Priority",
   "formItem.license": "Release Files",
   "formItem.haveSensitve": "NSFW Scan",
-  "formItem.licenseType": "授权",
-  "formItem.category": "AI分类",
-  "formItem.keywordsStatus": "审核状态",
+  "formItem.licenseType": "RM or RF",
+  "formItem.category": "AI Categories",
+  "formItem.keywordsStatus": "Review Status",
+
+  "list.nodata": "No Results, please try other filters",
+  "list.loading": "Loading...",
+
+  "modal.okText": "OK",
+  "modal.cancalText": "Cancel",
 
   "pager.result.total": "{total} results",
   "pager.result.size": "{size}/page",

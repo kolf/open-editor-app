@@ -16,6 +16,12 @@
   "formItem.category": "AI分类",
   "formItem.keywordsStatus": "审核状态",
 
+  "list.nodata": "可能这个资源已经飞走了，请修改搜索条件",
+  "list.loading": "加载中...",
+
+  "modal.okText": "确定",
+  "modal.cancalText": "取消",
+
   "pager.result.total": "共{total}条",
   "pager.result.size": "{size}条/页",
   "pager.select.total": "已选中{total}条",

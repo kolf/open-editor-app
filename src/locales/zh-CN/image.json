@@ -1,3 +1,44 @@
 {
-  "image.title": "标题"
+  "image.log": "日志",
+  "image.log.date": "编审时间",
+  "image.log.user": "编审人",
+  "image.log.actions": "编审内容",
+
+  "image.memo": "备注",
+  "image.releaseFiles": "授权",
+
+  "image.review": "审核",
+  "image.update": "编辑",
+  "image.title": "标题",
+  "image.keywords": "关键词",
+  "image.setting": "设置{value}",
+  "image.open.file": "打开原图",
+  "image.show.middleImage": "查看中图",
+  "image.resolve": "通过",
+  "image.reject": "不通过",
+  "image.qualityRank": "等级",
+
+  "image.status.14": "待编审",
+  "image.status.15": "待编审(免审)",
+  "image.status.24": "已通过",
+  "image.status.34": "不通过",
+
+  "image.priority.1": "正常",
+  "image.priority.2": "加急",
+
+  "image.license.1": "肖像权文件",
+  "image.license.2": "物权文件",
+  "image.license.3": "拍摄许可文件",
+
+  "image.haveSensitve.0": "未命中敏感词",
+  "image.haveSensitve.1": "命中敏感词",
+
+  "image.copyright.0": "不涉及肖像权或物权授权",
+  "image.copyright.1": "已取得肖像权授权",
+  "image.copyright.2": "已取得肖像权和物权授权",
+  "image.copyright.3": "已取得物权授权",
+  "image.copyright.7": "未取得物权授权",
+  "image.copyright.9": "未取得肖像权或物权授权",
+
+  "image.error.unselect": "Please select a picture"
 }

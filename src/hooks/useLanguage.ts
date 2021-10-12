@@ -16,5 +16,5 @@ export const useLanguagePkg = () => {
   return {
     language,
     languagePkg
-  }
+  };
 };

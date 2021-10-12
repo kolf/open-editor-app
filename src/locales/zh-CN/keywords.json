@@ -1,11 +1,21 @@
 {
   "keywords": "关键词",
+  "keywords.nodata": "关键词不存在！",
+
+  "keywords.source.ai.select": "AI关键词（用户勾选）",
+  "keywords.source.ai.unselect": "AI关键词（用户未勾选）",
+  "keywords.source.user.added": "用户提供关键词",
+  "keywords.source.editor.added": "编辑添加关键词",
+  "keywords.source.editor.removed": "编辑删除关键词",
+
   "keywords.type.theme": "主题",
   "keywords.type.concept": "概念",
   "keywords.type.size": "规格",
-  "keywords.type.person": "人物",
+  "keywords.type.people": "人物",
   "keywords.type.address": "地点",
+
   "keywords.modal.details": "关键词详情",
   "keywords.modal.select": "选择关键词",
+
   "keywords.textarea.placeholder": "请输入"
 }

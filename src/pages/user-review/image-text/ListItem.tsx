@@ -7,6 +7,7 @@ import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
 import options, { Quality, LicenseType, CopyrightType, License } from 'src/declarations/enums/query';
+import { useIntl } from 'react-intl';
 const { Option } = Select;
 const licenseTypeOptions = options.get(LicenseType);
 const licenseOptions = options.get(License);
@@ -20,27 +21,6 @@ type Props<T> = {
   onChange: <P extends keyof T>(index: number, field: P, value: T[P]) => void;
   selected: boolean;
 };
-
-function getIndexProps(qualityStatus: IOsiImageReview['qualityStatus']) {
-  if (/^1/.test(qualityStatus)) {
-    return {
-      title: `待编审`,
-      color: '#666666'
-    };
-  }
-  if (/^2/.test(qualityStatus)) {
-    return {
-      title: `已通过`,
-      color: '#09e35c'
-    };
-  }
-  if (/^3/.test(qualityStatus)) {
-    return {
-      title: `不通过`,
-      color: '#e30e09'
-    };
-  }
-}
 
 function isLicenseActive(releases: IImage['releases'], value: string): boolean {
   if (!releases || releases.length === 0) {
@@ -56,12 +36,28 @@ export default React.memo(function ListItem({
   onClick,
   onChange
 }: Props<IImage>): ReactElement {
+  const { formatMessage } = useIntl();
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
+
+  const indexPropsMap = {
+    14: {
+      title: `待编审`,
+      color: '#666666'
+    },
+    24: {
+      title: `已通过`,
+      color: '#09e35c'
+    },
+    34: {
+      title: `不通过`,
+      color: '#e30e09'
+    }
+  };
 
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
-      indexProps={{ ...getIndexProps(dataSource.osiImageReview.qualityStatus), text: index + 1 + '' }}
+      indexProps={{ ...indexPropsMap[dataSource.osiImageReview.qualityStatus], text: index + 1 + '' }}
       height={460}
       onClick={field => onClick(index, field)}
       selected={selected}
@@ -69,16 +65,16 @@ export default React.memo(function ListItem({
         {
           icon: <CheckOutlined />,
           value: 'resolve',
-          label: '通过',
+          label: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) }),
           disabled: dataSource.osiImageReview.callbackStatus === 2
         },
         {
           icon: <CloseOutlined />,
           value: 'reject',
-          label: '不通过',
+          label: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.reject' }) }),
           disabled: dataSource.osiImageReview.callbackStatus === 2
         },
-        { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
+        { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }
       ]}
     >
       <GridItemRow>

@@ -1,3 +1,44 @@
 {
-  "image.title": "标题"
+  "image.log": "Operation History",
+  "image.log.date": "Date",
+  "image.log.user": "User",
+  "image.log.actions": "Actions",
+
+  "image.memo": "Memo",
+  "image.releaseFiles": "Release Files",
+
+  "image.review": "Actions",
+  "image.update": "Edit",
+  "image.title": "Title",
+  "image.keywords": "Keyword",
+  "image.setting": "Setting {value}",
+  "image.open.file": "Open Files",
+  "image.show.middleImage": "View Image",
+  "image.resolve": "Accepted",
+  "image.reject": "Reject",
+  "image.qualityRank": "Quality Level",
+
+  "image.status.14": "To be Reviewed",
+  "image.status.15": "To be Reviewed (Exempt)",
+  "image.status.24": "Accepted",
+  "image.status.34": "Reject",
+
+  "image.priority.1": "Medium(Normal)",
+  "image.priority.2": "High",
+
+  "image.license.1": "肖像权文件",
+  "image.license.2": "物权文件",
+  "image.license.3": "拍摄许可文件",
+
+  "image.haveSensitve.0": "未命中敏感词",
+  "image.haveSensitve.1": "命中敏感词",
+
+  "image.copyright.0": "MR or PR is not Required",
+  "image.copyright.1": "Have MR",
+  "image.copyright.2": "Have MR and PR",
+  "image.copyright.3": "No PR",
+  "image.copyright.7": "Have PR",
+  "image.copyright.9": "No MR or PR",
+
+  "image.error.unselect": "Please select a picture"
 }

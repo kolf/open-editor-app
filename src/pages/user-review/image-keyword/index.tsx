@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import { Radio, Button, Space, Input, message } from 'antd';
@@ -24,6 +25,7 @@ const initialData = {
 };
 
 export default React.memo(function List() {
+  const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
 
@@ -310,17 +312,17 @@ export default React.memo(function List() {
       >
         <Space>
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            审核
+            <FormattedMessage id="image.review" />
           </Button>
-          <Button size="small" title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
+          <Button size="small" title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) })} onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            编辑
+            <FormattedMessage id="image.update" />
           </Button>
           <Button size="small" title="修改标题" onClick={e => updateTitle(selectedIds)}>
-            标题
+            <FormattedMessage id="image.title" />
           </Button>
           <Button size="small" title="修改关键词" onClick={e => updateKeywords(selectedIds)}>
-            关键词
+            <FormattedMessage id="image.keywords" />
           </Button>
         </Space>
       </Toolbar>

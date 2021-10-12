@@ -40,10 +40,10 @@ export enum KeywordSensitiveCheckType {
   提交检测 = '2'
 }
 
-export const SensitiveCheckType  = {
+export const SensitiveCheckType = {
   ...QualitySensitiveCheckType,
   ...KeywordSensitiveCheckType
-}
+};
 
 // AI检测
 export enum AIDetection {
@@ -53,13 +53,13 @@ export enum AIDetection {
 }
 
 export enum KeywordAIService {
-  'AI自动标题/关键词' = '3',
+  'AI自动标题/关键词' = '3'
 }
 
 export const AIService = {
   ...AIDetection,
   ...KeywordAIService
-}
+};
 
 // 资源/审核类型
 export enum AssetType {
@@ -169,7 +169,7 @@ export enum License {
 
 export enum AuditType {
   质量审核 = '1',
-  关键词审核 = '2'   
+  关键词审核 = '2'
 }
 
 export enum KeywordAuditDefault {

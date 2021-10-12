@@ -14,17 +14,17 @@ import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
 import { setLanguage } from 'src/features/language/language';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { useLanguage } from 'src/hooks/useLanguage';
+import { useLanguagePkg } from 'src/hooks/useLanguage';
 
 const { Search } = Input;
 
-export const Header: React.FC<any> = ({ menuKey, onChange }) => {
+const Header: React.FC<any> = ({ menuKey, onChange }) => {
+  const { language } = useLanguagePkg();
+  const { formatMessage } = useIntl();
   const user = useSelector((state: RootState) => state.user.user);
   const { show: showSearch } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
   const history = useHistory();
-  const isChinese = useLanguage();
-  const intl = useIntl();
 
   const handleLogout = () => {
     dispatch(logout());
@@ -35,7 +35,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
     let formRef = null;
     const mod = modal({
       width: 500,
-      title: <FormattedMessage id='Modify Password'/>,
+      title: <FormattedMessage id="Modify Password" />,
       content: <UpdatePasswordModal saveRef={r => (formRef = r)} />,
       onOk,
       autoIndex: false
@@ -64,16 +64,12 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
 
   const menu = (
     <Menu>
-      <Menu.Item>
-        <div onClick={updatePassword}>
-          <FormattedMessage id='Modify Password'/>
-        </div>
-      </Menu.Item>
-      <Menu.Item onClick={() => dispatch(setLanguage())}>
-        {isChinese ? 'English' : '中文'}
+      <Menu.Item onClick={() => dispatch(setLanguage())}>{language === 'en-US' ? '中文' : 'English'}</Menu.Item>
+      <Menu.Item onClick={updatePassword}>
+        <FormattedMessage id="Modify Password" />
       </Menu.Item>
       <Menu.Item onClick={handleLogout}>
-        <FormattedMessage id='Exit'/>
+        <FormattedMessage id="Exit" />
       </Menu.Item>
     </Menu>
   );
@@ -81,7 +77,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
   return (
     <div className="header">
       <h1 className="header-logo">
-        <FormattedMessage id='Inspection Platform'/>
+        <FormattedMessage id="Inspection Platform" />
       </h1>
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
@@ -98,7 +94,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
         <div className="header-search">
           <Search
             allowClear
-            placeholder={intl.formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
+            placeholder={formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
             onChange={e => {
               const value = e.target.value.replaceAll('，', ',');
               dispatch(setKeywords(value));
@@ -106,7 +102,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
             onSearch={e => {
               dispatch(openFire(true));
             }}
-            enterButton="搜索"
+            enterButton={formatMessage({ id: 'header.search.button' })}
             style={{ width: 390 }}
           />
         </div>

@@ -1,7 +1,12 @@
 {
+  "app.language": "English",
+  "app.title": "VCG内容审核管理平台",
+
   "menu.image.review": "Photo Review",
   "menu.image.quality": "Quality Review",
   "menu.image.keywords": "Metadata Review",
   "header.search.button": "Search",
-  "header.search.placeholder": "Enter Keywords or ID, using ',' to search multiples"
+  "header.search.placeholder": "Enter Keywords or ID, using ',' to search multiples",
+
+  "message.api.error": "API Error"
 }

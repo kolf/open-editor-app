@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import { Radio, Button, Space, Input, message } from 'antd';
@@ -31,6 +32,7 @@ const initialData = {
 };
 
 export default React.memo(function List() {
+  const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
@@ -41,8 +43,7 @@ export default React.memo(function List() {
   const {
     data: { list, total } = initialData,
     loading = true,
-    mutate,
-    run
+    mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
@@ -509,17 +510,27 @@ export default React.memo(function List() {
       >
         <Space>
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            审核
+            <FormattedMessage id="image.review" />
           </Button>
-          <Button size="small" title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
-          <Button size="small" title="不通过" onClick={e => setReject(-1)} icon={<CloseOutlined />} />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) })}
+            onClick={e => setResolve(-1)}
+            icon={<CheckOutlined />}
+          />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.reject' }) })}
+            onClick={e => setReject(-1)}
+            icon={<CloseOutlined />}
+          />
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            编辑
+            <FormattedMessage id="image.update" />
           </Button>
           {licenseTypeOptions.map(o => (
             <Button
               size="small"
-              title={`设置${o.label}`}
+              title={formatMessage({ id: 'image.setting' }, { value: o.label })}
               onClick={e => setLicenseTypeList(-1, o.value as IImage['licenseType'])}
             >
               {o.label}
@@ -529,7 +540,10 @@ export default React.memo(function List() {
           {qualityOptions.map(o => (
             <Button
               size="small"
-              title={`设置等级${o.label}`}
+              title={formatMessage(
+                { id: 'image.setting' },
+                { value: formatMessage({ id: 'image.qualityRank' }) + ' ' + o.label }
+              )}
               key={o.value}
               onClick={e => setQualityList(-1, o.value as IImage['qualityRank'])}
             >
@@ -538,14 +552,19 @@ export default React.memo(function List() {
           ))}
           <Button
             size="small"
-            title="设置授权文件说明"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.releaseFiles' }) })}
             onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />
-          <Button size="small" title="修改备注" onClick={e => setMemoList(-1)} icon={<Iconfont type="icon-beizhu" />} />
           <Button
             size="small"
-            title="批量打开大图"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.memo' }) })}
+            onClick={e => setMemoList(-1)}
+            icon={<Iconfont type="icon-beizhu" />}
+          />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.open.file' })}
             onClick={e => openOriginImage(-1)}
             icon={<Iconfont type="icon-tu" />}
           />

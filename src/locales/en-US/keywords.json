@@ -1,11 +1,21 @@
 {
-  "keywords": "关键词",
-  "keywords.type.theme": "主题",
-  "keywords.type.concept": "概念",
-  "keywords.type.size": "规格",
-  "keywords.type.person": "人物",
-  "keywords.type.address": "地点",
-  "keywords.modal.details": "关键词详情",
-  "keywords.modal.select": "选择关键词",
-  "keywords.textarea.placeholder": "请输入"
+  "keywords": "Keyword",
+  "keywords.nodata": "No data",
+
+  "keywords.source.ai.select": "AI（Selected by user）",
+  "keywords.source.ai.unselect": "AI（Not-select by user）",
+  "keywords.source.user.added": "Added by user",
+  "keywords.source.editor.added": "Added by editors",
+  "keywords.source.editor.removed": "Deleted by editors",
+
+  "keywords.type.theme": "Themes related",
+  "keywords.type.concept": "Conception related",
+  "keywords.type.size": "Size related",
+  "keywords.type.people": "People related",
+  "keywords.type.address": "Location related",
+
+  "keywords.modal.details": "Keyword Details",
+  "keywords.modal.select": "Choose keywords",
+
+  "keywords.textarea.placeholder": "Please Enter"
 }

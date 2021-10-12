@@ -34,35 +34,49 @@ function open(imgUrl: string) {
   window.open(imgUrl);
 }
 
-export default function ImageDetails({ dataSource }: Props): ReactElement {
+export default React.memo(function ImageDetails({ dataSource }: Props): ReactElement {
   return (
     <>
       <Row>
         <Col span={12}>
-          <div style={{ paddingRight: 24, display: 'flex',height:500 }} onClick={e => open(dataSource.urlYuan)}>
+          <div style={{ paddingRight: 24, display: 'flex', height: 500 }} onClick={e => open(dataSource.urlYuan)}>
             <img src={dataSource.imgUrl || defaultUrl} style={{ maxWidth: '100%', margin: 'auto' }} />
           </div>
         </Col>
         <Col span={12}>
-          <h3 style={{ textAlign: 'center' }}><FormattedMessage id='Headline'/></h3>
+          <h3 style={{ textAlign: 'center' }}>
+            <FormattedMessage id="Headline" />
+          </h3>
           <Row>
-            <Col span={4}><FormattedMessage id='AI'/></Col>
+            <Col span={4}>
+              <FormattedMessage id="AI" />
+            </Col>
             <Col span={19}>{dataSource.aiTitle || defaultName}</Col>
-            <Col span={4}><FormattedMessage id='User'/></Col>
+            <Col span={4}>
+              <FormattedMessage id="User" />
+            </Col>
             <Col span={19}>{dataSource.title || defaultName}</Col>
           </Row>
-          <h3 style={{ textAlign: 'center' }}><FormattedMessage id='Keywords'/></h3>
-          <Row>
-            <Col span={6}>AI用户点选</Col>
-            <Col span={18}>
+          <h3 style={{ textAlign: 'center' }}>
+            <FormattedMessage id="Keywords" />
+          </h3>
+          <Row gutter={4}>
+            <Col span={8}>
+              <FormattedMessage id="keywords.source.ai.select" />
+            </Col>
+            <Col span={16}>
               {dataSource.aiKeywordsSelected ? dataSource.aiKeywordsSelected.join('，') : defaultName}
             </Col>
-            <Col span={6}>AI用户未点选</Col>
-            <Col span={18}>
+            <Col span={8}>
+              <FormattedMessage id="keywords.source.ai.unselect" />
+            </Col>
+            <Col span={16}>
               {dataSource.aiKeywordsUnselected ? dataSource.aiKeywordsUnselected.join('，') : defaultName}
             </Col>
-            <Col span={6}>用户</Col>
-            <Col span={18}>{dataSource.aiKeywordsUnselected ? dataSource.userKeywords.join('，') : defaultName}</Col>
+            <Col span={8}>
+              <FormattedMessage id="keywords.source.user.added" />
+            </Col>
+            <Col span={16}>{dataSource.aiKeywordsUnselected ? dataSource.userKeywords.join('，') : defaultName}</Col>
           </Row>
           {dataSource && (
             <>
@@ -70,7 +84,7 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
               {Object.keys(exifMap).map(key => (
                 <div className="ant-row" key={key}>
                   <div className="ant-col-8">
-                    <FormattedMessage id={zhCNMap[exifMap[key]]}/>
+                    <FormattedMessage id={zhCNMap[exifMap[key]]} />
                   </div>
                   <div className="ant-col-16">{dataSource.exif[key] || '---'}</div>
                 </div>
@@ -81,4 +95,4 @@ export default function ImageDetails({ dataSource }: Props): ReactElement {
       </Row>
     </>
   );
-}
+});

@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { useIntl } from 'react-intl';
 import { Spin, Row, Col, Empty } from 'antd';
 import './GridList.less';
 
@@ -19,9 +20,11 @@ type Props<T> = {
 };
 
 export default function GridList<T>({ dataSource = [], renderItem, rowKey = 'id', loading }: Props<T>): ReactElement {
+  const { formatMessage } = useIntl();
+
   if (loading) {
     return (
-      <Spin tip="加载中...">
+      <Spin tip={formatMessage({ id: 'list.loading' })}>
         <div className="grid-loading"></div>
       </Spin>
     );
@@ -29,7 +32,7 @@ export default function GridList<T>({ dataSource = [], renderItem, rowKey = 'id'
   if (dataSource.length === 0) {
     return (
       <div style={{ padding: '48px 0' }}>
-        <Empty description="可能这个资源已经飞走了，请修改搜索条件" />
+        <Empty description={formatMessage({ id: 'list.nodata' })} />
       </div>
     );
   }
