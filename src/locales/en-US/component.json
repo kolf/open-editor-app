@@ -16,11 +16,18 @@
   "formItem.category": "AI Categories",
   "formItem.keywordsStatus": "Review Status",
 
+  "input.placeholder": "Please enter",
+  "select.placeholder": "Please choose",
+
   "list.nodata": "No Results, please try other filters",
   "list.loading": "Loading...",
 
   "modal.okText": "OK",
-  "modal.cancalText": "Cancel",
+  "modal.cancelText": "Cancel",
+  "modal.submitText": "Submit",
+
+  "findAndReplace.search.placeholder": "Please enter search content",
+  "findAndReplace.replace.placeholder": "Please enter replacement content",
 
   "pager.result.total": "{total} results",
   "pager.result.size": "{size}/page",

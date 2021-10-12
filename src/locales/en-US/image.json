@@ -11,7 +11,7 @@
   "image.update": "Edit",
   "image.title": "Title",
   "image.keywords": "Keyword",
-  "image.setting": "Setting {value}",
+  "image.setting": "Set {value}",
   "image.open.file": "Open Files",
   "image.show.middleImage": "View Image",
   "image.resolve": "Accepted",

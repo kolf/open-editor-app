@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { Provider } from 'react-redux';
 import { Modal, ConfigProvider } from 'antd';
 import { ModalFuncProps } from 'antd/lib/modal/Modal';
 import zhCN from 'antd/lib/locale/zh_CN';
@@ -135,33 +136,35 @@ class Mod extends React.Component<IModleProps> {
 
     const { children, autoIndex, style, ...restProps } = this.props;
     return (
-      <ConfigProvider locale={isEn ? enUS : zhCN}>
-        <IntlProvider locale={language} messages={isEn ? enUSLocal : zhCNLocal}>
-          <Modal
-            {...restProps}
-            wrapClassName={`${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
-            mask={!autoIndex}
-            maskClosable={false}
-            style={
-              (autoIndex && {
-                top: 0,
-                left: 0,
-                width: 'auto',
-                height: 'auto',
-                paddingBottom: 0,
-                display: 'inline-block'
-              }) ||
-              style
-            }
-            bodyStyle={{
-              maxHeight: this.bodyMaxHeight,
-              overflowY: 'auto'
-            }}
-          >
-            {children}
-          </Modal>
-        </IntlProvider>
-      </ConfigProvider>
+      <Provider store={store}>
+        <ConfigProvider locale={isEn ? enUS : zhCN}>
+          <IntlProvider locale={language} messages={isEn ? enUSLocal : zhCNLocal}>
+            <Modal
+              {...restProps}
+              wrapClassName={`${this.simpleClass} ${(autoIndex && 'autoIndex') || ''}`}
+              mask={!autoIndex}
+              maskClosable={false}
+              style={
+                (autoIndex && {
+                  top: 0,
+                  left: 0,
+                  width: 'auto',
+                  height: 'auto',
+                  paddingBottom: 0,
+                  display: 'inline-block'
+                }) ||
+                style
+              }
+              bodyStyle={{
+                maxHeight: this.bodyMaxHeight,
+                overflowY: 'auto'
+              }}
+            >
+              {children}
+            </Modal>
+          </IntlProvider>
+        </ConfigProvider>
+      </Provider>
     );
   }
 }

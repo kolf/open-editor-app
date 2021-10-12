@@ -4,10 +4,11 @@ import { Tag } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import keywordService from 'src/services/keywordService';
 import dataSource from 'src/assets/json/personKeywordList.json';
+import { useLanguagePkg } from 'src/hooks/useLanguage';
 
 export interface IKeyword {
   id: number;
-  kind: number;
+  kind: IKeywordsTag['kind'];
   cnname: string;
   enname: string;
 }
@@ -33,6 +34,7 @@ const keywordIdList: IdList = (
 }, []);
 
 export default function PersonKeywords({ value: propsValue, onChange: onClick }: Props): ReactElement {
+  const { language } = useLanguagePkg();
   const { data = [], loading = true }: { data: IKeyword[]; loading: boolean } = useRequest(
     () => keywordService.getList(keywordIdList.join(',')),
     {
@@ -79,6 +81,7 @@ export default function PersonKeywords({ value: propsValue, onChange: onClick }:
                 style={{ marginBottom: 4 }}
                 onClick={e => handleClick(keyword.vcg_keyword_id, e)}
               >
+                {/* {language === 'zh-CN' ? keyword.cnname : keyword.enname} */}
                 {keyword.cnname}
               </Tag>
             ))}

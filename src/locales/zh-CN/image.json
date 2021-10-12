@@ -40,5 +40,8 @@
   "image.copyright.7": "未取得物权授权",
   "image.copyright.9": "未取得肖像权或物权授权",
 
-  "image.error.unselect": "Please select a picture"
+  "image.error.unselect": "请选择图片！",
+
+  "image.setting.qualityRank.message": "",
+  "image.setting.qualityRank.success": ""
 }

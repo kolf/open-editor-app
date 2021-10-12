@@ -1,36 +1,21 @@
 import React, { useEffect, useRef, useCallback, useState, ReactElement } from 'react';
 import { Table } from 'antd';
+import { useIntl } from 'react-intl';
 
 interface Props {
   dataSource: Array<any>;
   onChange: (value: Array<number>) => void;
 }
 
-const defaultKinds = [
-  {
-    label: '主题',
-    value: '0'
-  },
-  {
-    label: '概念',
-    value: '1'
-  },
-  {
-    label: '规格',
-    value: '2'
-  },
-  {
-    label: '人物',
-    value: '3'
-  },
-  {
-    label: '地点',
-    value: '4'
-  }
-];
+const kinds: IKeywordsTag['kind'][] = [0, 1, 2, 3, 4];
 
-export default function KeywordSelectTable({ onChange, dataSource }: Props): ReactElement {
+export default React.memo(function KeywordSelectTable({ onChange, dataSource }: Props): ReactElement {
+  const { formatMessage } = useIntl();
   const [value, setValue] = useState([]);
+  const kindOptions = kinds.map(kind => ({
+    value: kind,
+    label: formatMessage({ id: `keywords.type.${kind}` })
+  }));
 
   useEffect(() => {
     onChange(value);
@@ -43,44 +28,44 @@ export default function KeywordSelectTable({ onChange, dataSource }: Props): Rea
 
   const columns = [
     {
-      title: '中文名',
+      title: formatMessage({ id: 'keywords.details.cnname' }),
       dataIndex: 'cnname',
       key: 'cnname',
       width: 100
     },
     {
-      title: '中文同义词',
+      title: formatMessage({ id: 'keywords.details.cnsyno' }),
       dataIndex: 'cnsyno',
       key: 'cnsyno',
       width: 200,
       render: text => text && text.join(';')
     },
     {
-      title: '英文名',
+      title: formatMessage({ id: 'keywords.details.enname' }),
       dataIndex: 'enname',
       key: 'enname',
       width: 100
     },
     {
-      title: '英文同义词',
+      title: formatMessage({ id: 'keywords.details.ensyno' }),
       dataIndex: 'ensyno',
       key: 'ensyno',
       width: 200,
       render: text => text.join(';')
     },
     {
-      title: '类型 ',
+      title: formatMessage({ id: 'keywords.details.kind' }),
       dataIndex: 'kind',
       key: 'kind',
       width: 50,
       render: text =>
-        defaultKinds.reduce((result, kind) => {
+        kindOptions.reduce((result, kind) => {
           result[kind.value] = kind.label;
           return result;
         }, {})[text] || '---'
     },
     {
-      title: '备注',
+      title: formatMessage({ id: 'keywords.details.memo' }),
       dataIndex: 'memo',
       key: 'memo',
       width: 50
@@ -107,4 +92,4 @@ export default function KeywordSelectTable({ onChange, dataSource }: Props): Rea
       rowKey="id"
     />
   );
-}
+});

@@ -10,10 +10,12 @@ interface IRelease {
   updatedTime?: any;
 }
 
+type IKeywordKind = 0 | 1 | 2 | 3 | 4;
+
 declare interface IKeywordsTag extends Option {
   value: string;
   color?: string;
-  kind?: number;
+  kind?: IKeywordKind;
   type: 0 | 1 | 2;
   source?: keyof IKeywordsAll;
 }

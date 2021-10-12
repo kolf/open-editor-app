@@ -208,7 +208,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -231,7 +231,7 @@ export default React.memo(function List() {
       mod.confirmLoading();
       const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
       mod.close();
-      message.success(`设置通过成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
         idList.map(id => {
           const item = list.find(l => l.id === id);
@@ -256,7 +256,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -307,7 +307,7 @@ export default React.memo(function List() {
         query: { stage: 1, status: 2, standardReason: standardReason.join(','), customReason }
       });
       mod.close();
-      message.success(`设置不通过成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       const reasonTitle = getReasonTitle(standardReason, customReason);
 
@@ -335,7 +335,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -345,7 +345,7 @@ export default React.memo(function List() {
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
-      message.success(`设置等级成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
         idList.map(id => ({
           id,
@@ -363,7 +363,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -373,7 +373,7 @@ export default React.memo(function List() {
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
-      message.success(`设置授权成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       setList(
         idList.map(id => ({
@@ -392,7 +392,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -425,7 +425,7 @@ export default React.memo(function List() {
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '3', value: value } });
       mod.close();
-      message.success(`设置授权成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       setList(
         idList.map(id => ({
@@ -443,7 +443,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -453,13 +453,15 @@ export default React.memo(function List() {
 
       mod = await confirm({
         title: '设置备注',
-        content: <Input placeholder="请输入备注信息" onChange={e => (value = e.target.value)} />
+        content: (
+          <Input placeholder={formatMessage({ id: 'input.placeholder' })} onChange={e => (value = e.target.value)} />
+        )
       });
 
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '4', memo: value } });
       mod.close();
-      message.success(`设置授权成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       setList(
         idList.map(id => ({

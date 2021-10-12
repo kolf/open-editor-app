@@ -1,5 +1,5 @@
 import React, { ReactElement, useState, useCallback, useRef, useEffect } from 'react';
-import { useIntl, FormattedDate } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 import { Button, message, Tag } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import KeywordDetails from 'src/components/modals/KeywordDetails';
@@ -134,9 +134,11 @@ export default React.memo(function KeywordTextArea({
         content: <KeywordSelectTable dataSource={res} onChange={value => (contentValue = value)} />,
         footer: action.includes('select') ? (
           <>
-            <Button onClick={mod.close}>{formatMessage({ id: 'modal.cancelText' })}</Button>
+            <Button onClick={mod.close}>
+              <FormattedMessage id="modal.cancelText" />
+            </Button>
             <Button type="primary" onClick={onOk}>
-              {formatMessage({ id: 'modal.okText' })}
+              <FormattedMessage id="modal.okText" />
             </Button>
           </>
         ) : null

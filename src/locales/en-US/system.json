@@ -8,5 +8,6 @@
   "header.search.button": "Search",
   "header.search.placeholder": "Enter Keywords or ID, using ',' to search multiples",
 
-  "message.api.error": "API Error"
+  "message.api.error": "API Error",
+  "message.setting.success": "Success!"
 }

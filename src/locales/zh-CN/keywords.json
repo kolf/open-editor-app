@@ -8,11 +8,23 @@
   "keywords.source.editor.added": "编辑添加关键词",
   "keywords.source.editor.removed": "编辑删除关键词",
 
-  "keywords.type.theme": "主题",
-  "keywords.type.concept": "概念",
-  "keywords.type.size": "规格",
-  "keywords.type.people": "人物",
-  "keywords.type.address": "地点",
+  "keywords.type.0": "主题",
+  "keywords.type.1": "概念",
+  "keywords.type.2": "规格",
+  "keywords.type.3": "人物",
+  "keywords.type.4": "地点",
+
+  "keywords.mode.all": "展示全部",
+  "keywords.mode.source": "按来源展示",
+  "keywords.mode.kind": "按类型展示",
+
+  "keywords.details.cnname": "中文名",
+  "keywords.details.cnsyno": "中文同义词",
+  "keywords.details.enname": "英文名",
+  "keywords.details.ensyno": "英文同义词",
+  "keywords.details.kind": "类型",
+  "keywords.details.pid": "父ID",
+  "keywords.details.memo": "备注",
 
   "keywords.modal.details": "关键词详情",
   "keywords.modal.select": "选择关键词",

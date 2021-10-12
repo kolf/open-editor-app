@@ -13,6 +13,8 @@ export const useLanguagePkg = () => {
   let languagePkg: any = enUS;
   if (language.includes('zh')) languagePkg = zhCN;
 
+  console.log(language, 'language');
+
   return {
     language,
     languagePkg
