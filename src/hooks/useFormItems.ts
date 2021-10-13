@@ -1,4 +1,3 @@
-import { useLanguagePkg } from './useLanguage';
 import { useIntl } from 'react-intl';
 
 export type IFormItem = {
@@ -6,13 +5,13 @@ export type IFormItem = {
   field: string;
   formType: IFormType;
   placeholder: string;
-  options?: Option[];
+  options?: Option<string>[];
   restProps?: any;
 };
 
 export type IFormType = 'TimeRange' | 'Select' | 'SearchSelect' | 'InputSplit';
 
-export type IFormItemKey = number | { key: number; options: Option[] };
+export type IFormItemKey = number | { key: number; options: Option<string>[] };
 
 export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] {
   const { formatMessage } = useIntl();
@@ -22,7 +21,7 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       key: 1,
       field: 'createdTime',
       formType: 'TimeRange',
-      placeholder: formatMessage({ id: 'formItem.createdTime' }),
+      placeholder: formatMessage({ id: 'image.createdTime' }),
       restProps: {
         width: 240
       }
@@ -31,14 +30,14 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       key: 2,
       field: 'qualityEditTime',
       formType: 'TimeRange',
-      placeholder: formatMessage({ id: 'formItem.editTime' })
+      placeholder: formatMessage({ id: 'image.qualityEditTime' })
     },
     {
       key: 3,
       field: 'qualityAuditorId',
       formType: 'SearchSelect',
       // placeholder: '审核人',
-      placeholder: formatMessage({ id: 'formItem.qualityAuditorId' }),
+      placeholder: formatMessage({ id: 'image.qualityAuditorId' }),
       restProps: {
         type: 'editUser'
       }
@@ -70,21 +69,21 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       field: 'aiQualityScore',
       formType: 'InputSplit',
       // placeholder: 'AI质量评分'
-      placeholder: formatMessage({ id: 'formItem.aiQualityScore' })
+      placeholder: formatMessage({ id: 'image.aiQualityScore' })
     },
     {
       key: 7,
       field: 'aiBeautyScore',
       formType: 'InputSplit',
       // placeholder: 'AI美学评分'
-      placeholder: formatMessage({ id: 'formItem.createdTime' })
+      placeholder: formatMessage({ id: 'image.aiBeautyScore' })
     },
     {
       key: 8,
       field: 'qualityRank',
       formType: 'Select',
       // placeholder: '质量等级',
-      placeholder: formatMessage({ id: 'formItem.qualityRank' }),
+      placeholder: formatMessage({ id: 'image.qualityRank' }),
       options: [
         { value: '1', label: 'A' },
         { value: '2', label: 'B' },
@@ -110,9 +109,9 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       // placeholder: '授权文件',
       placeholder: formatMessage({ id: 'formItem.license' }),
       options: [
-        { value: '1', label: formatMessage({ id: 'image.license.1' }) },
-        { value: '2', label: formatMessage({ id: 'image.license.2' }) },
-        { value: '3', label: formatMessage({ id: 'image.license.3' }) }
+        { value: '1', label: formatMessage({ id: 'image.releaseType.1' }) },
+        { value: '2', label: formatMessage({ id: 'image.releaseType.2' }) },
+        { value: '3', label: formatMessage({ id: 'image.releaseType.3' }) }
       ]
     },
     {

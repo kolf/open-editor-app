@@ -21,6 +21,7 @@ import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/e
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
+import { useOptions } from 'src/hooks/useSelect';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -39,6 +40,7 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
+  const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
 
   const {
     data: { list, total } = initialData,
@@ -150,7 +152,7 @@ export default React.memo(function List() {
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value + ''))
+              .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
               .join(',')
           };
@@ -214,7 +216,10 @@ export default React.memo(function List() {
 
     let mod = null;
     try {
-      mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setResolve' }),
+        content: formatMessage({ id: 'image.action.setResolve.content' })
+      });
 
       const imageList = list
         .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
@@ -267,7 +272,7 @@ export default React.memo(function List() {
     try {
       mod = await confirm({
         width: 820,
-        title: '设置不通过原因',
+        title: formatMessage({ id: 'image.action.setReject' }),
         bodyStyle: { padding: 0 },
         content: (
           <div style={{ margin: -24 }}>
@@ -283,7 +288,7 @@ export default React.memo(function List() {
       });
 
       if (standardReason.length === 0 && !customReason) {
-        message.info(`请选择不通过原因！`);
+        message.info(formatMessage({ id: 'select.placeholder' }));
         return;
       }
 
@@ -341,7 +346,10 @@ export default React.memo(function List() {
 
     let mod = null;
     try {
-      mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setQualityRank' }),
+        content: formatMessage({ id: 'image.action.setQualityRank.content' })
+      });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
@@ -369,7 +377,10 @@ export default React.memo(function List() {
 
     let mod = null;
     try {
-      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setLicenseType' }),
+        content: formatMessage({ id: 'image.action.setLicenseType.content' })
+      });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
@@ -401,7 +412,7 @@ export default React.memo(function List() {
       let value: IImage['copyright'] = null;
 
       mod = await confirm({
-        title: '设置授权',
+        title: formatMessage({ id: 'image.action.setCopyright' }),
         content: (
           <Radio.Group
             onChange={e => {
@@ -419,7 +430,7 @@ export default React.memo(function List() {
         )
       });
       if (!value) {
-        message.info(`请选择授权！`);
+        message.info(formatMessage({ id: 'select.placeholder' }));
         return;
       }
       mod.confirmLoading();
@@ -452,7 +463,7 @@ export default React.memo(function List() {
       let value: IImage['memo'] = '';
 
       mod = await confirm({
-        title: '设置备注',
+        title: formatMessage({ id: 'image.action.setMemo' }),
         content: (
           <Input placeholder={formatMessage({ id: 'input.placeholder' })} onChange={e => (value = e.target.value)} />
         )
@@ -516,13 +527,13 @@ export default React.memo(function List() {
           </Button>
           <Button
             size="small"
-            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) })}
+            title={formatMessage({ id: 'image.action.setResolve' })}
             onClick={e => setResolve(-1)}
             icon={<CheckOutlined />}
           />
           <Button
             size="small"
-            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.reject' }) })}
+            title={formatMessage({ id: 'image.action.setReject' })}
             onClick={e => setReject(-1)}
             icon={<CloseOutlined />}
           />
@@ -532,7 +543,7 @@ export default React.memo(function List() {
           {licenseTypeOptions.map(o => (
             <Button
               size="small"
-              title={formatMessage({ id: 'image.setting' }, { value: o.label })}
+              title={formatMessage({ id: 'image.action.setLicenseType' })}
               onClick={e => setLicenseTypeList(-1, o.value as IImage['licenseType'])}
             >
               {o.label}
@@ -554,19 +565,19 @@ export default React.memo(function List() {
           ))}
           <Button
             size="small"
-            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.releaseFiles' }) })}
+            title={formatMessage({ id: 'image.action.setCopyright' })}
             onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />
           <Button
             size="small"
-            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.memo' }) })}
+            title={formatMessage({ id: 'image.action.setMemo' })}
             onClick={e => setMemoList(-1)}
             icon={<Iconfont type="icon-beizhu" />}
           />
           <Button
             size="small"
-            title={formatMessage({ id: 'image.open.file' })}
+            title={formatMessage({ id: 'image.action.openOriginImage' })}
             onClick={e => openOriginImage(-1)}
             icon={<Iconfont type="icon-tu" />}
           />

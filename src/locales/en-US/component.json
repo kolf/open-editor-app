@@ -26,6 +26,13 @@
   "modal.cancelText": "Cancel",
   "modal.submitText": "Submit",
 
+  "updateKeywords.personKeyword": "People related",
+
+  "findAndReplace": "Replace",
+  "findAndReplace.title": "Title content",
+  "findAndReplace.positionType.content": "Content",
+  "findAndReplace.positionType.after": "After",
+  "findAndReplace.positionType.before": "Before",
   "findAndReplace.search.placeholder": "Please enter search content",
   "findAndReplace.replace.placeholder": "Please enter replacement content",
 

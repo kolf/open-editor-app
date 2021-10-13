@@ -7,7 +7,6 @@ import useFormItems, { IFormItem, IFormItemKey } from 'src/hooks/useFormItems';
 
 import 'src/styles/FormList.less';
 
-const { Option } = Select;
 const { RangePicker } = DatePicker;
 
 interface Props {
@@ -26,7 +25,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
   const [collapse, setCollapse] = useState(false);
   const values = form.getFieldsValue();
 
-  const renderFormItem = ({ restProps, formType, field, placeholder, options = [] }: IFormItem): ReactElement => {
+  const renderFormItem = ({ restProps, formType, field, placeholder, options }: IFormItem): ReactElement => {
     // console.log(options, 'options');
     switch (formType) {
       case 'TimeRange':
@@ -41,10 +40,10 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
       case 'Select':
         return (
           <Select allowClear filterOption={filterOption} showSearch style={{ width: 110 }} placeholder={placeholder}>
-            {options.map(o => (
-              <Option key={o.value} value={o.value}>
+            {(options || []).map(o => (
+              <Select.Option key={o.value} value={o.value}>
                 {o.label}
-              </Option>
+              </Select.Option>
             ))}
           </Select>
         );

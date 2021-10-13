@@ -1,7 +1,6 @@
 import React, { ReactElement } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { Select, Pagination, Space } from 'antd';
-const { Option } = Select;
 
 export interface Props {
   total?: number;
@@ -35,9 +34,9 @@ export default React.memo(function Pager({ onChange, ...restProps }: Props): Rea
         onChange={(pageSize: number) => onChange({ pageSize: pageSize })}
       >
         {pageOptions.map(o => (
-          <Option key={o} value={o}>
+          <Select.Option key={o} value={o}>
             <FormattedMessage id="pager.result.size" values={{ size: o }} />
-          </Option>
+          </Select.Option>
         ))}
       </Select>
     </Space>

@@ -248,7 +248,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   const showMiddleImage = (index: number) => {
     const { urlSmall } = listRef.current[index];
     const mod = modal({
-      title: formatMessage({ id: 'image.show.middleImage' }),
+      title: formatMessage({ id: 'image.action.showMiddleImage' }),
       width: 640,
       content: (
         <div className="image-max">

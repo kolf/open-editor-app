@@ -4,8 +4,6 @@ import { Tag } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import keywordService from 'src/services/keywordService';
 import dataSource from 'src/assets/json/personKeywordList.json';
-import { useLanguagePkg } from 'src/hooks/useLanguage';
-
 export interface IKeyword {
   id: number;
   kind: IKeywordsTag['kind'];
@@ -26,15 +24,15 @@ interface Props {
   onChange: (checked: boolean, clickedKeyword: IKeyword) => void; // TODO 无法使用onClick?
 }
 
-const keywordIdList: IdList = (
-  dataSource as Array<{ name: string; id: number; children: Array<IPersonKeyword> }>
-).reduce((result, item) => {
-  const idList = item.children.map(c => c.vcg_keyword_id);
-  return [...result, ...idList];
-}, []);
+const keywordIdList: IdList = (dataSource as { name: string; id: number; children: IPersonKeyword[] }[]).reduce(
+  (result, item) => {
+    const idList = item.children.map(c => c.vcg_keyword_id);
+    return [...result, ...idList];
+  },
+  []
+);
 
-export default function PersonKeywords({ value: propsValue, onChange: onClick }: Props): ReactElement {
-  const { language } = useLanguagePkg();
+export default React.memo(function PersonKeywords({ value: propsValue, onChange: onClick }: Props): ReactElement {
   const { data = [], loading = true }: { data: IKeyword[]; loading: boolean } = useRequest(
     () => keywordService.getList(keywordIdList.join(',')),
     {
@@ -89,4 +87,4 @@ export default function PersonKeywords({ value: propsValue, onChange: onClick }:
       ))}
     </>
   );
-}
+});

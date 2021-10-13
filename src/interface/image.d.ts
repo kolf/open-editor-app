@@ -12,7 +12,8 @@ interface IRelease {
 
 type IKeywordKind = 0 | 1 | 2 | 3 | 4;
 
-declare interface IKeywordsTag extends Option {
+declare interface IKeywordsTag {
+  label: string;
   value: string;
   color?: string;
   kind?: IKeywordKind;
@@ -98,7 +99,7 @@ declare type IImage = Partial<{
   caption: string;
   qualityRank: '1' | '2' | '3' | '4';
   licenseType: '1' | '2';
-  copyright: string;
+  copyright: '0' | '1' | '2' | '3' | '7' | '9';
   urlSmall: string;
   urlYuan: string;
   aiQualityScore: number;
@@ -116,6 +117,7 @@ declare type IImage = Partial<{
   osiImageReview: IOsiImageReview;
   osiKeywodsData: IOsiKeywodsData;
   releases: IRelease[];
+  releaseType: '1' | '2' | '3';
   sensitiveList: any[]; // TODO 待优化
 }>;
 

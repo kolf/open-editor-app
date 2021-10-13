@@ -1,6 +1,7 @@
 {
   "formItem.dropdown.up": "收缩",
   "formItem.dropdown.down": "展开",
+
   "formItem.qualityAuditorId": "审核人",
   "formItem.createdTime": "入库时间",
   "formItem.editTime": "审核时间",
@@ -26,6 +27,13 @@
   "modal.cancelText": "取消",
   "modal.submitText": "提交",
 
+  "updateKeywords.personKeyword": "People related",
+
+  "findAndReplace": "Replace",
+  "findAndReplace.title": "Title content",
+  "findAndReplace.positionType.content": "Replace",
+  "findAndReplace.positionType.after": "Replace",
+  "findAndReplace.positionType.befored": "Replace",
   "findAndReplace.search.placeholder": "请输入查找的内容",
   "findAndReplace.replace.placeholder": "请输入替换的内容",
 

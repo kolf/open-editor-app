@@ -12,7 +12,7 @@ import PersonKeywords, { IKeyword } from 'src/components/modals/PersonKeywords';
 import keywordService from 'src/services/keywordService';
 import { uniq } from 'src/components/KeywordTextArea';
 import * as tools from 'src/utils/tools';
-import { useIntl } from 'react-intl';
+import { useIntl, FormattedMessage } from 'react-intl';
 
 export type IListItem = Required<Pick<IImage, 'id' | 'keywordTags'>>;
 
@@ -21,7 +21,7 @@ type Props<T> = {
   onChange: (list: T) => void;
 };
 
-export default function UpdateKeywords({ defaultList, onChange }: Props<IListItem[]>): ReactElement {
+export default React.memo(function UpdateKeywords({ defaultList, onChange }: Props<IListItem[]>): ReactElement {
   const { formatMessage } = useIntl();
   const [keywordMode, setKeywordMode] = useState<ModeType>('source');
   const [list, setList] = useState(defaultList);
@@ -128,7 +128,7 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
       <div>
         <Dropdown overlay={personKeywordsOverlay} arrow>
           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-            人相关词 <DownOutlined />
+            <FormattedMessage id="updateKeywords.personKeyword" /> <DownOutlined />
           </a>
         </Dropdown>
         <div style={{ float: 'right', paddingBottom: 6 }}>
@@ -157,9 +157,11 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
       </div>
       <KeywordTextAreaGroup size="small" value={value} onChange={handleChange} mode={keywordMode} />
       <div style={{ position: 'relative', paddingLeft: 70, paddingTop: 12 }}>
-        <label style={{ position: 'absolute', left: 0, top: 36 }}>查找&替换：</label>
+        <label style={{ position: 'absolute', left: 0, top: 36 }}>
+          <FormattedMessage id="findAndReplace" />：
+        </label>
         <FindAndReplace onFinish={onReplace} />
       </div>
     </>
   );
-}
+});

@@ -13,7 +13,7 @@ type Props<T> = {
 };
 
 //
-const defaultKinds: Option[] = [
+const defaultKinds: Option<number>[] = [
   {
     label: '主题',
     value: 0
@@ -40,7 +40,7 @@ const removedSourceType = `aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKey
 export const removedSourceTypeReg = new RegExp(`^(${removedSourceType})$`);
 const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replace(/Del/g, '')})$`);
 
-const sourceTypes: Option[] = [
+const sourceTypes: Option<string>[] = [
   {
     label: 'AI关键词（用户勾选）',
     value: 'aiKeywordsSelected'

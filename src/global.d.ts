@@ -23,9 +23,9 @@ declare interface AntdOptions {
   label: string;
 }
 
-declare interface Option {
-  value: string | number;
+declare type Option<T> = {
+  value: T;
   label: string;
-}
+};
 
 declare type IdList = number[];

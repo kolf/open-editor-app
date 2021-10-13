@@ -203,13 +203,16 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     let mod = null;
     try {
-      mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setResolve' }),
+        content: formatMessage({ id: 'image.action.setResolve.content' })
+      });
 
       const imageList = list
         .filter(item => idList.includes(item.id) && item.osiImageReview.keywordsCallbackStatus !== 2)

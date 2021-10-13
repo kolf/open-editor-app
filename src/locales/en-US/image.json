@@ -4,8 +4,29 @@
   "image.log.user": "User",
   "image.log.actions": "Actions",
 
-  "image.memo": "Memo",
+  "image.action.showMiddleImage": "View Image",
+  "image.action.openOriginImage": "Open File",
+  "image.action.setResolve": "Set Resolve",
+  "image.action.setResolve.content": "Are you sure to set selected Accepted for selected photos?",
+  "image.action.setReject": "Set Reject",
+  "image.action.setQualityRank": "Quality grade/level Settings",
+  "image.action.setQualityRank.content": "Are you sure to set selected Quality grade/level for selected photos?",
+  "image.action.setLicenseType": "RF/RM Settings",
+  "image.action.setLicenseType.content": "Are you sure to set selected RF/RM for selected photos?",
+  "image.action.setCopyright": "Copyright Settings",
+  "image.action.setCopyright.placeholder": "Select Copyright",
+  "image.action.setMemo": "Notes Settings",
+  "image.action.setMemo.placeholder": "Enter notes",
+
+  "image.memo": "Notes",
   "image.releaseFiles": "Release Files",
+
+  "image.qualityAuditorId": "Editors",
+  "image.createdTime": "Submission Date",
+  "image.qualityEditTime": "Review Date",
+  "image.aiQualityScore": "LAI",
+  "image.aiBeautyScore": "AAI",
+  "image.qualityRank": "Quality Level",
 
   "image.review": "Actions",
   "image.update": "Edit",
@@ -16,7 +37,6 @@
   "image.show.middleImage": "View Image",
   "image.resolve": "Accepted",
   "image.reject": "Reject",
-  "image.qualityRank": "Quality Level",
 
   "image.status.14": "To be Reviewed",
   "image.status.15": "To be Reviewed (Exempt)",
@@ -26,13 +46,20 @@
   "image.priority.1": "Medium(Normal)",
   "image.priority.2": "High",
 
-  "image.license.1": "肖像权文件",
-  "image.license.2": "物权文件",
-  "image.license.3": "拍摄许可文件",
+  "image.releaseType.1": "Has Model Release",
+  "image.releaseType.2": "Has Property Release",
+  "image.releaseType.3": "Photography License File",
+  "image.releaseType.s.1": "MR File",
+  "image.releaseType.s.2": "PR File",
+  "image.releaseType.s.3": "PL",
 
-  "image.haveSensitve.0": "未命中敏感词",
-  "image.haveSensitve.1": "命中敏感词",
+  "image.liceseType.1": "RM",
+  "image.liceseType.2": "RF",
 
+  "image.haveSensitve.0": "No NSFW",
+  "image.haveSensitve.1": "Have NSFW",
+
+  "image.copyright": "Copyright",
   "image.copyright.0": "MR or PR is not Required",
   "image.copyright.1": "Have MR",
   "image.copyright.2": "Have MR and PR",
@@ -40,5 +67,9 @@
   "image.copyright.7": "Have PR",
   "image.copyright.9": "No MR or PR",
 
-  "image.error.unselect": "Please select a picture"
+  "iamge.callbackStatus.2": "",
+
+  "image.error.unselect": "Please select a picture",
+  "image.setting.qualityRank.message": "",
+  "image.setting.qualityRank.success": ""
 }
