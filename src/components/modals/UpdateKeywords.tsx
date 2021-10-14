@@ -17,11 +17,16 @@ import { useIntl, FormattedMessage } from 'react-intl';
 export type IListItem = Required<Pick<IImage, 'id' | 'keywordTags'>>;
 
 type Props<T> = {
+  langType: IImage['osiKeywodsData']['langType'];
   defaultList: T;
   onChange: (list: T) => void;
 };
 
-export default React.memo(function UpdateKeywords({ defaultList, onChange }: Props<IListItem[]>): ReactElement {
+export default React.memo(function UpdateKeywords({
+  langType,
+  defaultList,
+  onChange
+}: Props<IListItem[]>): ReactElement {
   const { formatMessage } = useIntl();
   const [keywordMode, setKeywordMode] = useState<ModeType>('source');
   const [list, setList] = useState(defaultList);
@@ -112,14 +117,19 @@ export default React.memo(function UpdateKeywords({ defaultList, onChange }: Pro
   };
 
   const handlePersonKeywordClick = (checked: boolean, keyword: IKeyword) => {
-    const newValue: IKeywordsTag = { value: keyword.id + '', label: keyword.cnname, kind: keyword.kind, type: 1 };
+    const newValue: IKeywordsTag = {
+      value: keyword.id + '',
+      label: keyword[langType === 1 ? 'cnname' : 'enname'],
+      kind: keyword.kind,
+      type: 1
+    };
     const nextValue = checked ? [...value, newValue] : value.filter(v => v.value !== newValue.value);
     handleChange(...updateValueSource(value, nextValue));
   };
 
   const personKeywordsOverlay = (
     <Menu style={{ padding: 16, width: 712 }}>
-      <PersonKeywords value={personKeywordIdList} onChange={handlePersonKeywordClick} />
+      <PersonKeywords langType={langType} value={personKeywordIdList} onChange={handlePersonKeywordClick} />
     </Menu>
   );
 
@@ -155,7 +165,7 @@ export default React.memo(function UpdateKeywords({ defaultList, onChange }: Pro
           </Radio.Group>
         </div>
       </div>
-      <KeywordTextAreaGroup size="small" value={value} onChange={handleChange} mode={keywordMode} />
+      <KeywordTextAreaGroup langType={langType} size="small" value={value} onChange={handleChange} mode={keywordMode} />
       <div style={{ position: 'relative', paddingLeft: 90, paddingTop: 12 }}>
         <label style={{ position: 'absolute', left: 0, top: 36 }}>
           <FormattedMessage id="findAndReplace" />：

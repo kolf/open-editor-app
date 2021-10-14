@@ -73,6 +73,7 @@
   "image.callbackStatus.2": "Waiting for confirmation！",
 
   "image.error.unselect": "Please select a picture",
+  "image.error.langeType": "Inconsistent language types!",
   "image.setting.qualityRank.message": "",
   "image.setting.qualityRank.success": ""
 }
