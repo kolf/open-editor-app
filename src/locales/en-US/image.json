@@ -6,9 +6,9 @@
 
   "image.action.showMiddleImage": "View Image",
   "image.action.openOriginImage": "Open File",
-  "image.action.setResolve": "Set Resolve",
+  "image.action.setResolve": "Pass",
   "image.action.setResolve.content": "Are you sure to set selected Accepted for selected photos?",
-  "image.action.setReject": "Set Reject",
+  "image.action.setReject": "Fail",
   "image.action.setQualityRank": "Quality grade/level Settings",
   "image.action.setQualityRank.content": "Are you sure to set selected Quality grade/level for selected photos?",
   "image.action.setLicenseType": "RF/RM Settings",

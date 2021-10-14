@@ -38,7 +38,8 @@ export default React.memo(function ListItem({
   const copyrightOptions = useOptions<IImage['copyright']>('image.copyright', ['0', '1', '2', '3', '7', '9']);
   const licenseTypeOptions = useOptions<IImage['licenseType']>('image.liceseType', ['1', '2']);
   const licenseOptions = useOptions<IImage['releaseType']>('image.releaseType.s', ['1', '2']);
-  const disabledMessage = dataSource.osiImageReview.callbackStatus === 2 ? '等待社区审核中' : '';
+  const disabledMessage =
+    dataSource.osiImageReview.callbackStatus === 2 ? formatMessage({ id: 'image.callbackStatus.2' }) : '';
 
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
 
@@ -69,13 +70,13 @@ export default React.memo(function ListItem({
         {
           icon: <CheckOutlined />,
           value: 'resolve',
-          label: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) }),
+          label: formatMessage({ id: 'image.action.setResolve' }),
           disabledMessage
         },
         {
           icon: <CloseOutlined />,
           value: 'reject',
-          label: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.reject' }) }),
+          label: formatMessage({ id: 'image.action.setReject' }),
           disabledMessage
         },
         { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }

@@ -37,7 +37,8 @@ export default React.memo(function ListItem({
   onChange
 }: Props<IImage>): ReactElement {
   const { formatMessage } = useIntl();
-  const disabledMessage = dataSource.osiImageReview.keywordsCallbackStatus === 2 ? '等待社区审核中' : '';
+  const disabledMessage =
+    dataSource.osiImageReview.keywordsCallbackStatus === 2 ? formatMessage({ id: 'image.callbackStatus.2' }) : '';
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
 
   // TODO 待优化
@@ -67,7 +68,7 @@ export default React.memo(function ListItem({
         {
           icon: <CheckOutlined />,
           value: 'resolve',
-          label: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) }),
+          label: formatMessage({ id: 'image.action.setResolve' }),
           disabledMessage
         },
         { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }

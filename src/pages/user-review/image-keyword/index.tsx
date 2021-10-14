@@ -323,7 +323,7 @@ export default React.memo(function List() {
           </Button>
           <Button
             size="small"
-            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) })}
+            title={formatMessage({ id: 'image.action.setResolve' })}
             onClick={e => setResolve(-1)}
             icon={<CheckOutlined />}
           />
