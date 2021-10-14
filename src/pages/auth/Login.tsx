@@ -4,15 +4,13 @@ import { useHistory } from 'react-router';
 import { Button, Col, Form, Input, Row, Checkbox, message } from 'antd';
 import { login } from 'src/features/auth/authenticate';
 import { PATH } from 'src/routes/path';
-import logoUrl from 'src/assets/img/logo.svg';
 import './styles.less';
-import { FormattedMessage } from 'react-intl';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useLanguage } from 'src/hooks/useLanguage';
 import { setLanguage } from 'src/features/language/language';
 
-Login.propTypes = {};
-
-function Login() {
+export default React.memo(function Login() {
+  const { formatMessage } = useIntl();
   const dispatch = useDispatch();
   const history = useHistory();
   const [forgot, setForgot] = useState(true);
@@ -54,11 +52,11 @@ function Login() {
           </h1>
         </div>
         <Form initialValues={{ userName: localStorage.getItem('userName') }} onFinish={onFinish}>
-          <Form.Item name="userName" rules={[{ required: true, message: '请输入用户名！' }]}>
-            <Input size="large" placeholder="请输入用户名" />
+          <Form.Item name="userName" rules={[{ required: true, message: formatMessage({ id: 'input.placeholder' }) }]}>
+            <Input size="large" placeholder={formatMessage({ id: 'input.placeholder' })} />
           </Form.Item>
-          <Form.Item name="password" rules={[{ required: true, message: '请输入用户密码!' }]}>
-            <Input.Password size="large" placeholder="请输入用户密码" />
+          <Form.Item name="password" rules={[{ required: true, message: formatMessage({ id: 'input.placeholder' }) }]}>
+            <Input.Password size="large" placeholder={formatMessage({ id: 'input.placeholder' })} />
           </Form.Item>
           <Form.Item>
             <Button size="large" type="primary" htmlType="submit" loading={loading} block>
@@ -85,6 +83,4 @@ function Login() {
       </div>
     </Row>
   );
-}
-
-export default Login;
+});

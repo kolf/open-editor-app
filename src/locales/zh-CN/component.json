@@ -27,13 +27,13 @@
   "modal.cancelText": "取消",
   "modal.submitText": "提交",
 
-  "updateKeywords.personKeyword": "People related",
+  "updateKeywords.personKeyword": "人物关键词",
 
-  "findAndReplace": "Replace",
-  "findAndReplace.title": "Title content",
-  "findAndReplace.positionType.content": "Replace",
-  "findAndReplace.positionType.after": "Replace",
-  "findAndReplace.positionType.befored": "Replace",
+  "findAndReplace": "查找&替换",
+  "findAndReplace.title": "标题内容",
+  "findAndReplace.positionType.content": "替换",
+  "findAndReplace.positionType.after": "前追加",
+  "findAndReplace.positionType.befored": "后追加",
   "findAndReplace.search.placeholder": "请输入查找的内容",
   "findAndReplace.replace.placeholder": "请输入替换的内容",
 
@@ -42,5 +42,9 @@
   "pager.select.total": "已选中{total}条",
   "pager.select.all": "全选",
   "pager.select.invert": "反选",
-  "pager.select.cancel": "取消"
+  "pager.select.cancel": "取消",
+
+  "table.column.no": "序号",
+  "table.column.fileName": "文件名",
+  "table.column.actions": "操作"
 }

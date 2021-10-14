@@ -18,6 +18,9 @@
   "image.action.setMemo": "设置备注",
   "image.action.setMemo.placeholder": "请输入备注信息",
 
+  "image.action.liceseFile": "肖像权/物权文件",
+  "image.action.openLiceseFile": "查看源文件",
+
   "image.memo": "备注",
   "image.releaseFiles": "授权",
 
@@ -67,8 +70,9 @@
   "image.copyright.7": "未取得物权授权",
   "image.copyright.9": "未取得肖像权或物权授权",
 
-  "image.error.unselect": "请选择图片！",
+  "image.callbackStatus.2": "等待社区审核中！",
 
+  "image.error.unselect": "请选择图片！",
   "image.setting.qualityRank.message": "",
   "image.setting.qualityRank.success": ""
 }

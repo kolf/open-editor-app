@@ -1,6 +1,6 @@
 import React, { ReactElement, useState, useCallback, useRef, useEffect } from 'react';
 import { useIntl, FormattedMessage } from 'react-intl';
-import { Button, message, Tag } from 'antd';
+import { Button, message, Tag, Input } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import KeywordDetails from 'src/components/modals/KeywordDetails';
 import KeywordSelectTable from 'src/components/modals/KeywordSelectTable';
@@ -9,6 +9,8 @@ import * as tools from 'src/utils/tools';
 import { useDoubleClick } from 'src/hooks/useDoubleClick';
 import keywordService from 'src/services/keywordService';
 import 'src/styles/KeywordTextArea.less';
+
+const TextArea = Input.TextArea;
 
 type actionType = 'add' | 'remove' | 'select';
 
@@ -191,6 +193,7 @@ export default React.memo(function KeywordTextArea({
   }
 
   async function handleTextAreaBlur() {
+    console.log('error');
     await matchTextAreaValue();
     setContenteditable(false);
   }
@@ -246,7 +249,7 @@ export default React.memo(function KeywordTextArea({
           placeholder={placeholder || defaultPlaceholder}
           className="KeywordTextArea-textarea"
           style={{ width: wrapRef.current.clientWidth - 4, height: wrapRef.current.clientHeight - 8 }}
-          value={textAreaValue}
+          defaultValue={textAreaValue}
           onChange={e => setTextAreaValue(e.target.value)}
           onBlur={handleTextAreaBlur}
         />

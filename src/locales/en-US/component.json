@@ -28,11 +28,11 @@
 
   "updateKeywords.personKeyword": "People related",
 
-  "findAndReplace": "Replace",
-  "findAndReplace.title": "Title content",
-  "findAndReplace.positionType.content": "Content",
-  "findAndReplace.positionType.after": "After",
-  "findAndReplace.positionType.before": "Before",
+  "findAndReplace": "Search&Replace",
+  "findAndReplace.title": "Title",
+  "findAndReplace.positionType.content": "Replace",
+  "findAndReplace.positionType.after": "Add to before",
+  "findAndReplace.positionType.before": "Add to end",
   "findAndReplace.search.placeholder": "Please enter search content",
   "findAndReplace.replace.placeholder": "Please enter replacement content",
 
@@ -41,5 +41,9 @@
   "pager.select.total": "{total} Selected",
   "pager.select.all": "Select All",
   "pager.select.invert": "Invert",
-  "pager.select.cancel": "Cancel"
+  "pager.select.cancel": "Cancel",
+
+  "table.column.no": "No.",
+  "table.column.fileName": "File Name",
+  "table.column.actions": "Actions"
 }

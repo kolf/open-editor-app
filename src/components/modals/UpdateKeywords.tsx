@@ -156,7 +156,7 @@ export default React.memo(function UpdateKeywords({ defaultList, onChange }: Pro
         </div>
       </div>
       <KeywordTextAreaGroup size="small" value={value} onChange={handleChange} mode={keywordMode} />
-      <div style={{ position: 'relative', paddingLeft: 70, paddingTop: 12 }}>
+      <div style={{ position: 'relative', paddingLeft: 90, paddingTop: 12 }}>
         <label style={{ position: 'absolute', left: 0, top: 36 }}>
           <FormattedMessage id="findAndReplace" />：
         </label>

@@ -29,7 +29,7 @@ export default React.memo(function UpdateTitle({ onAdd, onReplace }: Props): Rea
   };
 
   return (
-    <Form labelCol={{ span: 4 }} wrapperCol={{ span: 20 }} autoComplete="off">
+    <Form labelCol={{ span: 5 }} wrapperCol={{ span: 19 }} autoComplete="off">
       <Form.Item label={formatMessage({ id: 'findAndReplace.title' })} name="content">
         <>
           <Radio.Group
@@ -51,7 +51,7 @@ export default React.memo(function UpdateTitle({ onAdd, onReplace }: Props): Rea
           </Radio.Group>
           <Input
             placeholder={formatMessage({ id: 'input.placeholder' })}
-            style={{ width: 321 }}
+            style={{ width: 298 }}
             onChange={e => handleChange('addValue', e.target.value)}
           />
           <Button style={{ marginLeft: 2 }} onClick={e => onAdd(state.addValue, state.positionType)}>

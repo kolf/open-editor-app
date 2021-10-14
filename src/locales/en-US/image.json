@@ -18,6 +18,9 @@
   "image.action.setMemo": "Notes Settings",
   "image.action.setMemo.placeholder": "Enter notes",
 
+  "image.action.liceseFile": "Model/Property Release",
+  "image.action.openLiceseFile": "Open File",
+
   "image.memo": "Notes",
   "image.releaseFiles": "Release Files",
 
@@ -67,7 +70,7 @@
   "image.copyright.7": "Have PR",
   "image.copyright.9": "No MR or PR",
 
-  "iamge.callbackStatus.2": "",
+  "image.callbackStatus.2": "Waiting for confirmation！",
 
   "image.error.unselect": "Please select a picture",
   "image.setting.qualityRank.message": "",

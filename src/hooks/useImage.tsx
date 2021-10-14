@@ -154,7 +154,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
 
     function onReplace(searchValue: string, replaceValue: string) {
       if (!searchValue) {
-        message.info(`请输入查找内容！`);
+        message.info(formatMessage({ id: 'input.placeholder' }));
         return;
       }
       const currentList = listRef.current;
