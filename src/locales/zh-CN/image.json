@@ -73,6 +73,7 @@
   "image.callbackStatus.2": "等待社区审核中！",
 
   "image.error.unselect": "请选择图片！",
+  "image.error.langeType": "图片数据类型不一致!",
   "image.setting.qualityRank.message": "",
   "image.setting.qualityRank.success": ""
 }

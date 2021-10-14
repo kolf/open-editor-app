@@ -87,6 +87,14 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       return;
     }
 
+    const selectedList = listRef.current.filter(item => idList.includes(item.id));
+
+    if (!checkListLangType(selectedList)) {
+      message.info(formatMessage({ id: 'image.error.langeType' }));
+      return;
+    }
+
+    const langType = list[0].osiKeywodsData.langType;
     const mod = modal({
       title: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.keywords' }) }),
       width: 760,
@@ -94,15 +102,14 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       content: (
         <UpdateKeywords
           onChange={update}
-          defaultList={listRef.current
-            .filter(item => idList.includes(item.id))
-            .map(
-              item =>
-                ({
-                  id: item.id,
-                  keywordTags: item.keywordTags.map(k => ({ ...k, color: null }))
-                } as IKeywordsInListItem)
-            )}
+          langType={langType}
+          defaultList={selectedList.map(
+            item =>
+              ({
+                id: item.id,
+                keywordTags: item.keywordTags.map(k => ({ ...k, color: null }))
+              } as IKeywordsInListItem)
+          )}
         />
       ),
       footer: null
@@ -111,6 +118,11 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
     async function update(list) {
       let nextList = await imageService.checkAmbiguityKeywords(list);
       setSelectedList(nextList);
+    }
+
+    function checkListLangType(list: IImage[]): boolean {
+      const langType = list[0].osiKeywodsData.langType;
+      return list.every(item => item.osiKeywodsData.langType === langType);
     }
   };
 

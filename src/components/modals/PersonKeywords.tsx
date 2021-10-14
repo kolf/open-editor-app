@@ -20,6 +20,7 @@ interface IPersonKeyword {
 }
 
 interface Props {
+  langType: IImage['osiKeywodsData']['langType'];
   value: IdList;
   onChange: (checked: boolean, clickedKeyword: IKeyword) => void; // TODO 无法使用onClick?
 }
@@ -32,7 +33,11 @@ const keywordIdList: IdList = (dataSource as { name: string; id: number; childre
   []
 );
 
-export default React.memo(function PersonKeywords({ value: propsValue, onChange: onClick }: Props): ReactElement {
+export default React.memo(function PersonKeywords({
+  langType,
+  value: propsValue,
+  onChange: onClick
+}: Props): ReactElement {
   const { data = [], loading = true }: { data: IKeyword[]; loading: boolean } = useRequest(
     () => keywordService.getList(keywordIdList.join(',')),
     {
@@ -79,8 +84,7 @@ export default React.memo(function PersonKeywords({ value: propsValue, onChange:
                 style={{ marginBottom: 4 }}
                 onClick={e => handleClick(keyword.vcg_keyword_id, e)}
               >
-                {/* {language === 'zh-CN' ? keyword.cnname : keyword.enname} */}
-                {keyword.cnname}
+                {keyword[langType === 1 ? 'cnname' : 'enname']}
               </Tag>
             ))}
         </div>
