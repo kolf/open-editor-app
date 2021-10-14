@@ -1,13 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Collapse, Checkbox, Input, message } from 'antd';
+import { useIntl } from 'react-intl';
 const { Panel } = Collapse;
 
 interface Props {
-  dataSource: any;
-  onChange?: any;
+  dataSource: any; // TODO
+  onChange?: (value: string[], otherValue: string) => void;
 }
 
 const SelectReject = ({ dataSource, onChange }: Props) => {
+  const { formatMessage } = useIntl();
   const [value, setValue] = useState([]);
   const [otherValue, setOtherValue] = useState('');
 
@@ -17,7 +19,7 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
     let nextValue = [];
     if (checked) {
       if (value.length >= 3) {
-        message.info(`最多选择三个不通过原因，请取消一个再选择~！`);
+        message.info(formatMessage({ id: 'selectRejct.error' }));
         return;
       }
       nextValue = [...value, newValue];
@@ -67,11 +69,11 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
         </Panel>
       ))}
 
-      <Panel header="其他原因" key="other">
+      <Panel header={formatMessage({ id: 'selectReject.otherValue' })} key="other">
         <Input
           type="textarea"
           value={otherValue}
-          placeholder="请输入其它原因"
+          placeholder={formatMessage({ id: 'input.placeholder' })}
           onChange={e => {
             const propsValue = value.filter(v => v !== 'other');
             const otherValue = e.target.value;

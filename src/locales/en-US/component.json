@@ -18,6 +18,8 @@
 
   "input.placeholder": "Please enter",
   "select.placeholder": "Please choose",
+  "inputNumber.max": "Max",
+  "inputNumber.min": "Min",
 
   "list.nodata": "No Results, please try other filters",
   "list.loading": "Loading...",
@@ -35,6 +37,9 @@
   "findAndReplace.positionType.before": "Add to end",
   "findAndReplace.search.placeholder": "Please enter search content",
   "findAndReplace.replace.placeholder": "Please enter replacement content",
+
+  "selectReject.error": "more than three",
+  "selectReject.otherValue": "Other",
 
   "pager.result.total": "{total} results",
   "pager.result.size": "{size}/page",
