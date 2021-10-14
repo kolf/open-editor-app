@@ -1,0 +1,50 @@
+{
+  "formItem.dropdown.up": "收缩",
+  "formItem.dropdown.down": "展开",
+
+  "formItem.qualityAuditorId": "审核人",
+  "formItem.createdTime": "入库时间",
+  "formItem.editTime": "审核时间",
+  "formItem.qualityStatus": "审核状态",
+  "formItem.osiProviderId": "数据来源",
+  "formItem.aiQualityScore": "AI质量评分",
+  "formItem.aiBeautyScore": "AI美学评分",
+  "formItem.qualityRank": "质量等级",
+  "formItem.priority": "优先级",
+  "formItem.license": "授权文件",
+  "formItem.haveSensitve": "敏感词",
+  "formItem.licenseType": "授权",
+  "formItem.category": "AI分类",
+  "formItem.keywordsStatus": "审核状态",
+
+  "input.placeholder": "请输入！",
+  "select.placeholder": "请选择！",
+
+  "list.nodata": "可能这个资源已经飞走了，请修改搜索条件",
+  "list.loading": "加载中...",
+
+  "modal.okText": "确定",
+  "modal.cancelText": "取消",
+  "modal.submitText": "提交",
+
+  "updateKeywords.personKeyword": "人物关键词",
+
+  "findAndReplace": "查找&替换",
+  "findAndReplace.title": "标题内容",
+  "findAndReplace.positionType.content": "替换",
+  "findAndReplace.positionType.after": "前追加",
+  "findAndReplace.positionType.befored": "后追加",
+  "findAndReplace.search.placeholder": "请输入查找的内容",
+  "findAndReplace.replace.placeholder": "请输入替换的内容",
+
+  "pager.result.total": "共{total}条",
+  "pager.result.size": "{size}条/页",
+  "pager.select.total": "已选中{total}条",
+  "pager.select.all": "全选",
+  "pager.select.invert": "反选",
+  "pager.select.cancel": "取消",
+
+  "table.column.no": "序号",
+  "table.column.fileName": "文件名",
+  "table.column.actions": "操作"
+}

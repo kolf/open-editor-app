@@ -8,10 +8,9 @@ import { removedSourceTypeReg } from 'src/components/KeywordTextAreaGroup';
 import UpdateTitle, { PositionType } from 'src/components/modals/UpdateTitle';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import imageService from 'src/services/imageService';
-import keywordService from 'src/services/keywordService';
 import modal from 'src/utils/modal';
 import * as tools from 'src/utils/tools';
-
+import { FormattedMessage, useIntl } from 'react-intl';
 
 type ITitleInListItem = Required<Pick<IImage, 'id' | 'title'>>;
 
@@ -21,6 +20,7 @@ interface Props<T> {
 }
 
 export default function useImage({ list, onChange }: Props<IImage[]>) {
+  const { formatMessage } = useIntl();
   const { reasonMap } = React.useContext(DataContext);
   const listRef = useRef<IImage[] | null>(list);
   const [selectedIds, setSelectedIds] = useState<IdList>([]);
@@ -83,12 +83,12 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
 
   const updateKeywords = (idList: IdList): void => {
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     const mod = modal({
-      title: `修改关键词`,
+      title: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.keywords' }) }),
       width: 760,
       autoIndex: false,
       content: (
@@ -117,12 +117,12 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   // 修改标题
   const updateTitle = (idList: IdList): void => {
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     const mod = modal({
-      title: `修改标题`,
+      title: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.title' }) }),
       content: <UpdateTitle onAdd={onAdd} onReplace={onReplace} />,
       footer: null
     });
@@ -154,7 +154,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
 
     function onReplace(searchValue: string, replaceValue: string) {
       if (!searchValue) {
-        message.info(`请输入查找内容！`);
+        message.info(formatMessage({ id: 'input.placeholder' }));
         return;
       }
       const currentList = listRef.current;
@@ -169,7 +169,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   // 显示图片详情
   const showDetails = async (index: number) => {
     const mod = modal({
-      title: `图片详情`,
+      title: <FormattedMessage id="Photo Info/EXIF" />,
       width: 680,
       content: <Loading />,
       footer: null
@@ -185,25 +185,25 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       const length = listRef.current.length;
       const { id, urlSmall, urlYuan } = listRef.current[index];
       try {
-        const res = await Promise.all([imageService.getKeywordDetails({ id }), imageService.getExif({ id })]);
+        const res = await Promise.all([imageService.getKeywords({ id }), imageService.getExif({ id })]);
         mod.update({
           content: <ImageDetails dataSource={{ ...res[0], imgUrl: urlSmall, urlYuan, exif: res[1] }} />,
           footer: (
             <div style={{ display: 'flex' }}>
               <Button disabled={index === 0} onClick={e => update(index - 1)}>
-                上一个
+                <FormattedMessage id="Prev" />
               </Button>
               <div style={{ flex: 1, textAlign: 'center', paddingTop: 6 }}>
                 {index + 1}/{length}
               </div>
               <Button disabled={index === length - 1} onClick={e => update(index + 1)}>
-                下一个
+                <FormattedMessage id="Next" />
               </Button>
             </div>
           )
         });
       } catch (error) {
-        message.error(`请求接口出错！`);
+        message.error(formatMessage({ id: 'message.api.error' }));
         mod.close();
       }
     }
@@ -219,7 +219,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   const openOriginImage = (index: number) => {
     const idList: IdList = index === -1 ? selectedIds : [listRef.current[index].id];
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
     idList.forEach(id => {
@@ -234,13 +234,13 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
     try {
       const res = await imageService.getLogList([id]);
       const mod = modal({
-        title: `操作日志`,
+        title: formatMessage({ id: 'image.log' }),
         width: 640,
         content: <ImageLogs dataSource={res} />,
         footer: null
       });
     } catch (error) {
-      message.error(`请求接口出错！`);
+      message.error(formatMessage({ id: 'message.api.error' }));
     }
   };
 
@@ -248,7 +248,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
   const showMiddleImage = (index: number) => {
     const { urlSmall } = listRef.current[index];
     const mod = modal({
-      title: `查看中图`,
+      title: formatMessage({ id: 'image.action.showMiddleImage' }),
       width: 640,
       content: (
         <div className="image-max">

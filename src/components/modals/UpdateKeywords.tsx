@@ -12,6 +12,7 @@ import PersonKeywords, { IKeyword } from 'src/components/modals/PersonKeywords';
 import keywordService from 'src/services/keywordService';
 import { uniq } from 'src/components/KeywordTextArea';
 import * as tools from 'src/utils/tools';
+import { useIntl, FormattedMessage } from 'react-intl';
 
 export type IListItem = Required<Pick<IImage, 'id' | 'keywordTags'>>;
 
@@ -20,7 +21,8 @@ type Props<T> = {
   onChange: (list: T) => void;
 };
 
-export default function UpdateKeywords({ defaultList, onChange }: Props<IListItem[]>): ReactElement {
+export default React.memo(function UpdateKeywords({ defaultList, onChange }: Props<IListItem[]>): ReactElement {
+  const { formatMessage } = useIntl();
   const [keywordMode, setKeywordMode] = useState<ModeType>('source');
   const [list, setList] = useState(defaultList);
 
@@ -126,7 +128,7 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
       <div>
         <Dropdown overlay={personKeywordsOverlay} arrow>
           <a className="ant-dropdown-link" onClick={e => e.preventDefault()}>
-            人相关词 <DownOutlined />
+            <FormattedMessage id="updateKeywords.personKeyword" /> <DownOutlined />
           </a>
         </Dropdown>
         <div style={{ float: 'right', paddingBottom: 6 }}>
@@ -138,22 +140,28 @@ export default function UpdateKeywords({ defaultList, onChange }: Props<IListIte
             }}
           >
             <Radio.Button value="all">
-              <LineOutlined title="展示全部" />
+              <LineOutlined title={formatMessage({ id: 'keywords.mode.all' })} />
             </Radio.Button>
             <Radio.Button value="source">
-              <FileSearchOutlined title="按来源展示" />
+              <FileSearchOutlined
+                title={formatMessage({
+                  id: 'keywords.mode.source'
+                })}
+              />
             </Radio.Button>
             <Radio.Button value="kind">
-              <UnorderedListOutlined title="按类型展示" />
+              <UnorderedListOutlined title={formatMessage({ id: 'keywords.mode.kind' })} />
             </Radio.Button>
           </Radio.Group>
         </div>
       </div>
       <KeywordTextAreaGroup size="small" value={value} onChange={handleChange} mode={keywordMode} />
-      <div style={{ position: 'relative', paddingLeft: 70, paddingTop: 12 }}>
-        <label style={{ position: 'absolute', left: 0, top: 36 }}>查找&替换：</label>
+      <div style={{ position: 'relative', paddingLeft: 90, paddingTop: 12 }}>
+        <label style={{ position: 'absolute', left: 0, top: 36 }}>
+          <FormattedMessage id="findAndReplace" />：
+        </label>
         <FindAndReplace onFinish={onReplace} />
       </div>
     </>
   );
-}
+});

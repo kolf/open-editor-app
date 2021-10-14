@@ -6,12 +6,11 @@ import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
-import options, { Quality, LicenseType, CopyrightType, License } from 'src/declarations/enums/query';
+import options, { Quality } from 'src/declarations/enums/query';
+import { useIntl } from 'react-intl';
+import { useOptions } from 'src/hooks/useSelect';
 const { Option } = Select;
-const licenseTypeOptions = options.get(LicenseType);
-const licenseOptions = options.get(License);
 const qualityOptions = options.get(Quality);
-const copyrightOptions = options.get(CopyrightType);
 
 type Props<T> = {
   dataSource: T;
@@ -19,50 +18,57 @@ type Props<T> = {
   onClick: (index: number, field: IImageActionType) => void;
 };
 
-function getIndexProps(qualityStatus: IOsiImageReview['qualityStatus']) {
-  if (/^1/.test(qualityStatus)) {
-    return {
-      title: `待编审`,
-      color: '#666666'
-    };
-  }
-  if (/^2/.test(qualityStatus)) {
-    return {
-      title: `已通过`,
-      color: '#09e35c'
-    };
-  }
-  if (/^3/.test(qualityStatus)) {
-    return {
-      title: `不通过`,
-      color: '#e30e09'
-    };
-  }
-}
-
-function isLicenseActive(releases: IImage['releases'], value: string): boolean {
+function isLicenseActive(releases: IImage['releases'], value: IImage['releaseType']): boolean {
   if (!releases || releases.length === 0) {
     return false;
   }
   return !!releases.find(o => o.type + '' === value);
 }
 
-export default React.memo(function ListItem({ dataSource, index, onClick }: Props<IImage>): ReactElement {
+export default React.memo(function ListItem({
+  dataSource,
+  index,
+  onClick
+}: Props<IImage>): ReactElement {
+  const { formatMessage } = useIntl();
+  const copyrightOptions = useOptions<IImage['copyright']>('image.copyright', ['0', '1', '2', '3', '7', '9']);
+  const licenseTypeOptions = useOptions<IImage['licenseType']>('image.liceseType', ['1', '2']);
+  const licenseOptions = useOptions<IImage['releaseType']>('image.releaseType.s', ['1', '2']);
+
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
+
+  // TODO 待优化
+  const indexPropsMap = {
+    14: {
+      title: formatMessage({ id: 'image.status.14' }),
+      color: '#666666'
+    },
+    24: {
+      title: formatMessage({ id: 'image.status.24' }),
+      color: '#09e35c'
+    },
+    34: {
+      title: formatMessage({ id: 'image.status.34' }),
+      color: '#e30e09'
+    }
+  };
+
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
-      indexProps={{ ...getIndexProps(dataSource.osiImageReview.qualityStatus), text: index + 1 + '' }}
+      indexProps={{ ...indexPropsMap[dataSource.osiImageReview.qualityStatus], text: index + 1 + '' }}
       height={460}
       onClick={field => onClick(index, field)}
-      actions={[{ icon: <CalendarOutlined />, value: 'logs', label: '日志' }]}
+      actions={[
+        { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }
+      ]}
     >
       <GridItemRow>
         <Row>
-          <Col title="入库时间" flex="auto">
+          <Col title={formatMessage({ id: 'image.createdTime' })} flex="auto">
             {dataSource.createdTime}
           </Col>
-          <Col title="编辑时间" style={{ textAlign: 'right' }}>
+          <Col title={formatMessage({ id: 'image.qualityEditTime' })} style={{ textAlign: 'right' }}>
             {dataSource.osiImageReview.qualityEditTime}
           </Col>
         </Row>
@@ -73,7 +79,7 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
         </a>
         {dataSource.osiImageReview.priority === 2 && (
           <IconFont
-            title="加急"
+            title={formatMessage({ id: 'image.priority.2' })}
             type="icon-xing"
             style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }}
           />
@@ -83,8 +89,8 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
       <GridItemRow>
         <Space>
           <span>LAI</span>
-          <span title="AI质量评分">{dataSource.aiQualityScore}</span>
-          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
+          <span title={formatMessage({ id: 'image.aiQualityScore' })}>{dataSource.aiQualityScore}</span>
+          <span title={formatMessage({ id: 'image.aiBeautyScore' })}>{dataSource.aiBeautyScore}</span>
           <span>{dataSource.categoryNames}</span>
         </Space>
       </GridItemRow>
@@ -102,26 +108,29 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
       <GridItemRow>
         <div style={{ paddingBottom: 6 }}>
           <Space style={{ paddingRight: 12, paddingTop: 6 }}>
-            {licenseOptions
-              .filter(o => o.value !== '3')
-              .map(o => {
-                const isActvie = isLicenseActive(dataSource.releases, o.value as string);
-                return (
-                  <a
-                    key={o.value}
-                    style={isActvie ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
-                    onClick={e => (isActvie ? onClick(index, 'releases') : null)}
-                  >
-                    {o.label}
-                  </a>
-                );
-              })}
+            {licenseOptions.map(o => {
+              const isActvie = isLicenseActive(dataSource.releases, o.value);
+              return (
+                <a
+                  key={o.value}
+                  style={isActvie ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
+                  onClick={e => (isActvie ? onClick(index, 'releases') : null)}
+                >
+                  {o.label}
+                </a>
+              );
+            })}
           </Space>
-
-          <RadioText options={licenseTypeOptions} value={dataSource.licenseType} />
+          <RadioText<IImage['licenseType']>
+            options={licenseTypeOptions}
+            value={dataSource.licenseType}
+          />
 
           <div style={{ position: 'absolute', right: 0, top: 0 }}>
-            <Select defaultValue={dataSource.qualityRank} placeholder="等级">
+            <Select
+              defaultValue={dataSource.qualityRank}
+              placeholder={formatMessage({ id: 'image.qualityRank' })}
+            >
               {qualityOptions.map(o => (
                 <Option value={o.value} key={o.value}>
                   {o.label}
@@ -132,7 +141,11 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
         </div>
       </GridItemRow>
       <GridItemRow>
-        <Select defaultValue={dataSource.copyright} placeholder="授权" style={{ width: '100%' }}>
+        <Select
+          defaultValue={dataSource.copyright}
+          placeholder={formatMessage({ id: 'image.copyright' })}
+          style={{ width: '100%' }}
+        >
           {copyrightOptions.map(o => (
             <Option value={o.value} key={o.value}>
               {o.label}
@@ -141,7 +154,7 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
         </Select>
       </GridItemRow>
       <GridItemRow>
-        <Input readOnly placeholder="备注" defaultValue={dataSource.memo} />
+        <Input readOnly placeholder={formatMessage({ id: 'image.memo' })} defaultValue={dataSource.memo} />
       </GridItemRow>
       {dataSource.reasonTitle && (
         <GridItem.TopTag align="right" color="rgb(255, 85, 0)">

@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import { Radio, Button, Space, Input, message } from 'antd';
 import { CheckOutlined, LineOutlined, FileSearchOutlined, UnorderedListOutlined } from '@ant-design/icons';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from 'src/components/formlist/FormList';
+import FormList from 'src/components/FormList';
 import ListItem from './ListItem';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup';
@@ -24,6 +25,7 @@ const initialData = {
 };
 
 export default React.memo(function List() {
+  const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
 
@@ -201,16 +203,19 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     let mod = null;
     try {
-      mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setResolve' }),
+        content: formatMessage({ id: 'image.action.setResolve.content' })
+      });
 
       const imageList = list
-        .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
+        .filter(item => idList.includes(item.id) && item.osiImageReview.keywordsCallbackStatus !== 2)
         .map(item => {
           const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
           return {
@@ -234,7 +239,7 @@ export default React.memo(function List() {
       mod.confirmLoading();
       const res = await review({ body: imageList, query: { status: 1 } });
       mod.close();
-      message.success(`设置通过成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
         idList.map(id => {
           const item = list.find(l => l.id === id);
@@ -297,30 +302,47 @@ export default React.memo(function List() {
             }}
           >
             <Radio.Button value="all">
-              <LineOutlined title="展示全部" />
+              <LineOutlined title={formatMessage({ id: 'keywords.mode.all' })} />
             </Radio.Button>
             <Radio.Button value="source">
-              <FileSearchOutlined title="按来源展示" />
+              <FileSearchOutlined
+                title={formatMessage({
+                  id: 'keywords.mode.source'
+                })}
+              />
             </Radio.Button>
             <Radio.Button value="kind">
-              <UnorderedListOutlined title="按类型展示" />
+              <UnorderedListOutlined title={formatMessage({ id: 'keywords.mode.kind' })} />
             </Radio.Button>
           </Radio.Group>
         }
       >
         <Space>
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            审核
+            <FormattedMessage id="image.review" />
           </Button>
-          <Button size="small" title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) })}
+            onClick={e => setResolve(-1)}
+            icon={<CheckOutlined />}
+          />
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            编辑
+            <FormattedMessage id="image.update" />
           </Button>
-          <Button size="small" title="修改标题" onClick={e => updateTitle(selectedIds)}>
-            标题
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.title' }) })}
+            onClick={e => updateTitle(selectedIds)}
+          >
+            <FormattedMessage id="image.title" />
           </Button>
-          <Button size="small" title="修改关键词" onClick={e => updateKeywords(selectedIds)}>
-            关键词
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.keywords' }) })}
+            onClick={e => updateKeywords(selectedIds)}
+          >
+            <FormattedMessage id="image.keywords" />
           </Button>
         </Space>
       </Toolbar>

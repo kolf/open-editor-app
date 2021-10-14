@@ -1,0 +1,49 @@
+{
+  "formItem.dropdown.up": "Open",
+  "formItem.dropdown.down": "Close",
+  "formItem.qualityAuditorId": "Editors",
+  "formItem.createdTime": "Submission Date",
+  "formItem.editTime": "Review Date",
+  "formItem.qualityStatus": "Review Status",
+  "formItem.osiProviderId": "Source",
+  "formItem.aiQualityScore": "LAI",
+  "formItem.aiBeautyScore": "AAI",
+  "formItem.qualityRank": "Quality Level",
+  "formItem.priority": "Priority",
+  "formItem.license": "Release Files",
+  "formItem.haveSensitve": "NSFW Scan",
+  "formItem.licenseType": "RM or RF",
+  "formItem.category": "AI Categories",
+  "formItem.keywordsStatus": "Review Status",
+
+  "input.placeholder": "Please enter",
+  "select.placeholder": "Please choose",
+
+  "list.nodata": "No Results, please try other filters",
+  "list.loading": "Loading...",
+
+  "modal.okText": "OK",
+  "modal.cancelText": "Cancel",
+  "modal.submitText": "Submit",
+
+  "updateKeywords.personKeyword": "People related",
+
+  "findAndReplace": "Search&Replace",
+  "findAndReplace.title": "Title",
+  "findAndReplace.positionType.content": "Replace",
+  "findAndReplace.positionType.after": "Add to before",
+  "findAndReplace.positionType.before": "Add to end",
+  "findAndReplace.search.placeholder": "Please enter search content",
+  "findAndReplace.replace.placeholder": "Please enter replacement content",
+
+  "pager.result.total": "{total} results",
+  "pager.result.size": "{size}/page",
+  "pager.select.total": "{total} Selected",
+  "pager.select.all": "Select All",
+  "pager.select.invert": "Invert",
+  "pager.select.cancel": "Cancel",
+
+  "table.column.no": "No.",
+  "table.column.fileName": "File Name",
+  "table.column.actions": "Actions"
+}

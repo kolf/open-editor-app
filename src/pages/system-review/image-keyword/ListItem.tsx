@@ -7,6 +7,7 @@ import GridItemRow from 'src/components/list/GridItemRow';
 import KeywordTextAreaGroup, { ModeType } from 'src/components/KeywordTextAreaGroup';
 
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
+import { useIntl } from 'react-intl';
 
 type Props<T> = {
   dataSource: T;
@@ -15,30 +16,24 @@ type Props<T> = {
   keywordMode: ModeType;
 };
 
-function getIndexProps(keywordsStatus: IOsiImageReview['keywordsStatus']) {
-  if (/^1/.test(keywordsStatus)) {
-    return {
-      title: `待编审`,
-      color: '#666666'
-    };
-  }
-  if (/^2/.test(keywordsStatus)) {
-    return {
-      title: `已通过`,
-      color: '#09e35c'
-    };
-  }
-  if (/^3/.test(keywordsStatus)) {
-    return {
-      title: `不通过`,
-      color: '#e30e09'
-    };
-  }
-}
-
 export default React.memo(function ListItem({ dataSource, keywordMode, index, onClick }: Props<IImage>): ReactElement {
+const { formatMessage } = useIntl();
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
-
+  // TODO 待优化
+  const indexPropsMap = {
+    14: {
+      title: formatMessage({ id: 'image.status.14' }),
+      color: '#666666'
+    },
+    24: {
+      title: formatMessage({ id: 'image.status.24' }),
+      color: '#09e35c'
+    },
+    34: {
+      title: formatMessage({ id: 'image.status.34' }),
+      color: '#e30e09'
+    }
+  };
   const getHeight = (): number => {
     if (keywordMode === 'kind') {
       return 890;
@@ -52,17 +47,19 @@ export default React.memo(function ListItem({ dataSource, keywordMode, index, on
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
-      indexProps={{ ...getIndexProps(dataSource.osiImageReview.keywordsStatus), text: index + 1 + '' }}
+      indexProps={{ ...indexPropsMap[dataSource.osiImageReview.keywordsStatus], text: index + 1 + '' }}
       height={getHeight()}
       onClick={field => onClick(index, field)}
-      actions={[{ icon: <CalendarOutlined />, value: 'logs', label: '日志' }]}
+      actions={[
+        { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }
+      ]}
     >
       <GridItemRow>
         <Row>
-          <Col title="入库时间" flex="auto">
+          <Col title={formatMessage({ id: 'image.createdTime' })} flex="auto">
             {dataSource.createdTime}
           </Col>
-          <Col title="编辑时间" style={{ textAlign: 'right' }}>
+          <Col title={formatMessage({ id: 'image.qualityEditTime' })} style={{ textAlign: 'right' }}>
             {dataSource.osiImageReview.qualityEditTime}
           </Col>
         </Row>
@@ -73,7 +70,7 @@ export default React.memo(function ListItem({ dataSource, keywordMode, index, on
         </a>
         {dataSource.osiImageReview.priority === 2 && (
           <IconFont
-            title="加急"
+            title={formatMessage({ id: 'image.priority.2' })}
             type="icon-xing"
             style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }}
           />
@@ -83,14 +80,14 @@ export default React.memo(function ListItem({ dataSource, keywordMode, index, on
       <GridItemRow>
         <Space>
           <span>LAI</span>
-          <span title="AI质量评分">{dataSource.aiQualityScore}</span>
-          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
+          <span title={formatMessage({ id: 'image.aiQualityScore' })}>{dataSource.aiQualityScore}</span>
+          <span title={formatMessage({ id: 'image.aiBeautyScore' })}>{dataSource.aiBeautyScore}</span>
           <span>{dataSource.categoryNames}</span>
         </Space>
       </GridItemRow>
 
       <GridItemRow>
-        <Input.TextArea title={dataSource.title} rows={2} defaultValue={dataSource.title} placeholder="标题" />
+        <Input.TextArea title={dataSource.title} rows={2} defaultValue={dataSource.title} placeholder={formatMessage({ id: 'image.title' })}/>
       </GridItemRow>
       <Divider style={{ margin: '6px 0' }} />
 

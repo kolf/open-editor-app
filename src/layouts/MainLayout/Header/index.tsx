@@ -1,6 +1,6 @@
 import { UserOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Menu, Input, message } from 'antd';
-import React, { memo, useEffect } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
@@ -12,9 +12,15 @@ import { RootState } from 'src/store';
 import modal from 'src/utils/modal';
 import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
+import { setLanguage } from 'src/features/language/language';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { useLanguagePkg } from 'src/hooks/useLanguage';
+
 const { Search } = Input;
 
-export const Header: React.FC<any> = ({ menuKey, onChange }) => {
+const Header: React.FC<any> = ({ menuKey, onChange }) => {
+  const { language } = useLanguagePkg();
+  const { formatMessage } = useIntl();
   const user = useSelector((state: RootState) => state.user.user);
   const { show: showSearch } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
@@ -29,7 +35,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
     let formRef = null;
     const mod = modal({
       width: 500,
-      title: '修改密码',
+      title: <FormattedMessage id="Modify Password" />,
       content: <UpdatePasswordModal saveRef={r => (formRef = r)} />,
       onOk,
       autoIndex: false
@@ -58,16 +64,21 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
 
   const menu = (
     <Menu>
-      <Menu.Item>
-        <div onClick={updatePassword}>修改密码</div>
+      <Menu.Item onClick={() => dispatch(setLanguage())}>{language === 'en-US' ? '中文' : 'English'}</Menu.Item>
+      <Menu.Item onClick={updatePassword}>
+        <FormattedMessage id="Modify Password" />
       </Menu.Item>
-      <Menu.Item onClick={handleLogout}>退出</Menu.Item>
+      <Menu.Item onClick={handleLogout}>
+        <FormattedMessage id="Exit" />
+      </Menu.Item>
     </Menu>
   );
 
   return (
     <div className="header">
-      <h1 className="header-logo">内容审核管理平台</h1>
+      <h1 className="header-logo">
+        <FormattedMessage id="Inspection Platform" />
+      </h1>
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
           {menus
@@ -83,7 +94,7 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
         <div className="header-search">
           <Search
             allowClear
-            placeholder="请输入关键词或ID，多个用逗号隔开"
+            placeholder={formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
             onChange={e => {
               const value = e.target.value.replaceAll('，', ',');
               dispatch(setKeywords(value));
@@ -91,8 +102,8 @@ export const Header: React.FC<any> = ({ menuKey, onChange }) => {
             onSearch={e => {
               dispatch(openFire(true));
             }}
-            enterButton="搜索"
-            style={{ width: 320 }}
+            enterButton={formatMessage({ id: 'header.search.button' })}
+            style={{ width: 390 }}
           />
         </div>
       )}

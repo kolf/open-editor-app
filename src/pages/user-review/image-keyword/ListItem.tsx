@@ -7,6 +7,7 @@ import GridItemRow from 'src/components/list/GridItemRow';
 import KeywordTextAreaGroup, { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup';
 
 import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
+import { useIntl } from 'react-intl';
 
 type Props<T> = {
   dataSource: T;
@@ -16,27 +17,6 @@ type Props<T> = {
   selected: boolean;
   keywordMode: KeywordModeType;
 };
-
-function getIndexProps(keywordsStatus: IOsiImageReview['keywordsStatus']) {
-  if (/^1/.test(keywordsStatus)) {
-    return {
-      title: `待编审`,
-      color: '#666666'
-    };
-  }
-  if (/^2/.test(keywordsStatus)) {
-    return {
-      title: `已通过`,
-      color: '#09e35c'
-    };
-  }
-  if (/^3/.test(keywordsStatus)) {
-    return {
-      title: `不通过`,
-      color: '#e30e09'
-    };
-  }
-}
 
 function getHeight(keywordMode: KeywordModeType): number {
   if (keywordMode === 'kind') {
@@ -56,12 +36,30 @@ export default React.memo(function ListItem({
   onClick,
   onChange
 }: Props<IImage>): ReactElement {
+  const { formatMessage } = useIntl();
+  const disabledMessage = dataSource.osiImageReview.keywordsCallbackStatus === 2 ? '等待社区审核中' : '';
   const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
+
+  // TODO 待优化
+  const indexPropsMap = {
+    14: {
+      title: formatMessage({ id: 'image.status.14' }),
+      color: '#666666'
+    },
+    24: {
+      title: formatMessage({ id: 'image.status.24' }),
+      color: '#09e35c'
+    },
+    34: {
+      title: formatMessage({ id: 'image.status.34' }),
+      color: '#e30e09'
+    }
+  };
 
   return (
     <GridItem
       cover={<img src={dataSource.urlSmall} />}
-      indexProps={{ ...getIndexProps(dataSource.osiImageReview.keywordsStatus), text: index + 1 + '' }}
+      indexProps={{ ...indexPropsMap[dataSource.osiImageReview.keywordsStatus], text: index + 1 + '' }}
       height={getHeight(keywordMode)}
       onClick={field => onClick(index, field)}
       selected={selected}
@@ -69,18 +67,18 @@ export default React.memo(function ListItem({
         {
           icon: <CheckOutlined />,
           value: 'resolve',
-          label: '通过',
-          disabled: dataSource.osiImageReview.callbackStatus === 2
+          label: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.resolve' }) }),
+          disabledMessage
         },
-        { icon: <CalendarOutlined />, value: 'logs', label: '日志' }
+        { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }
       ]}
     >
       <GridItemRow>
         <Row>
-          <Col title="入库时间" flex="auto">
+          <Col title={formatMessage({ id: 'image.createdTime' })} flex="auto">
             {dataSource.createdTime}
           </Col>
-          <Col title="编辑时间" style={{ textAlign: 'right' }}>
+          <Col title={formatMessage({ id: 'image.qualityEditTime' })} style={{ textAlign: 'right' }}>
             {dataSource.osiImageReview.qualityEditTime}
           </Col>
         </Row>
@@ -91,18 +89,18 @@ export default React.memo(function ListItem({
         </a>
         {dataSource.osiImageReview.priority === 2 && (
           <IconFont
-            title="加急"
+            title={formatMessage({ id: 'image.priority.2' })}
             type="icon-xing"
             style={{ fontSize: 18, position: 'relative', top: 1, marginLeft: 6 }}
           />
         )}
       </GridItemRow>
-      <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName as string}</GridItemRow>
+      <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
       <GridItemRow>
         <Space>
           <span>LAI</span>
-          <span title="AI质量评分">{dataSource.aiQualityScore}</span>
-          <span title="AI美学评分">{dataSource.aiBeautyScore}</span>
+          <span title={formatMessage({ id: 'image.aiQualityScore' })}>{dataSource.aiQualityScore}</span>
+          <span title={formatMessage({ id: 'image.aiBeautyScore' })}>{dataSource.aiBeautyScore}</span>
           <span>{dataSource.categoryNames}</span>
         </Space>
       </GridItemRow>
@@ -112,7 +110,7 @@ export default React.memo(function ListItem({
           title={dataSource.title}
           rows={2}
           value={dataSource.title}
-          placeholder="标题"
+          placeholder={formatMessage({ id: 'image.title' })}
           onChange={e => onChange(index, 'title', e.target.value)}
         />
       </GridItemRow>

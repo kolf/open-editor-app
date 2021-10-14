@@ -1,7 +1,11 @@
 import useRequest from '@ahooksjs/use-request';
+import CheckOutlined from '@ant-design/icons/lib/icons/CheckOutlined';
+import CloseOutlined from '@ant-design/icons/lib/icons/CloseOutlined';
 import { Button, message, Table } from 'antd';
 import React, { useEffect, useState } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { compose } from 'redux';
+import Toolbar from 'src/components/list/Toolbar';
 import options, {
   AIService,
   AssetType,
@@ -10,8 +14,10 @@ import options, {
   OsiDbProviderStatus,
   SensitiveCheckType
 } from 'src/declarations/enums/query';
+import { zhCNMap } from 'src/locales/zhCN';
 import providerService from 'src/services/providerService';
 import modal from 'src/utils/modal';
+import { getTableDisplay } from 'src/utils/tools';
 import CreateDataModal from './DataSourceForm';
 
 export enum ModalType {
@@ -21,6 +27,7 @@ export enum ModalType {
 
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
+  
   const {
     data = { list: [], total: 0 },
     loading,
@@ -38,10 +45,10 @@ function List() {
       const v = payload[p] || [];
       switch (p) {
         case 'AIDetection':
-          if (v.includes(AIService.AI质量评分)) memo['ifAiQualityScore'] = '1';
-          if (v.includes(AIService.AI美学评分)) memo['ifAiBeautyScore'] = '1';
-          if (v.includes(AIService.AI分类)) memo['ifAiCategory'] = '1';
-          if (v.includes(AIService['AI自动标题/关键词'])) memo['ifAiKeywords'] = '1';
+          memo['ifAiQualityScore'] = v.includes(AIService.AI质量评分) ? 1 : 0;
+          memo['ifAiBeautyScore'] = v.includes(AIService.AI美学评分) ? 1 : 0;
+          memo['ifAiCategory'] = v.includes(AIService.AI分类) ? 1 : 0;
+          memo['ifAiKeywords'] = v.includes(AIService['AI自动标题/关键词']) ? 1 : 0;
           Reflect.deleteProperty(payload, p);
           break;
         case 'auditFlows':
@@ -101,10 +108,11 @@ function List() {
 
   // 创建数据源
   const createSource = (modalType, initialValues?) => {
+    const title = `${modalType === ModalType.修改数据来源 ? '编辑' : '创建'}数据来源`;
     let form;
     const mod = modal({
       width: 720,
-      title: `${modalType === ModalType.修改数据来源 ? '编辑' : '创建'}数据来源`,
+      title: <FormattedMessage id={zhCNMap[title]} />,
       content: <CreateDataModal saveRef={f => (form = f)} initialValues={initialValues} modalType={modalType} />,
       onOk
     });
@@ -130,8 +138,9 @@ function List() {
 
   // 开通/禁用数据源
   const closeSource = async (values: any, requestStatus: OsiDbProviderStatus) => {
+    const title = `是否确认${options.map(OsiDbProviderStatus)[requestStatus]}？`;
     const mod = modal({
-      title: `是否确认${options.map(OsiDbProviderStatus)[requestStatus]}`,
+      title: <FormattedMessage id={zhCNMap[title]} />,
       onOk
     });
 
@@ -151,21 +160,21 @@ function List() {
 
   const columns: Column[] = [
     {
-      title: '序号',
+      title: <FormattedMessage id="No." />,
       dataIndex: 'index'
     },
     {
-      title: 'ID',
+      title: <FormattedMessage id="ID" />,
       dataIndex: 'id'
     },
     {
-      title: '创建时间',
+      title: <FormattedMessage id="Created Date" />,
       dataIndex: 'createdTime',
       render: value => value
     },
-    { title: '数据来源名称', dataIndex: 'name' },
+    { title: <FormattedMessage id="Data Source" />, dataIndex: 'name' },
     {
-      title: '审核类型',
+      title: <FormattedMessage id="Inspection Type" />,
       dataIndex: 'auditFlows',
       render: v => {
         return (
@@ -174,15 +183,38 @@ function List() {
               v
                 .split(',')
                 .sort()
-                .map(v => <div>{options.map(AuditType)[v]}</div>)}
+                .map(v => {
+                  const text = getTableDisplay(v, AuditType);
+                  return (
+                    text && (
+                      <div>
+                        <FormattedMessage id={text} />
+                      </div>
+                    )
+                  );
+                })}
           </>
         );
       }
     },
-    { title: '分配', dataIndex: 'assignType', render: v => options.map(AssignType)[v] },
-    { title: '资源类型', dataIndex: 'assetType', render: v => options.map(AssetType)[v] },
     {
-      title: '敏感检测',
+      title: <FormattedMessage id="Distribution" />,
+      dataIndex: 'assignType',
+      render: v => {
+        const text = getTableDisplay(v, AssignType);
+        return text && <FormattedMessage id={text} />;
+      }
+    },
+    {
+      title: <FormattedMessage id="Resource Type" />,
+      dataIndex: 'assetType',
+      render: v => {
+        const text = getTableDisplay(v, AssetType);
+        return text && <FormattedMessage id={text} />;
+      }
+    },
+    {
+      title: <FormattedMessage id="NSFW Scan" />,
       dataIndex: 'sensitiveCheckType',
       render: v => {
         return (
@@ -191,43 +223,81 @@ function List() {
               v
                 .split(',')
                 .sort()
-                .map(v => <div>{options.map(SensitiveCheckType)[v]}</div>)}
+                .map(v => {
+                  const text = getTableDisplay(v, SensitiveCheckType);
+                  return (
+                    text && (
+                      <div>
+                        <FormattedMessage id={text} />
+                      </div>
+                    )
+                  );
+                })}
           </>
         );
       }
     },
     {
-      title: 'AI服务',
+      title: <FormattedMessage id="AI" />,
       render: (value, tr) => {
         return (
           <>
-            {tr.ifAiQualityScore && <div>AI质量评分</div>}
-            {tr.ifAiBeautyScore && <div>AI美学评分</div>}
-            {tr.ifAiCategory && <div>AI分类</div>}
-            {tr.ifAiKeywords && <div>AI自动标题/关键词</div>}
+            {tr.ifAiQualityScore && (
+              <div>
+                <FormattedMessage id="LAI Quality" />
+              </div>
+            )}
+            {tr.ifAiBeautyScore && (
+              <div>
+                <FormattedMessage id="AAI Aesthetic" />
+              </div>
+            )}
+            {tr.ifAiCategory && (
+              <div>
+                <FormattedMessage id="AI Categories" />
+              </div>
+            )}
+            {tr.ifAiKeywords && (
+              <div>
+                <FormattedMessage id="AI Title-Keywords" />
+              </div>
+            )}
           </>
         );
       }
     },
-    { title: '创建人', dataIndex: 'createdName' },
-    { title: '状态', dataIndex: 'status', render: v => options.map(OsiDbProviderStatus)[v] },
+    { title: <FormattedMessage id="Creator" />, dataIndex: 'createdName' },
     {
-      title: '操作',
+      title: <FormattedMessage id="Status" />,
+      dataIndex: 'status',
+      render: v => {
+        return v == OsiDbProviderStatus.开通 ? (
+          <CheckOutlined style={{ color: 'green', fontSize: 18 }} />
+        ) : (
+          <CloseOutlined style={{ color: 'red', fontSize: 18 }} />
+        );
+      }
+    },
+    {
+      title: <FormattedMessage id="Actions" />,
       render: (v, tr) => {
         // 需要修改之后的状态
         const requestStatus =
           tr.status == OsiDbProviderStatus.开通 ? OsiDbProviderStatus.关闭 : OsiDbProviderStatus.开通;
+        const buttonText = getTableDisplay(requestStatus, OsiDbProviderStatus);
         return (
           <>
             <Button
               type="text"
               onClick={() => compose(v => createSource(ModalType.修改数据来源, v), makeResponsePayload)(tr)}
             >
-              编辑
+              <FormattedMessage id="Edit" />
             </Button>
-            <Button type="text" onClick={() => closeSource(tr, requestStatus)}>
-              {options.map(OsiDbProviderStatus)[requestStatus]}
-            </Button>
+            {buttonText && (
+              <Button type="text" onClick={() => closeSource(tr, requestStatus)}>
+                <FormattedMessage id={buttonText} />
+              </Button>
+            )}
           </>
         );
       }
@@ -237,9 +307,20 @@ function List() {
   return (
     <>
       <Button type="primary" onClick={() => createSource(ModalType.创建数据来源)}>
-        创建数据来源
+        <FormattedMessage id="Create Data Source" />
       </Button>
+      <Toolbar
+        pagerProps={{
+          total,
+          current: query.pageNum,
+          pageSize: query.pageSize,
+          onChange: values => {
+            setQuery({ ...query, ...values });
+          }
+        }}
+      ></Toolbar>
       <Table
+        pagination={false}
         loading={loading}
         bordered
         columns={columns}

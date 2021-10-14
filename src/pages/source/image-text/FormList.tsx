@@ -15,13 +15,16 @@ import SearchSelect from 'src/components/SearchSelect';
 import 'src/styles/FormList.less';
 import { useContext } from 'react';
 import { DataContext } from 'src/components/contexts/DataProvider';
+import { FormattedMessage, useIntl } from 'react-intl';
+import { zhCNMap } from 'src/locales/zhCN';
 
 const { Option } = Select;
 
 const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
-  const { providerOptions } = useContext(DataContext);
+  const intl = useIntl();
 
+  const { providerOptions } = useContext(DataContext);
   return (
     <div className="formList-root">
       <Form
@@ -34,83 +37,91 @@ const FormList = (props: any) => {
         }}
       >
         <Form.Item name="createdTime" className="form-list-item">
+          {/* 入库时间 */}
           <DatePicker.RangePicker
-            style={{ width: 220 }}
+            style={{ width: 250 }}
             separator={props.createdTime ? '~' : ''}
-            placeholder={['入库时间', '']}
+            placeholder={[intl.formatMessage({ id: 'Submission Date' }), '']}
           />
         </Form.Item>
         <Form.Item name="assignStatus" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="分配状态">
+          {/* 分配状态 */}
+          <Select allowClear style={{ width: 150 }} placeholder={<FormattedMessage id="Distribution Stats" />}>
             {options.get(BatchAssignStatus).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
+                <FormattedMessage id={zhCNMap[o.label]} />
               </Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item name="userList" className="form-list-item">
+          {/* 分配对象 */}
           <SearchSelect
             style={{ width: 160 }}
-            placeholder="分配对象"
+            placeholder={<FormattedMessage id="Editors" />}
             type="editUser"
             mode="multiple"
             manual
-            fixedOptions={[{ value: '-1', label: '全部资源' }]}
+            fixedOptions={[{ value: '-1', label: <FormattedMessage id="All Resources" /> }]}
           />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
+          {/* 数据来源 */}
           <SearchSelect
             allowClear
             showSearch
             type="provider"
             style={{ width: 160 }}
-            placeholder="数据来源"
+            placeholder={<FormattedMessage id="Data Source" />}
             options={providerOptions}
             manual
           />
         </Form.Item>
         <Form.Item name="assignMode" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="分配">
+          {/* 分配 */}
+          <Select allowClear style={{ width: 120 }} placeholder={<FormattedMessage id="Distribution" />}>
             {options.get(BatchAssignMode).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
+                <FormattedMessage id={zhCNMap[o.label]} />
               </Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item name="sensitiveCheckType" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="敏感检测">
+          {/* 敏感检测 */}
+          <Select allowClear style={{ width: 120 }} placeholder={<FormattedMessage id="NSFW Scan" />}>
             {options.get(SensitiveCheckType).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
+                <FormattedMessage id={zhCNMap[o.label]} />
               </Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item name="priority" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="优先级">
+          {/* 优先级 */}
+          <Select allowClear style={{ width: 120 }} placeholder={<FormattedMessage id="Priority" />}>
             {options.get(Priority).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
+                <FormattedMessage id={zhCNMap[o.label]} />
               </Option>
             ))}
           </Select>
         </Form.Item>
-        <Form.Item name='sensitiveKeywordsTable' className='form-list-item'>
-          <Select allowClear style={{ width: 120 }} placeholder="敏感词表">
+        <Form.Item name="sensitiveKeywordsTable" className="form-list-item">
+          {/* 敏感词表 */}
+          <Select allowClear style={{ width: 120 }} placeholder={<FormattedMessage id="NSFW Keywords" />}>
             {options.get(SensitiveWordList).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
+                <FormattedMessage id={zhCNMap[o.label]} />
               </Option>
             ))}
           </Select>
         </Form.Item>
         <Form.Item name="aiDetection" className="form-list-item">
-          <Select allowClear style={{ width: 120 }} placeholder="AI服务">
+          <Select allowClear style={{ width: 140 }} placeholder={<FormattedMessage id="AI" />}>
             {options.get(AIService).map(o => (
               <Option key={`${o.label}${o.value}`} value={o.value}>
-                {o.label}
+                <FormattedMessage id={zhCNMap[o.label]} />
               </Option>
             ))}
           </Select>

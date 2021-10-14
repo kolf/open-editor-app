@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import { Radio, Button, Space, Input, message } from 'antd';
@@ -6,7 +7,7 @@ import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
 import Iconfont from 'src/components/Iconfont';
 import GridList from 'src/components/list/GridList';
 import Toolbar from 'src/components/list/Toolbar';
-import FormList from 'src/components/formlist/FormList';
+import FormList from 'src/components/FormList';
 import ListItem from './ListItem';
 import SelectReject from 'src/components/modals/SelectReject';
 import { DataContext } from 'src/components/contexts/DataProvider';
@@ -20,6 +21,7 @@ import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/e
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
+import { useOptions } from 'src/hooks/useSelect';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -31,18 +33,19 @@ const initialData = {
 };
 
 export default React.memo(function List() {
+  const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
   const { partyId } = useCurrentUser();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
+  const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
 
   const {
     data: { list, total } = initialData,
     loading = true,
-    mutate,
-    run
+    mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
@@ -149,7 +152,7 @@ export default React.memo(function List() {
             reasonTitle,
             osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
-              .filter((o, index) => categoryList.includes(o.value + ''))
+              .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
               .join(',')
           };
@@ -207,13 +210,16 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     let mod = null;
     try {
-      mod = await confirm({ title: '图片通过', content: `请确认当前选中图片全部设置为通过吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setResolve' }),
+        content: formatMessage({ id: 'image.action.setResolve.content' })
+      });
 
       const imageList = list
         .filter(item => idList.includes(item.id) && item.osiImageReview.callbackStatus !== 2)
@@ -230,7 +236,7 @@ export default React.memo(function List() {
       mod.confirmLoading();
       const res = await review({ body: imageList, query: { stage: 1, status: 1 } });
       mod.close();
-      message.success(`设置通过成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
         idList.map(id => {
           const item = list.find(l => l.id === id);
@@ -255,7 +261,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -266,7 +272,7 @@ export default React.memo(function List() {
     try {
       mod = await confirm({
         width: 820,
-        title: '设置不通过原因',
+        title: formatMessage({ id: 'image.action.setReject' }),
         bodyStyle: { padding: 0 },
         content: (
           <div style={{ margin: -24 }}>
@@ -282,7 +288,7 @@ export default React.memo(function List() {
       });
 
       if (standardReason.length === 0 && !customReason) {
-        message.info(`请选择不通过原因！`);
+        message.info(formatMessage({ id: 'select.placeholder' }));
         return;
       }
 
@@ -306,7 +312,7 @@ export default React.memo(function List() {
         query: { stage: 1, status: 2, standardReason: standardReason.join(','), customReason }
       });
       mod.close();
-      message.success(`设置不通过成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       const reasonTitle = getReasonTitle(standardReason, customReason);
 
@@ -334,17 +340,20 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     let mod = null;
     try {
-      mod = await confirm({ title: '设置等级', content: `请确认当前选中图片设置为当前选中的质量等级吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setQualityRank' }),
+        content: formatMessage({ id: 'image.action.setQualityRank.content' })
+      });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '1', value } });
       mod.close();
-      message.success(`设置等级成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
         idList.map(id => ({
           id,
@@ -362,17 +371,20 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
     let mod = null;
     try {
-      mod = await confirm({ title: '设置授权', content: `请确认当前选中图片设置为当前选中授权RF/RM吗?` });
+      mod = await confirm({
+        title: formatMessage({ id: 'image.action.setLicenseType' }),
+        content: formatMessage({ id: 'image.action.setLicenseType.content' })
+      });
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '2', value } });
       mod.close();
-      message.success(`设置授权成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       setList(
         idList.map(id => ({
@@ -391,7 +403,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -400,7 +412,7 @@ export default React.memo(function List() {
       let value: IImage['copyright'] = null;
 
       mod = await confirm({
-        title: '设置授权',
+        title: formatMessage({ id: 'image.action.setCopyright' }),
         content: (
           <Radio.Group
             onChange={e => {
@@ -418,13 +430,13 @@ export default React.memo(function List() {
         )
       });
       if (!value) {
-        message.info(`请选择授权！`);
+        message.info(formatMessage({ id: 'select.placeholder' }));
         return;
       }
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '3', value: value } });
       mod.close();
-      message.success(`设置授权成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       setList(
         idList.map(id => ({
@@ -442,7 +454,7 @@ export default React.memo(function List() {
     const idList = index === -1 ? selectedIds : [list[index].id];
 
     if (idList.length === 0) {
-      message.info(`请选择图片！`);
+      message.info(formatMessage({ id: 'image.error.unselect' }));
       return;
     }
 
@@ -451,14 +463,16 @@ export default React.memo(function List() {
       let value: IImage['memo'] = '';
 
       mod = await confirm({
-        title: '设置备注',
-        content: <Input placeholder="请输入备注信息" onChange={e => (value = e.target.value)} />
+        title: formatMessage({ id: 'image.action.setMemo' }),
+        content: (
+          <Input placeholder={formatMessage({ id: 'input.placeholder' })} onChange={e => (value = e.target.value)} />
+        )
       });
 
       mod.confirmLoading();
       const res = await update({ body: idList, query: { type: '4', memo: value } });
       mod.close();
-      message.success(`设置授权成功！`);
+      message.success(formatMessage({ id: 'message.setting.success' }));
 
       setList(
         idList.map(id => ({
@@ -509,17 +523,27 @@ export default React.memo(function List() {
       >
         <Space>
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            审核
+            <FormattedMessage id="image.review" />
           </Button>
-          <Button size="small" title="通过" onClick={e => setResolve(-1)} icon={<CheckOutlined />} />
-          <Button size="small" title="不通过" onClick={e => setReject(-1)} icon={<CloseOutlined />} />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.action.setResolve' })}
+            onClick={e => setResolve(-1)}
+            icon={<CheckOutlined />}
+          />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.action.setReject' })}
+            onClick={e => setReject(-1)}
+            icon={<CloseOutlined />}
+          />
           <Button size="small" type="text" style={{ marginLeft: 8 }}>
-            编辑
+            <FormattedMessage id="image.update" />
           </Button>
           {licenseTypeOptions.map(o => (
             <Button
               size="small"
-              title={`设置${o.label}`}
+              title={formatMessage({ id: 'image.action.setLicenseType' })}
               onClick={e => setLicenseTypeList(-1, o.value as IImage['licenseType'])}
             >
               {o.label}
@@ -529,7 +553,10 @@ export default React.memo(function List() {
           {qualityOptions.map(o => (
             <Button
               size="small"
-              title={`设置等级${o.label}`}
+              title={formatMessage(
+                { id: 'image.setting' },
+                { value: formatMessage({ id: 'image.qualityRank' }) + ' ' + o.label }
+              )}
               key={o.value}
               onClick={e => setQualityList(-1, o.value as IImage['qualityRank'])}
             >
@@ -538,14 +565,19 @@ export default React.memo(function List() {
           ))}
           <Button
             size="small"
-            title="设置授权文件说明"
+            title={formatMessage({ id: 'image.action.setCopyright' })}
             onClick={e => setCopyrightList(-1)}
             icon={<Iconfont type="icon-shouquanweituoshu" />}
           />
-          <Button size="small" title="修改备注" onClick={e => setMemoList(-1)} icon={<Iconfont type="icon-beizhu" />} />
           <Button
             size="small"
-            title="批量打开大图"
+            title={formatMessage({ id: 'image.action.setMemo' })}
+            onClick={e => setMemoList(-1)}
+            icon={<Iconfont type="icon-beizhu" />}
+          />
+          <Button
+            size="small"
+            title={formatMessage({ id: 'image.action.openOriginImage' })}
             onClick={e => openOriginImage(-1)}
             icon={<Iconfont type="icon-tu" />}
           />

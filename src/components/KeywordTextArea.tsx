@@ -1,5 +1,6 @@
-import React, { ReactElement, useState, useCallback, useRef, useEffect, MouseEventHandler } from 'react';
-import { Button, message, Tag } from 'antd';
+import React, { ReactElement, useState, useCallback, useRef, useEffect } from 'react';
+import { useIntl, FormattedMessage } from 'react-intl';
+import { Button, message, Tag, Input } from 'antd';
 import Loading from 'src/components/common/LoadingBlock';
 import KeywordDetails from 'src/components/modals/KeywordDetails';
 import KeywordSelectTable from 'src/components/modals/KeywordSelectTable';
@@ -8,6 +9,8 @@ import * as tools from 'src/utils/tools';
 import { useDoubleClick } from 'src/hooks/useDoubleClick';
 import keywordService from 'src/services/keywordService';
 import 'src/styles/KeywordTextArea.less';
+
+const TextArea = Input.TextArea;
 
 type actionType = 'add' | 'remove' | 'select';
 
@@ -39,12 +42,13 @@ const defaultAction: actionType[] = ['add', 'remove', 'select'];
 export default React.memo(function KeywordTextArea({
   value,
   title,
-  placeholder = '请输入关键词',
+  placeholder,
   height = 100,
   action = defaultAction,
   langType,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
+  const { formatMessage } = useIntl();
   const wrapRef = useRef<HTMLDivElement>(null);
   const inputMirrorRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -53,6 +57,7 @@ export default React.memo(function KeywordTextArea({
   const [textAreaValue, setTextAreaValue] = useState<string>('');
   const hybridClick = useDoubleClick(showDetails, onDeleteValue);
   const added = action.includes('add');
+  const defaultPlaceholder = formatMessage({ id: 'keywords.textarea.placeholder' });
 
   useEffect(() => {
     if (inputRef.current) {
@@ -87,7 +92,7 @@ export default React.memo(function KeywordTextArea({
     const { value: id, type } = value[index];
 
     if (type === 0) {
-      message.info(`关键词不存在！`);
+      message.info(formatMessage({ id: 'keywords.nodata' }));
       return;
     }
 
@@ -98,7 +103,7 @@ export default React.memo(function KeywordTextArea({
 
     const mod = modal({
       width: 600,
-      title: '关键词详情',
+      title: formatMessage({ id: 'keywords.modal.details' }),
       content: <Loading />,
       footer: null
     });
@@ -118,7 +123,7 @@ export default React.memo(function KeywordTextArea({
 
     const mod = modal({
       width: 800,
-      title: '选择关键词',
+      title: formatMessage({ id: 'keywords.modal.select' }),
       content: <Loading />,
       footer: null
     });
@@ -131,9 +136,11 @@ export default React.memo(function KeywordTextArea({
         content: <KeywordSelectTable dataSource={res} onChange={value => (contentValue = value)} />,
         footer: action.includes('select') ? (
           <>
-            <Button onClick={mod.close}>取消</Button>
+            <Button onClick={mod.close}>
+              <FormattedMessage id="modal.cancelText" />
+            </Button>
             <Button type="primary" onClick={onOk}>
-              确定
+              <FormattedMessage id="modal.okText" />
             </Button>
           </>
         ) : null
@@ -186,6 +193,7 @@ export default React.memo(function KeywordTextArea({
   }
 
   async function handleTextAreaBlur() {
+    console.log('error');
     await matchTextAreaValue();
     setContenteditable(false);
   }
@@ -238,10 +246,10 @@ export default React.memo(function KeywordTextArea({
     >
       {contenteditable ? (
         <textarea
-          placeholder={placeholder}
+          placeholder={placeholder || defaultPlaceholder}
           className="KeywordTextArea-textarea"
           style={{ width: wrapRef.current.clientWidth - 4, height: wrapRef.current.clientHeight - 8 }}
-          value={textAreaValue}
+          defaultValue={textAreaValue}
           onChange={e => setTextAreaValue(e.target.value)}
           onBlur={handleTextAreaBlur}
         />
@@ -269,14 +277,14 @@ export default React.memo(function KeywordTextArea({
                 onChange={e => setInputValue(e.target.value)}
                 onKeyDown={handleInputKeydown}
                 onBlur={matchInputValue}
-                placeholder={value.length === 0 ? placeholder : ''}
+                placeholder={value.length === 0 ? placeholder || defaultPlaceholder : ''}
               />
               <span className="KeywordTextArea-inputMirror" ref={inputMirrorRef}>
                 {inputValue}&nbsp;
               </span>
             </>
           ) : (
-            value.length === 0 && <span>{placeholder}</span>
+            value.length === 0 && <span>{placeholder || defaultPlaceholder}</span>
           )}
         </>
       )}

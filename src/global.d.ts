@@ -10,7 +10,7 @@ declare type AlignType = 'left' | 'center' | 'right';
 declare type FixedType = 'left' | 'right' | boolean;
 
 declare interface Column<T = any> {
-  title: string;
+  title: ReactElement;
   dataIndex?: string;
   width?: number;
   fixed?: FixedType;
@@ -18,25 +18,14 @@ declare interface Column<T = any> {
   render?: (value: any, tr: T) => React.ReactNode;
 }
 
-declare interface Menu {
-  key: string;
-  name: string;
-  hasChild?: boolean;
-  icon?: string;
-  path?: string;
-  breadcrumbName: string;
-  hidden?: boolean;
-  children?: Menu[];
-}
-
 declare interface AntdOptions {
   value: string;
   label: string;
 }
 
-declare interface Option {
-  value: string | number;
+declare type Option<T> = {
+  value: T;
   label: string;
-}
+};
 
 declare type IdList = number[];

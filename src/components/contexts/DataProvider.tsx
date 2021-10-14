@@ -2,11 +2,9 @@ import React, { createContext } from 'react';
 import { useRequest } from 'ahooks';
 import commonService from 'src/services/commonService';
 
-interface IReason {}
-
 interface Props {
-  providerOptions?: Option[];
-  categoryOptions?: Option[];
+  providerOptions?: Option<string>[];
+  categoryOptions?: Option<string>[];
   allReason?: any[];
   reasonMap: Map<string, string>;
 }

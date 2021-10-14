@@ -1,8 +1,9 @@
 import React, { memo, ReactElement } from 'react';
 import { Form, Input } from 'antd';
 import { useEffect } from 'react';
+import { FormattedMessage, useIntl } from 'react-intl';
 
-interface IUpdatePasswordModalProps {
+interface Props {
   saveRef?: any;
 }
 
@@ -10,7 +11,7 @@ const formItemLayout = {
   // 表单布局
   labelCol: {
     xs: { span: 24 },
-    sm: { span: 6 }
+    sm: { span: 7 }
   },
   wrapperCol: {
     xs: { span: 24 },
@@ -18,7 +19,8 @@ const formItemLayout = {
   }
 };
 
-const UpdatePasswordModal = ({ saveRef }: IUpdatePasswordModalProps): ReactElement => {
+export default React.memo(function UpdatePasswordModal({ saveRef }: Props): ReactElement {
+  const { formatMessage } = useIntl();
   const [form] = Form.useForm();
 
   useEffect(() => {
@@ -31,15 +33,15 @@ const UpdatePasswordModal = ({ saveRef }: IUpdatePasswordModalProps): ReactEleme
     <Form form={form} {...formItemLayout}>
       <Form.Item
         name="password"
-        label="新密码"
+        label={<FormattedMessage id="New Password" />}
         rules={[
           {
             required: true,
-            message: '请输入新密码！'
+            message: formatMessage({ id: 'input.placeholder' })
           },
           {
             min: 6,
-            message: '密码最少六位字符！'
+            message: formatMessage({ id: 'form.password.error' })
           }
         ]}
         hasFeedback
@@ -48,19 +50,19 @@ const UpdatePasswordModal = ({ saveRef }: IUpdatePasswordModalProps): ReactEleme
       </Form.Item>
       <Form.Item
         name="confirm"
-        label="确认新密码"
+        label={<FormattedMessage id="Confirm New Password" />}
         dependencies={['password']}
         rules={[
           {
             required: true,
-            message: '请输入新密码！'
+            message: formatMessage({ id: 'input.placeholder' })
           },
           ({ getFieldValue }) => ({
             validator(_, value) {
               if (!value || getFieldValue('password') === value) {
                 return Promise.resolve();
               }
-              return Promise.reject(new Error('两次输入的密码不一致！'));
+              return Promise.reject(new Error(formatMessage({ id: 'form.rePassword.error' })));
             }
           })
         ]}
@@ -69,6 +71,4 @@ const UpdatePasswordModal = ({ saveRef }: IUpdatePasswordModalProps): ReactEleme
       </Form.Item>
     </Form>
   );
-};
-
-export default memo(UpdatePasswordModal);
+});

@@ -10,10 +10,13 @@ interface IRelease {
   updatedTime?: any;
 }
 
-declare interface IKeywordsTag extends Option {
+type IKeywordKind = 0 | 1 | 2 | 3 | 4;
+
+declare interface IKeywordsTag {
+  label: string;
   value: string;
   color?: string;
-  kind?: number;
+  kind?: IKeywordKind;
   type: 0 | 1 | 2;
   source?: keyof IKeywordsAll;
 }
@@ -67,7 +70,8 @@ declare interface IOsiImageReview {
   providerResId: string;
   osiBatchId: number;
   osiProviderId: number;
-  callbackStatus: number;
+  callbackStatus: 1 | 2;
+  keywordsCallbackStatus: 1 | 2;
 }
 
 // 图片操作方法
@@ -95,7 +99,7 @@ declare type IImage = Partial<{
   caption: string;
   qualityRank: '1' | '2' | '3' | '4';
   licenseType: '1' | '2';
-  copyright: string;
+  copyright: '0' | '1' | '2' | '3' | '7' | '9';
   urlSmall: string;
   urlYuan: string;
   aiQualityScore: number;
@@ -113,6 +117,7 @@ declare type IImage = Partial<{
   osiImageReview: IOsiImageReview;
   osiKeywodsData: IOsiKeywodsData;
   releases: IRelease[];
+  releaseType: '1' | '2' | '3';
   sensitiveList: any[]; // TODO 待优化
 }>;
 

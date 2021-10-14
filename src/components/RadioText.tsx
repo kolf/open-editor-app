@@ -4,15 +4,15 @@ import { Space } from 'antd';
 interface Props<T> {
   value: T;
   onChange?: (value: T) => void;
-  options: Option[];
+  options: Option<T>[];
 }
 
-export default function RadioText<T>({ value, options, onChange }: Props<T | Option['value']>): ReactElement {
+export default function RadioText<T>({ value, options, onChange }: Props<T>): ReactElement {
   return (
     <Space>
       {options.map(o => (
         <a
-          key={o.value}
+          key={o.value + ''}
           onClick={e => onChange(o.value)}
           style={value === o.value ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
         >

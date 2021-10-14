@@ -1,5 +1,7 @@
 import React, { ReactElement } from 'react';
 import KeywordTextArea, { uniq } from './KeywordTextArea';
+import { useOptions } from '../hooks/useSelect';
+import { useIntl } from 'react-intl';
 
 export type ModeType = 'all' | 'source' | 'kind';
 
@@ -12,56 +14,9 @@ type Props<T> = {
   onChange?: (value: T[], addedValue: T[], removedValue: T[]) => void;
 };
 
-//
-const defaultKinds: Option[] = [
-  {
-    label: '主题',
-    value: 0
-  },
-  {
-    label: '概念',
-    value: 1
-  },
-  {
-    label: '规格',
-    value: 2
-  },
-  {
-    label: '人物',
-    value: 3
-  },
-  {
-    label: '地点',
-    value: 4
-  }
-];
-
 const removedSourceType = `aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKeywordsDel|userKeywordsAuditDel`;
 export const removedSourceTypeReg = new RegExp(`^(${removedSourceType})$`);
-const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replaceAll('Del', '')})$`);
-
-const sourceTypes: Option[] = [
-  {
-    label: 'AI关键词（用户勾选）',
-    value: 'aiKeywordsSelected'
-  },
-  {
-    label: 'AI关键词（用户未勾选） ',
-    value: 'aiKeywordsUnselected'
-  },
-  {
-    label: '用户提供关键词',
-    value: 'userKeywords|userKeywordsAudit'
-  },
-  {
-    label: '编辑添加关键词',
-    value: 'editorKeywordsAdd'
-  },
-  {
-    label: '编辑删除关键词',
-    value: removedSourceType
-  }
-];
+const addedSourceTypeReg = new RegExp(`^(${removedSourceType.replace(/Del/g, '')})$`);
 
 export const updateValueSource = <T extends IKeywordsTag>(value: T[], nextValue: T[]): [T[], T[], T[]] => {
   const addedValue = nextValue
@@ -121,6 +76,15 @@ export default React.memo(function KeywordTextAreaGroup({
   value,
   onChange
 }: Props<IKeywordsTag>): ReactElement {
+  const { formatMessage } = useIntl();
+  const kindOptions = useOptions<IKeywordsTag['kind']>('keywords.kind', [0, 1, 2, 3, 4]);
+  const scourceOptions = useOptions<string>('keywords.source', [
+    'aiKeywordsSelected',
+    'aiKeywordsUnselected',
+    'userKeywords|userKeywordsAudit',
+    'editorKeywordsAdd',
+    'aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKeywordsDel|userKeywordsAuditDel'
+  ]);
   const filterRemovedValue = (): IKeywordsTag[] => value.filter(item => !removedSourceTypeReg.test(item.source));
 
   const getValueByKind = (kind: number): IKeywordsTag[] => {
@@ -149,7 +113,7 @@ export default React.memo(function KeywordTextAreaGroup({
     // TODO 按来源展示，等接口。。。
     return (
       <>
-        {sourceTypes.map(sourceType => {
+        {scourceOptions.map(sourceType => {
           const currentValue = getValueBySource(sourceType.value as string);
           return (
             <div key={sourceType.value} style={{ paddingBottom: 6 }}>
@@ -173,16 +137,15 @@ export default React.memo(function KeywordTextAreaGroup({
   if (mode === 'kind') {
     return (
       <>
-        {[...defaultKinds, { label: '其他或不确定关键词', value: -1 }].map(kind => {
+        {[...kindOptions, { label: formatMessage({ id: 'keywords.kind.-1' }), value: -1 }].map(kind => {
           const currentValue = getValueByKind(kind.value as number);
-          const placeholder = `请输入${kind.label}关键词`;
           return (
             <div key={kind.value} style={{ paddingBottom: 6 }}>
               <KeywordTextArea
                 langType={langType}
                 height={size === 'small' ? 60 : 80}
-                title={kind.label + '关键词'}
-                placeholder={placeholder}
+                title={kind.label}
+                placeholder={kind.label}
                 value={currentValue}
                 action={readOnly ? [] : ['add', 'remove', 'select']}
                 onChange={handleChange}
@@ -198,7 +161,7 @@ export default React.memo(function KeywordTextAreaGroup({
       <KeywordTextArea
         langType={langType}
         height={200}
-        title="关键词"
+        title={formatMessage({ id: 'keywords' })}
         value={filterRemovedValue()}
         action={readOnly ? [] : ['add', 'remove', 'select']}
         onChange={handleChange}
