@@ -81,7 +81,7 @@ export default React.memo(function UpdateKeywords({ defaultList, onChange }: Pro
       .filter(str => str);
     const newKeywordTags: IKeywordsTag[] = await keywordService.findList(tools.trim(replaceValue));
     if (searchLabelList.length === 0) {
-      message.info(`请输入要查找的关键词！`);
+      message.info(formatMessage({ id: 'input.placeholder' }));
       return;
     }
 

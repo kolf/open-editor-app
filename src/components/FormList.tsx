@@ -6,6 +6,7 @@ import InputSplit from 'src/components/InputSplit';
 import useFormItems, { IFormItem, IFormItemKey } from 'src/hooks/useFormItems';
 
 import 'src/styles/FormList.less';
+import { useIntl } from 'react-intl';
 
 const { RangePicker } = DatePicker;
 
@@ -20,6 +21,7 @@ function filterOption(input: string, option) {
 }
 
 export default React.memo(function FormList({ initialValues, onChange, itemKeys = [] }: Props): ReactElement {
+  const { formatMessage } = useIntl();
   const [form] = Form.useForm(null);
   const formItems = useFormItems(itemKeys);
   const [collapse, setCollapse] = useState(false);
@@ -77,9 +79,21 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
       </div>
       <div className="formList-dropdown">
         {collapse ? (
-          <Button type="text" shape="circle" title="收缩" icon={<UpOutlined />} onClick={e => setCollapse(false)} />
+          <Button
+            type="text"
+            shape="circle"
+            title={formatMessage({ id: 'formItem.dropdown.up' })}
+            icon={<UpOutlined />}
+            onClick={e => setCollapse(false)}
+          />
         ) : (
-          <Button type="text" shape="circle" title="展开" icon={<DownOutlined />} onClick={e => setCollapse(true)} />
+          <Button
+            type="text"
+            shape="circle"
+            title={formatMessage({ id: 'formItem.dropdown.down' })}
+            icon={<DownOutlined />}
+            onClick={e => setCollapse(true)}
+          />
         )}
       </div>
     </div>

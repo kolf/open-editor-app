@@ -1,12 +1,14 @@
 import React, { createContext } from 'react';
 import { useRequest } from 'ahooks';
 import commonService from 'src/services/commonService';
+import { useLanguagePkg } from 'src/hooks/useLanguage';
+import { useAsyncOptions } from 'src/hooks/useSelect';
 
 interface Props {
   providerOptions?: Option<string>[];
   categoryOptions?: Option<string>[];
   allReason?: any[];
-  reasonMap: Map<string, string>;
+  reasonMap?: Map<string, string>;
 }
 
 function getReasonMap(treeData): Props['reasonMap'] {
@@ -30,12 +32,16 @@ function getReasonMap(treeData): Props['reasonMap'] {
 export const DataContext = createContext<Props>(null);
 
 export const DataProvider = ({ children }) => {
-  const { data = [], loading } = useRequest(async () => {
+  const { language } = useLanguagePkg();
+  const getAsyncOptions = useAsyncOptions(language);
+
+  const { data = {}, loading } = useRequest(async () => {
     const [providerOptions, categoryOptions, allReason] = await Promise.all([
-      commonService.getOptions({ type: 'provider' }),
-      commonService.getOptions({ type: 'category' }),
+      commonService.getOptions({ type: 'provider' }, language),
+      commonService.getOptions({ type: 'category' }, language),
       commonService.getImageAllReason()
     ]);
+
     return {
       providerOptions,
       categoryOptions,
@@ -44,5 +50,17 @@ export const DataProvider = ({ children }) => {
     };
   });
 
-  return <DataContext.Provider value={data as Props}>{children}</DataContext.Provider>;
+  const makeData = (data: Props): Props => {
+    return Object.keys(data).reduce((result, key: keyof Props) => {
+      const value = data[key];
+      if (/Options$/.test(key) && value) {
+        result[key] = getAsyncOptions(value);
+      } else {
+        result[key] = value;
+      }
+      return result;
+    }, {});
+  };
+
+  return <DataContext.Provider value={makeData(data as Props)}>{children}</DataContext.Provider>;
 };

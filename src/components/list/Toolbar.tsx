@@ -3,10 +3,10 @@ import { FormattedMessage } from 'react-intl';
 import { Affix, Space, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import Pager, { Props as IPager } from 'src/components/Pager';
-import { useLanguagePkg } from 'src/hooks/useLanguage';
 import './Toolbar.less';
+import { useOptions } from '../../hooks/useSelect';
 
-type ISelectType = '0' | '1' | '2';
+type ISelectType = 'all' | 'invert' | 'cancel';
 
 interface Props {
   selectedIds?: IdList;
@@ -27,29 +27,15 @@ export default React.memo(function Toolbar({
   pagerProps,
   extraContent
 }: Props): ReactElement {
-  const { languagePkg } = useLanguagePkg();
-  const options = [
-    {
-      label: languagePkg['pager.select.all'],
-      value: '0'
-    },
-    {
-      label: languagePkg['pager.select.invert'],
-      value: '1'
-    },
-    {
-      label: languagePkg['pager.select.cancel'],
-      value: '2'
-    }
-  ];
+  const options = useOptions<ISelectType>('pager.select', ['all', 'invert', 'cancel']);
 
   const handleClick = (key: ISelectType) => {
     let nextSelectedIds = [];
     switch (key) {
-      case '0':
+      case 'all':
         nextSelectedIds = [...idList];
         break;
-      case '1':
+      case 'invert':
         nextSelectedIds = idList.filter(id => !selectedIds.includes(id));
         break;
     }
@@ -64,7 +50,7 @@ export default React.memo(function Toolbar({
           {onSelectIds && (
             <Space style={{ paddingRight: 6 }}>
               {options.map(o => (
-                <a key={o.value} onClick={e => handleClick(o.value as ISelectType)}>
+                <a key={o.value} onClick={e => handleClick(o.value)}>
                   {o.label}
                 </a>
               ))}

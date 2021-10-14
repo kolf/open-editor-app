@@ -37,7 +37,7 @@ export default function KeywordDetails({ dataSource }: Props): ReactElement {
 
   const kindOptions = kinds.map(kind => ({
     value: kind,
-    label: formatMessage({ id: `keywords.type.${kind}` })
+    label: formatMessage({ id: `keywords.kind.${kind}` })
   }));
 
   return (

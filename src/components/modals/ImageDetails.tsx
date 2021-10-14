@@ -62,19 +62,19 @@ export default React.memo(function ImageDetails({ dataSource }: Props): ReactEle
           </h3>
           <Row gutter={4}>
             <Col span={8}>
-              <FormattedMessage id="keywords.source.ai.select" />
+              <FormattedMessage id="keywords.source.aiKeywordsSelected" />
             </Col>
             <Col span={16}>
               {dataSource.aiKeywordsSelected ? dataSource.aiKeywordsSelected.join('，') : defaultName}
             </Col>
             <Col span={8}>
-              <FormattedMessage id="keywords.source.ai.unselect" />
+              <FormattedMessage id="keywords.source.aiKeywordsUnselected" />
             </Col>
             <Col span={16}>
               {dataSource.aiKeywordsUnselected ? dataSource.aiKeywordsUnselected.join('，') : defaultName}
             </Col>
             <Col span={8}>
-              <FormattedMessage id="keywords.source.user.added" />
+              <FormattedMessage id="keywords.source.userKeywords|userKeywordsAudit" />
             </Col>
             <Col span={16}>{dataSource.aiKeywordsUnselected ? dataSource.userKeywords.join('，') : defaultName}</Col>
           </Row>

@@ -111,9 +111,9 @@ const table = {
   Headline: '标题',
   Keywords: '关键词',
   User: '用户',
-  Prev: '上一个',
+  Previous: '上一个',
   Next: '下一个',
-  
+
   Model: '机型',
   'Shooting Date': '原始日期时间',
   'Edited Date': '修改时间',

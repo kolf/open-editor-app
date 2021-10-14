@@ -1,5 +1,6 @@
 import React, { ReactElement, useState, useEffect, useRef } from 'react';
 import { Dropdown, Input, InputNumber, Menu } from 'antd';
+import { useIntl } from 'react-intl';
 
 interface Props {
   placeholder: string;
@@ -7,6 +8,7 @@ interface Props {
 }
 
 export default React.memo(function InputSplit({ placeholder, onChange }: Props): ReactElement {
+  const { formatMessage } = useIntl();
   const [minValue, setMinValue] = useState<number>();
   const [maxValue, setMaxValue] = useState<number>();
 
@@ -32,7 +34,7 @@ export default React.memo(function InputSplit({ placeholder, onChange }: Props):
         max={10}
         bordered={false}
         style={{ width: hasValue ? 80 : 180, textAlign: 'center' }}
-        placeholder={hasValue ? '最小值' : placeholder}
+        placeholder={hasValue ? formatMessage({ id: 'inputNumber.min' }) : placeholder}
       />
       {hasValue && <span style={{ paddingTop: 4, width: 10 }}>~</span>}
       {hasValue && (
@@ -43,7 +45,7 @@ export default React.memo(function InputSplit({ placeholder, onChange }: Props):
           min={minValue || 0}
           max={10}
           bordered={false}
-          placeholder="最大值"
+          placeholder={formatMessage({ id: 'inputNumber.max' })}
           style={{
             width: 80,
             textAlign: 'center',
