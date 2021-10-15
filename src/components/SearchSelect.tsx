@@ -12,7 +12,7 @@ export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'op
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
   options?: Option<string | number>[];
-  fixedOptions?: any;
+  fixedOptions?: Option<string | number>[];
 }
 /**
  *
