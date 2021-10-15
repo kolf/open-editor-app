@@ -11,8 +11,8 @@ function filterOption(input, option) {
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
-  options?: any;
-  fixedOptions?: any;
+  options?: Option<string | number>[];
+  fixedOptions?: Option<string | number>[];
 }
 /**
  *

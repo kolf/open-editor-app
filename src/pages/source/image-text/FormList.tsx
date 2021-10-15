@@ -62,7 +62,7 @@ const FormList = (props: any) => {
             type="editUser"
             mode="multiple"
             manual
-            fixedOptions={[{ value: '-1', label: <FormattedMessage id="All Resources" /> }]}
+            fixedOptions={[{ value: '-1', label: intl.formatMessage({ id: 'All Resources' }) }]}
           />
         </Form.Item>
         <Form.Item name="osiProviderId" className="form-list-item">
