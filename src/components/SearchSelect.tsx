@@ -11,7 +11,7 @@ function filterOption(input, option) {
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
-  options?: any;
+  options?: Option<string | number>[];
   fixedOptions?: any;
 }
 /**
@@ -30,7 +30,11 @@ export default React.memo(function SearchSelect({
   ...restProps
 }: Props): ReactElement {
   const [inputValue, setInputValue] = useState('');
-  const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
+  const {
+    run,
+    loading,
+    data = []
+  } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
     initialData: options || [],
     manual,
     debounceInterval: 900,
@@ -42,6 +46,8 @@ export default React.memo(function SearchSelect({
       run();
     }
   }, [inputValue]);
+
+  console.log(options, fixedOptions, 'opeit');
 
   return (
     <Select
