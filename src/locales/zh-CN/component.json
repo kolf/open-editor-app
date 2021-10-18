@@ -39,6 +39,11 @@
   "findAndReplace.search.placeholder": "请输入查找的内容",
   "findAndReplace.replace.placeholder": "请输入替换的内容",
 
+  "checkSensitiveWords.title": "敏感词提示",
+  "checkSensitiveWords.content": "该稿件标题、图说、组关键词、组照说明中包含限制发布的内容，请再次核实确保符合安全编审规范。如需发布含限制发布内容，须先请示频道主编及总编处理",
+  "checkSensitiveWords.id": "图片ID",
+  "checkSensitiveWords.keywords": "敏感词",
+
   "selectReject.error": "最多选择三个不通过原因，请取消一个再选择！",
   "selectReject.otherValue": "其他原因",
 

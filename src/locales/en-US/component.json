@@ -38,6 +38,11 @@
   "findAndReplace.search.placeholder": "Please enter search content",
   "findAndReplace.replace.placeholder": "Please enter replacement content",
 
+  "checkSensitiveWords.title": "Sensitive keywords",
+  "checkSensitiveWords.content": "The title, description, group keywords and group photo description contain contents that restrict publication. Please update the content. More, please contact the channel chief editor if you want to publish the restrict content.",
+  "checkSensitiveWords.id": "ID",
+  "checkSensitiveWords.keywords": "keywords",
+
   "selectReject.error": "more than three",
   "selectReject.otherValue": "Other",
 

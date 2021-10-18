@@ -1,4 +1,4 @@
-@import "~antd/dist/antd.less";
+@import '~antd/dist/antd.less';
 
 body {
   margin: 0;
@@ -14,6 +14,12 @@ body {
   }
 }
 
+.text {
+  &-error {
+    color: #cf1322;
+  }
+}
+
 .image-max {
   img {
     max-width: 100%;
@@ -21,27 +27,29 @@ body {
 }
 
 // antd
-.ant-modal-mask{
-  background-color: rgba(0,0,0,0) !important
+.ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0) !important;
 }
 .ant-form-inline .ant-form-item {
   margin-bottom: 8px;
 }
-.form-readonly{
-  .ant-input[disabled],.ant-select-disabled.ant-select-multiple .ant-select-selection-item,.ant-radio-disabled + span{
+.form-readonly {
+  .ant-input[disabled],
+  .ant-select-disabled.ant-select-multiple .ant-select-selection-item,
+  .ant-radio-disabled + span {
     color: #000;
   }
 }
-.ant-tag-green{
+.ant-tag-green {
   border-color: #008000;
-  color:#008000
+  color: #008000;
 }
-.ant-tag-blue{
+.ant-tag-blue {
   border-color: #096dd9;
 }
-.ant-tag-red{
+.ant-tag-red {
   border-color: #cf1322;
 }
-.ant-tag-gold{
+.ant-tag-gold {
   border-color: #d48806;
 }

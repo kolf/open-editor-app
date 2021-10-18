@@ -60,6 +60,7 @@ export default React.memo(function List() {
   const [keywords] = useHeaderSearch(() => onRefresh());
 
   const {
+    showSensitiveWowrds,
     getReasonTitle,
     keywordTags2string,
     showDetails,
@@ -238,6 +239,14 @@ export default React.memo(function List() {
       }
       mod.confirmLoading();
       const res = await review({ body: imageList, query: { status: 1 } });
+
+      const sensitiveWordsList = await imageService.checkSensitiveWords(imageList);
+      if (sensitiveWordsList.length) {
+        mod.close();
+        showSensitiveWowrds(sensitiveWordsList);
+        return;
+      }
+
       mod.close();
       message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
