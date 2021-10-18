@@ -129,6 +129,23 @@ export class ImageService {
       };
     });
   }
+
+  async checkSensitiveWords<T extends IImage>(
+    data: T[]
+  ): Promise<
+    {
+      id: IImage['id'];
+      sensitiveWords: string;
+    }[]
+  > {
+    try {
+      const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/checkSensitiveWords`, data);
+      return res.data || [];
+    } catch (error) {
+      return [];
+    }
+  }
+
   async getKeywordTags<T extends IImage>(data: T[]): Promise<T[]> {
     const idList = this.joinKeywordIds(data);
     if (idList.length === 0) {
