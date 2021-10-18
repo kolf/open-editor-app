@@ -27,7 +27,7 @@ export enum ModalType {
 
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
-  
+
   const {
     data = { list: [], total: 0 },
     loading,
