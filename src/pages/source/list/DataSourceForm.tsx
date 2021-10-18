@@ -102,6 +102,8 @@ export default function CreateDataModal({
     saveRef(form);
   }, [form]);
 
+  // console.log(initialValues, 'initialValues');
+
   return (
     <>
       <Form

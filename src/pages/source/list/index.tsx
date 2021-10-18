@@ -43,6 +43,7 @@ function List() {
   function makeRequestPayLoad(payload) {
     const result = Object.keys(payload).reduce((memo, p) => {
       const v = payload[p] || [];
+      // console.log(p, v, 'ai');
       switch (p) {
         case 'AIDetection':
           memo['ifAiQualityScore'] = v.includes(AIService.AI质量评分) ? 1 : 0;
@@ -85,10 +86,10 @@ function List() {
         case 'ifAiCategory':
         case 'ifAiKeywords':
           memo['AIDetection'] = memo['AIDetection'] || [];
-          if (key === 'ifAiQualityScore') memo['AIDetection'].push(AIService.AI质量评分);
-          if (key === 'ifAiBeautyScore') memo['AIDetection'].push(AIService.AI美学评分);
-          if (key === 'ifAiCategory') memo['AIDetection'].push(AIService.AI分类);
-          if (key === 'ifAiKeywords') memo['AIDetection'].push(AIService['AI自动标题/关键词']);
+          if (key === 'ifAiQualityScore' && v) memo['AIDetection'].push(AIService.AI质量评分);
+          if (key === 'ifAiBeautyScore' && v) memo['AIDetection'].push(AIService.AI美学评分);
+          if (key === 'ifAiCategory' && v) memo['AIDetection'].push(AIService.AI分类);
+          if (key === 'ifAiKeywords' && v) memo['AIDetection'].push(AIService['AI自动标题/关键词']);
           break;
         case 'name':
         case 'assetType':
@@ -242,22 +243,22 @@ function List() {
       render: (value, tr) => {
         return (
           <>
-            {tr.ifAiQualityScore && (
+            {!!tr.ifAiQualityScore && (
               <div>
                 <FormattedMessage id="LAI Quality" />
               </div>
             )}
-            {tr.ifAiBeautyScore && (
+            {!!tr.ifAiBeautyScore && (
               <div>
                 <FormattedMessage id="AAI Aesthetic" />
               </div>
             )}
-            {tr.ifAiCategory && (
+            {!!tr.ifAiCategory && (
               <div>
                 <FormattedMessage id="AI Categories" />
               </div>
             )}
-            {tr.ifAiKeywords && (
+            {!!tr.ifAiKeywords && (
               <div>
                 <FormattedMessage id="AI Title-Keywords" />
               </div>
@@ -318,7 +319,7 @@ function List() {
             setQuery({ ...query, ...values });
           }
         }}
-      ></Toolbar>
+      />
       <Table
         pagination={false}
         loading={loading}
