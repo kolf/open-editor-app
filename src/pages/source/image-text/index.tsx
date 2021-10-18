@@ -71,12 +71,13 @@ function VcgImageText() {
         await bacthService
           .assign(values)
           .then(() => {
-            message.success(intl.formatMessage({ id: 'Distribution Success' }))
+            message.success(intl.formatMessage({ id: 'Distribution Success' }));
             refresh();
           })
           .catch(err => {
             message.error(err.message);
-          }).finally(mod.close);
+          })
+          .finally(mod.close);
       } catch (e) {
         mod && mod.close();
         e && message.error(e);
@@ -142,13 +143,13 @@ function VcgImageText() {
       title: <FormattedMessage id="Priority" />,
       align: 'center',
       dataIndex: 'priority',
-      render: value => value && <FormattedMessage id={getTableDisplay(value, Priority)}/>
+      render: value => value && <FormattedMessage id={getTableDisplay(value, Priority)} />
     },
     {
       title: <FormattedMessage id="Distribution Stats" />,
       align: 'center',
       dataIndex: 'assignStatus',
-      render: value => value && <FormattedMessage id={getTableDisplay(value, BatchAssignStatus)}/>
+      render: value => value && <FormattedMessage id={getTableDisplay(value, BatchAssignStatus)} />
     },
     {
       title: <FormattedMessage id="Distribution Date" />,
@@ -180,11 +181,7 @@ function VcgImageText() {
       render: (value, tr) => {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
-          <Button
-            disabled={tr.assignStatus != BatchAssignStatus.未分配 || tr.status == BatchStatus.入库中}
-            type="text"
-            onClick={() => assignData(tr.id)}
-          >
+          <Button disabled={tr.status !== BatchStatus.入库完成} type="text" onClick={() => assignData(tr.id)}>
             <FormattedMessage id="Distribution" />
           </Button>
         );
