@@ -175,7 +175,7 @@ export class ImageService {
                     });
                   }
                 }
-              } else {
+              } else if (k) {
                 const [label, id] = k.split('|');
                 const value = id ? id.replaceAll('::', ',') : label;
 

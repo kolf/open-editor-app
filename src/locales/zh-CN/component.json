@@ -44,6 +44,15 @@
   "checkSensitiveWords.id": "图片ID",
   "checkSensitiveWords.keywords": "敏感词",
 
+  "sensitiveWords.title": "敏感词",
+  "sensitiveWords.id": "ID",
+  "sensitiveWords.keyword": "敏感词",
+  "sensitiveWords.synoKeyword": "同义词",
+  "sensitiveWords.category": "分类",
+  "sensitiveWords.notes": "备注",
+  "sensitiveWords.groupKeyword": "组合词",
+  "sensitiveWords.groupSynoKeyword": "组合词同义词",
+
   "selectReject.error": "最多选择三个不通过原因，请取消一个再选择！",
   "selectReject.otherValue": "其他原因",
 

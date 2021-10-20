@@ -8,11 +8,13 @@ function filterOption(input, option) {
   return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
+type Options = Option<string | number>[];
+
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
-  options?: Option<string | number>[];
-  fixedOptions?: Option<string | number>[];
+  options?: Options;
+  fixedOptions?: Options;
 }
 /**
  *
@@ -46,8 +48,6 @@ export default React.memo(function SearchSelect({
       run();
     }
   }, [inputValue]);
-
-  console.log(options, fixedOptions, 'opeit');
 
   return (
     <Select

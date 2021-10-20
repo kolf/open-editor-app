@@ -27,6 +27,11 @@ function isLicenseActive(releases: IImage['releases'], value: IImage['releaseTyp
   return !!releases.find(o => o.type + '' === value);
 }
 
+function are(prevState, nextState) {
+  // console.log(prevState, nextState, 'prevState, nextState');
+  return JSON.stringify(prevState.dataSource) === JSON.stringify(nextState.dataSource) && prevState.selected === nextState.selected;
+}
+
 export default React.memo(function ListItem({
   dataSource,
   selected,
@@ -199,4 +204,5 @@ export default React.memo(function ListItem({
       )}
     </GridItem>
   );
-});
+},
+are);

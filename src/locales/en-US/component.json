@@ -43,6 +43,15 @@
   "checkSensitiveWords.id": "ID",
   "checkSensitiveWords.keywords": "keywords",
 
+  "sensitiveWords.title": "Sensitive keywords",
+  "sensitiveWords.id": "ID",
+  "sensitiveWords.keyword": "Keywords",
+  "sensitiveWords.synoKeyword": "Synonym",
+  "sensitiveWords.category": "Category",
+  "sensitiveWords.notes": "Notes",
+  "sensitiveWords.groupKeyword": "Combined",
+  "sensitiveWords.groupSynoKeyword": "Combined synonyms",
+
   "selectReject.error": "more than three",
   "selectReject.otherValue": "Other",
 
