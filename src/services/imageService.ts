@@ -179,7 +179,7 @@ export class ImageService {
                 const [label, id] = k.split('|');
                 const value = id ? id.replaceAll('::', ',') : label;
 
-                if (!keywordTags.find(k => k.value === value)) {
+                if (label && !keywordTags.find(k => k.value === value)) {
                   keywordTags.push({
                     value,
                     label: label,
