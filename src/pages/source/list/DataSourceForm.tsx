@@ -35,9 +35,11 @@ export default function CreateDataModal({
   initialValues: any;
   modalType: ModalType;
 }) {
-  const [opts, setOptions] = useState(defaultOptions);
   const intl = useIntl();
-  const [form] = Form.useForm();
+
+  const [opts, setOptions] = useState(defaultOptions);
+  const [form] = Form.useForm(null);
+  const [values, setValues] = useState(initialValues);
 
   useEffect(() => {
     // 如果弹窗为修改数据来源 且 审核类型只勾选质量审核、关键词审核其中一个
@@ -102,13 +104,12 @@ export default function CreateDataModal({
     saveRef(form);
   }, [form]);
 
-  // console.log(initialValues, 'initialValues');
-
   return (
     <>
       <Form
         form={form}
         onFieldsChange={onFieldsChange}
+        onValuesChange={newValue => setValues({ ...values, ...newValue })}
         initialValues={initialValues}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 12 }}
@@ -126,7 +127,7 @@ export default function CreateDataModal({
         <Form.Item
           label={<FormattedMessage id="Resource Type" />}
           name="assetType"
-          rules={[{ required: true, message: '请选择资源类型！' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'select.placeholder' }) }]}
         >
           <Radio.Group>
             {Object.keys(AssetType).map((t, i) => (
@@ -139,7 +140,7 @@ export default function CreateDataModal({
         <Form.Item
           label={<FormattedMessage id="Inspection Type" />}
           name="auditFlows"
-          rules={[{ required: true, message: <FormattedMessage id="Please Select Inspection Type!" /> }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'select.placeholder' }) }]}
         >
           <Checkbox.Group>
             {Object.keys(AuditType).map((t, i) => {
@@ -154,7 +155,7 @@ export default function CreateDataModal({
         <Form.Item
           label={<FormattedMessage id="Distribution" />}
           name="assignType"
-          rules={[{ required: true, message: '请选择分配！' }]}
+          rules={[{ required: true, message: intl.formatMessage({ id: 'select.placeholder' }) }]}
         >
           <Radio.Group>
             {Object.keys(AssignType).map((t, i) => (
@@ -171,7 +172,16 @@ export default function CreateDataModal({
             ))}
           </Radio.Group>
         </Form.Item>
-        <Form.Item label={<FormattedMessage id="NSFW Scan" />} name="sensitiveCheckType">
+        <Form.Item
+          label={<FormattedMessage id="NSFW Scan" />}
+          name="sensitiveCheckType"
+          rules={[
+            {
+              required: values.sensitiveKeywordsTable?.length > 0,
+              message: intl.formatMessage({ id: 'select.placeholder' })
+            }
+          ]}
+        >
           <Checkbox.Group>
             {Object.keys(opts.sensitiveCheckType).map((t, i) => (
               <Checkbox key={`${t}${i}`} value={opts.sensitiveCheckType[t]}>
@@ -185,21 +195,9 @@ export default function CreateDataModal({
           name="sensitiveKeywordsTable"
           rules={[
             {
-              required: false,
+              required: values.sensitiveCheckType?.length > 0,
               message: <FormattedMessage id="Please Select NSFW Keywords!" />
-            },
-            ({ getFieldValue }) => ({
-              validator(_, value) {
-                const isSensitiveCheckExist = getFieldValue('sensitiveCheckType')?.length;
-                const isSensitiveWordListExist = value?.length;
-                if (isSensitiveCheckExist && !isSensitiveWordListExist) {
-                  return Promise.reject(<FormattedMessage id="Please Select NSFW Keywords!" />);
-                } else if (!isSensitiveCheckExist && isSensitiveWordListExist) {
-                  return Promise.reject(<FormattedMessage id="Please Select NSFW Scan!" />);
-                }
-                return Promise.resolve();
-              }
-            })
+            }
           ]}
         >
           <Checkbox.Group>
