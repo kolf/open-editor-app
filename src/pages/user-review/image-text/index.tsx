@@ -486,27 +486,34 @@ export default React.memo(function List() {
     }
   };
 
+  const getFormItemKeys = React.useMemo(() => {
+    return () => [
+      3,
+      1,
+      2,
+      4,
+      { key: 5, options: providerOptions },
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      { key: 13, options: categoryOptions }
+    ];
+  }, [categoryOptions, providerOptions]);
+
+  const onFormListChange = React.useCallback(
+    values => {
+      setQuery({ ...query, ...values, pageNum: 1 });
+    },
+    [query]
+  );
+
   return (
     <>
-      <FormList
-        itemKeys={[
-          3,
-          1,
-          2,
-          4,
-          { key: 5, options: providerOptions },
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          { key: 13, options: categoryOptions }
-        ]}
-        initialValues={query}
-        onChange={value => setQuery({ ...query, ...value, pageNum: 1 })}
-      />
+      <FormList itemKeys={getFormItemKeys()} initialValues={query} onChange={onFormListChange} />
       <Toolbar
         onSelectIds={setSelectedIds}
         onRefresh={onRefresh}

@@ -1,6 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
+import { useSelector } from 'react-redux';
 import { Collapse, Checkbox, Input, message } from 'antd';
 import { useIntl } from 'react-intl';
+import { RootState } from 'src/store';
 const { Panel } = Collapse;
 
 interface Props {
@@ -8,10 +10,12 @@ interface Props {
   onChange?: (value: string[], otherValue: string) => void;
 }
 
-const SelectReject = ({ dataSource, onChange }: Props) => {
+export default function SelectReject({ dataSource, onChange }: Props): React.ReactElement {
   const { formatMessage } = useIntl();
-  const [value, setValue] = useState([]);
-  const [otherValue, setOtherValue] = useState('');
+  const { language } = useSelector((state: RootState) => state.language);
+  const [value, setValue] = React.useState([]);
+  const [otherValue, setOtherValue] = React.useState('');
+  const isEn = language === 'en-US';
 
   const handleChange = e => {
     const { checked, value: newValue } = e.target;
@@ -38,20 +42,20 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
         return (
           <div key={item.id}>
             <Checkbox value={key} onChange={handleChange} checked={value.includes(key)}>
-              {item.desc}
+              {item[isEn ? 'descEn' : 'desc']}
             </Checkbox>
           </div>
         );
       }
       return (
         <div key={item.id}>
-          <h4 style={{ paddingTop: 6, fontWeight: 700 }}>{item.desc}</h4>
+          <h4 style={{ paddingTop: 6, fontWeight: 700 }}>{item[isEn ? 'descEn' : 'desc']}</h4>
           {item.childNodes.map(c => {
             const key = c.id + '';
             return (
               <div key={c.id}>
                 <Checkbox value={key} onChange={handleChange} checked={value.includes(key)}>
-                  {c.desc}
+                  {c[isEn ? 'descEn' : 'desc']}
                 </Checkbox>
               </div>
             );
@@ -64,7 +68,7 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
   return (
     <Collapse bordered={false} defaultActiveKey={['other']}>
       {dataSource.map(item => (
-        <Panel header={item.desc} key={item.id + ''}>
+        <Panel header={item[isEn ? 'descEn' : 'desc']} key={item.id + ''}>
           {renderCheckboxGroup(item.childNodes)}
         </Panel>
       ))}
@@ -85,6 +89,4 @@ const SelectReject = ({ dataSource, onChange }: Props) => {
       </Panel>
     </Collapse>
   );
-};
-
-export default SelectReject;
+}

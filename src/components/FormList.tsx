@@ -27,6 +27,8 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
   const [collapse, setCollapse] = useState(false);
   const values = form.getFieldsValue();
 
+  console.log(initialValues, 'initialValues');
+
   const renderFormItem = ({ restProps, formType, field, placeholder, options }: IFormItem): ReactElement => {
     // console.log(options, 'options');
     switch (formType) {
