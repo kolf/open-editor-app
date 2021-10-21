@@ -5,8 +5,7 @@ import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import KeywordTextAreaGroup, { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup';
-
-import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
+import SensitiveWordsTips from 'src/components/SensitiveWordsTips';
 import { useIntl } from 'react-intl';
 
 type Props<T> = {
@@ -39,7 +38,6 @@ export default React.memo(function ListItem({
   const { formatMessage } = useIntl();
   const disabledMessage =
     dataSource.osiImageReview.keywordsCallbackStatus === 2 ? formatMessage({ id: 'image.callbackStatus.2' }) : '';
-  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
 
   // TODO 待优化
   const indexPropsMap = {
@@ -134,11 +132,7 @@ export default React.memo(function ListItem({
         </GridItem.TopTag>
       )}
 
-      {dataSource.sensitiveList.length > 0 && (
-        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
-          {sensitiveListTitle as string}
-        </GridItem.TopTag>
-      )}
+      <SensitiveWordsTips dataSource={dataSource.sensitiveWordList} />
     </GridItem>
   );
 });

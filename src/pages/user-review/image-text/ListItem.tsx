@@ -5,10 +5,11 @@ import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
-import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
+import SensitiveWordsTips from 'src/components/SensitiveWordsTips';
 import options, { Quality } from 'src/declarations/enums/query';
 import { useIntl } from 'react-intl';
 import { useOptions } from 'src/hooks/useSelect';
+
 const { Option } = Select;
 const qualityOptions = options.get(Quality);
 
@@ -27,11 +28,6 @@ function isLicenseActive(releases: IImage['releases'], value: IImage['releaseTyp
   return !!releases.find(o => o.type + '' === value);
 }
 
-function are(prevState, nextState) {
-  // console.log(prevState, nextState, 'prevState, nextState');
-  return JSON.stringify(prevState.dataSource) === JSON.stringify(nextState.dataSource) && prevState.selected === nextState.selected;
-}
-
 export default React.memo(function ListItem({
   dataSource,
   selected,
@@ -45,8 +41,6 @@ export default React.memo(function ListItem({
   const licenseOptions = useOptions<IImage['releaseType']>('image.releaseType.s', ['1', '2']);
   const disabledMessage =
     dataSource.osiImageReview.callbackStatus === 2 ? formatMessage({ id: 'image.callbackStatus.2' }) : '';
-
-  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
 
   // TODO 待优化
   const indexPropsMap = {
@@ -197,12 +191,7 @@ export default React.memo(function ListItem({
         </GridItem.TopTag>
       )}
 
-      {dataSource.sensitiveList.length > 0 && (
-        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
-          {sensitiveListTitle as string}
-        </GridItem.TopTag>
-      )}
+      <SensitiveWordsTips dataSource={dataSource.sensitiveWordList} />
     </GridItem>
   );
-},
-are);
+});

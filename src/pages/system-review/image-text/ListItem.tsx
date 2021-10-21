@@ -5,7 +5,7 @@ import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
 import RadioText from 'src/components/RadioText';
-import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
+import SensitiveWordsTips from 'src/components/SensitiveWordsTips';
 import options, { Quality } from 'src/declarations/enums/query';
 import { useIntl } from 'react-intl';
 import { useOptions } from 'src/hooks/useSelect';
@@ -25,17 +25,11 @@ function isLicenseActive(releases: IImage['releases'], value: IImage['releaseTyp
   return !!releases.find(o => o.type + '' === value);
 }
 
-export default React.memo(function ListItem({
-  dataSource,
-  index,
-  onClick
-}: Props<IImage>): ReactElement {
+export default React.memo(function ListItem({ dataSource, index, onClick }: Props<IImage>): ReactElement {
   const { formatMessage } = useIntl();
   const copyrightOptions = useOptions<IImage['copyright']>('image.copyright', ['0', '1', '2', '3', '7', '9']);
   const licenseTypeOptions = useOptions<IImage['licenseType']>('image.liceseType', ['1', '2']);
   const licenseOptions = useOptions<IImage['releaseType']>('image.releaseType.s', ['1', '2']);
-
-  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
 
   // TODO 待优化
   const indexPropsMap = {
@@ -59,9 +53,7 @@ export default React.memo(function ListItem({
       indexProps={{ ...indexPropsMap[dataSource.osiImageReview.qualityStatus], text: index + 1 + '' }}
       height={460}
       onClick={field => onClick(index, field)}
-      actions={[
-        { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }
-      ]}
+      actions={[{ icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }]}
     >
       <GridItemRow>
         <Row>
@@ -121,16 +113,10 @@ export default React.memo(function ListItem({
               );
             })}
           </Space>
-          <RadioText<IImage['licenseType']>
-            options={licenseTypeOptions}
-            value={dataSource.licenseType}
-          />
+          <RadioText<IImage['licenseType']> options={licenseTypeOptions} value={dataSource.licenseType} />
 
           <div style={{ position: 'absolute', right: 0, top: 0 }}>
-            <Select
-              defaultValue={dataSource.qualityRank}
-              placeholder={formatMessage({ id: 'image.qualityRank' })}
-            >
+            <Select defaultValue={dataSource.qualityRank} placeholder={formatMessage({ id: 'image.qualityRank' })}>
               {qualityOptions.map(o => (
                 <Option value={o.value} key={o.value}>
                   {o.label}
@@ -162,11 +148,7 @@ export default React.memo(function ListItem({
         </GridItem.TopTag>
       )}
 
-      {dataSource.sensitiveList.length > 0 && (
-        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
-          {sensitiveListTitle as string}
-        </GridItem.TopTag>
-      )}
+      <SensitiveWordsTips dataSource={dataSource.sensitiveWordList} />
     </GridItem>
   );
 });

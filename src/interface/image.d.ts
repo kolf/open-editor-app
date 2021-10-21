@@ -118,7 +118,8 @@ declare type IImage = Partial<{
   osiKeywodsData: IOsiKeywodsData;
   releases: IRelease[];
   releaseType: '1' | '2' | '3';
-  sensitiveList: any[]; // TODO 待优化
+  sensitiveWords: string; // TODO 待优化
+  sensitiveWordList: any[]; // TODO 待优化
 }>;
 
 declare interface IImageResponse {

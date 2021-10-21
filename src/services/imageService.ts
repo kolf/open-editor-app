@@ -25,16 +25,11 @@ export class ImageService {
   async getList(data: any): Promise<any> {
     const res = await Api.post(`/api/outsourcing/osiImage/pageList`, data);
     const { list, total } = res.data.data;
-    const res1 = await this.getSentiveWordList(list.map(item => item.id));
+    let nextList = await this.getSentiveWordList(list);
 
     return {
       total,
-      list: list.map(item => {
-        return {
-          ...item,
-          sensitiveList: res1[item.id] || []
-        };
-      })
+      list: nextList
     };
   }
   async getExif(data: any): Promise<any> {
@@ -202,12 +197,18 @@ export class ImageService {
     }
   }
 
-  async getSentiveWordList(data: any): Promise<any> {
+  async getSentiveWordList<T extends IImage>(data: T[]): Promise<T[]> {
+    const idList: IdList = data.map(item => item.id);
     try {
-      const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, data);
-      return res.data.data;
+      const res = await Api.post(`/api/outsourcing/osiImageSensitiveReason/getSentiveWordByImageIds`, idList);
+      const mapData = res?.data?.data || {};
+      // return res.data.data;
+      return data.map(item => ({
+        ...item,
+        sensitiveWordList: mapData[item.id] || []
+      }));
     } catch (error) {
-      return {};
+      return data.map(item => ({ ...item, sensitiveWordList: [] }));
     }
   }
   async getSentiveWord(keywordsList: any): Promise<any> {

@@ -4,9 +4,8 @@ import { CalendarOutlined } from '@ant-design/icons';
 import IconFont from 'src/components/Iconfont';
 import GridItem from 'src/components/list/GridItem';
 import GridItemRow from 'src/components/list/GridItemRow';
+import SensitiveWordsTips from 'src/components/SensitiveWordsTips';
 import KeywordTextAreaGroup, { ModeType } from 'src/components/KeywordTextAreaGroup';
-
-import { useSentiveKeywords } from 'src/hooks/useSentiveKeywords';
 import { useIntl } from 'react-intl';
 
 type Props<T> = {
@@ -17,8 +16,7 @@ type Props<T> = {
 };
 
 export default React.memo(function ListItem({ dataSource, keywordMode, index, onClick }: Props<IImage>): ReactElement {
-const { formatMessage } = useIntl();
-  const [sensitiveListTitle, showSensitiveDetails] = useSentiveKeywords(dataSource.sensitiveList); // TODO 待优化
+  const { formatMessage } = useIntl();
   // TODO 待优化
   const indexPropsMap = {
     14: {
@@ -50,9 +48,7 @@ const { formatMessage } = useIntl();
       indexProps={{ ...indexPropsMap[dataSource.osiImageReview.keywordsStatus], text: index + 1 + '' }}
       height={getHeight()}
       onClick={field => onClick(index, field)}
-      actions={[
-        { icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }
-      ]}
+      actions={[{ icon: <CalendarOutlined />, value: 'logs', label: formatMessage({ id: 'image.log' }) }]}
     >
       <GridItemRow>
         <Row>
@@ -87,7 +83,12 @@ const { formatMessage } = useIntl();
       </GridItemRow>
 
       <GridItemRow>
-        <Input.TextArea title={dataSource.title} rows={2} defaultValue={dataSource.title} placeholder={formatMessage({ id: 'image.title' })}/>
+        <Input.TextArea
+          title={dataSource.title}
+          rows={2}
+          defaultValue={dataSource.title}
+          placeholder={formatMessage({ id: 'image.title' })}
+        />
       </GridItemRow>
       <Divider style={{ margin: '6px 0' }} />
 
@@ -105,12 +106,7 @@ const { formatMessage } = useIntl();
           {dataSource.reasonTitle}
         </GridItem.TopTag>
       )}
-
-      {dataSource.sensitiveList.length > 0 && (
-        <GridItem.TopTag align="left" color="#666" onClick={showSensitiveDetails}>
-          {sensitiveListTitle as string}
-        </GridItem.TopTag>
-      )}
+      <SensitiveWordsTips dataSource={dataSource.sensitiveWordList} />
     </GridItem>
   );
 });
