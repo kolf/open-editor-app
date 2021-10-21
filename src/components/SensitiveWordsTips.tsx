@@ -50,15 +50,15 @@ function stringify(dataSource: any[]): string {
 export default function SensitiveWordsTips({ dataSource }: Props): React.ReactElement {
   const ref = React.useRef();
   const isLeave = useHover(ref);
-  if (!dataSource) {
-    return null;
+  if (dataSource.length === 0) {
+    return <div ref={ref} />;
   }
   const data = parse(dataSource);
 
   const getStyle = (): React.CSSProperties => {
     return {
       position: 'absolute',
-      zIndex:11,
+      zIndex: 11,
       top: 0,
       paddingLeft: 4,
       paddingRight: 4,
