@@ -4,6 +4,7 @@ import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import SearchSelect from 'src/components/SearchSelect';
 import InputSplit from 'src/components/InputSplit';
 import useFormItems, { IFormItem, IFormItemKey } from 'src/hooks/useFormItems';
+import propsAreEqual from 'src/utils/propsAreEqual';
 
 import 'src/styles/FormList.less';
 import { useIntl } from 'react-intl';
@@ -27,7 +28,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
   const [collapse, setCollapse] = useState(false);
   const values = form.getFieldsValue();
 
-  console.log(initialValues, 'initialValues');
+  // console.log(initialValues, 'initialValues');
 
   const renderFormItem = ({ restProps, formType, field, placeholder, options }: IFormItem): ReactElement => {
     // console.log(options, 'options');
@@ -100,4 +101,4 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
       </div>
     </div>
   );
-});
+}, propsAreEqual(['itemKeys']));

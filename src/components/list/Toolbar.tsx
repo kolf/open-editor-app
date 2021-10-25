@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { Affix, Space, Button } from 'antd';
 import { ReloadOutlined } from '@ant-design/icons';
 import Pager, { Props as IPager } from 'src/components/Pager';
+import propsAreEqual from 'src/utils/propsAreEqual';
 import './Toolbar.less';
 import { useOptions } from '../../hooks/useSelect';
 
@@ -78,4 +79,5 @@ export default React.memo(function Toolbar({
       </div>
     </Affix>
   );
-});
+},
+propsAreEqual(['selectedIds', 'idList']));
