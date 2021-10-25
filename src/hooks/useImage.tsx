@@ -138,7 +138,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       return;
     }
 
-    const langType = list[0].osiKeywodsData.langType;
+    const langType = selectedList[0].osiKeywodsData.langType;
     const mod = modal({
       title: formatMessage({ id: 'image.setting' }, { value: formatMessage({ id: 'image.keywords' }) }),
       width: 760,

@@ -327,7 +327,6 @@ function List() {
         columns={columns}
         dataSource={list.map((l, i) => Object.assign(l, { index: i + 1 }))}
       />
-      ;
     </>
   );
 }
