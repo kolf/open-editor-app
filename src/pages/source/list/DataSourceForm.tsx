@@ -104,6 +104,8 @@ export default function CreateDataModal({
     saveRef(form);
   }, [form]);
 
+  console.log(values, 'values');
+
   return (
     <>
       <Form

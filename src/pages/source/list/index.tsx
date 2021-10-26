@@ -43,7 +43,7 @@ function List() {
   function makeRequestPayLoad(payload) {
     const result = Object.keys(payload).reduce((memo, p) => {
       const v = payload[p] || [];
-      // console.log(p, v, 'ai');
+
       switch (p) {
         case 'AIDetection':
           memo['ifAiQualityScore'] = v.includes(AIService.AI质量评分) ? 1 : 0;
@@ -57,7 +57,7 @@ function List() {
         case 'keywordsReivewTitle':
         case 'keywordsReviewKeywords':
         case 'sensitiveKeywordsTable':
-          memo[p] = v.join(',');
+          memo[p] = v ? v.join(',') : [];
           break;
         default:
           memo[p] = payload[p];
@@ -78,7 +78,7 @@ function List() {
         case 'sensitiveKeywordsTable':
         case 'keywordsReivewTitle':
         case 'keywordsReviewKeywords':
-          memo[key] = v?.split(',');
+          memo[key] = v ? v.split(',') : [];
           break;
         // AI服务因字段原因单独处理
         case 'ifAiQualityScore':
