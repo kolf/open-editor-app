@@ -12,6 +12,7 @@ export interface Props {
 const pageOptions = [60, 100, 200];
 
 export default React.memo(function Pager({ onChange, ...restProps }: Props): ReactElement {
+  // console.log(restProps.total,'restProps.total')
   const pageProps = {
     simple: true,
     ...restProps,

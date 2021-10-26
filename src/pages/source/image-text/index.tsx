@@ -37,16 +37,11 @@ function VcgImageText() {
   const {
     data = { list: [], total: 0 },
     loading,
-    run: fetchData,
     refresh
-  } = useRequest(bacthService.getList, {
-    manual: true,
-    ready: !!providerOptions
+  } = useRequest(() => bacthService.getList(query), {
+    ready: !!providerOptions,
+    refreshDeps: [query]
   });
-
-  useEffect(() => {
-    fetchData(query);
-  }, [query]);
 
   // 数据分配弹窗
   function assignData(osiBatchId) {
@@ -124,9 +119,10 @@ function VcgImageText() {
       align: 'center',
       dataIndex: 'sensitiveCheckType',
       render: value => {
+        console.log(value, 'value');
         const texts = (value && value.split(',').map(v => getTableDisplay(v, SensitiveCheckType))) || [];
         return (
-          (texts.length &&
+          (texts.length > 0 &&
             texts.map((t, i) => {
               return (
                 <div key={i}>
@@ -247,7 +243,7 @@ function VcgImageText() {
             setQuery({ ...query, ...values });
           }
         }}
-      ></Toolbar>
+      />
       <Table
         pagination={false}
         dataSource={data.list.map((l, i) => Object.assign(l, { index: i + 1 }))}
