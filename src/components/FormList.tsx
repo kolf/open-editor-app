@@ -101,4 +101,4 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
       </div>
     </div>
   );
-}, propsAreEqual(['itemKeys']));
+});

@@ -78,7 +78,7 @@ export default React.memo(function ListItem({
             {dataSource.createdTime}
           </Col>
           <Col title={formatMessage({ id: 'image.qualityEditTime' })} style={{ textAlign: 'right' }}>
-            {dataSource.osiImageReview.qualityEditTime}
+            {dataSource.osiImageReview.keywordsEditTime}
           </Col>
         </Row>
       </GridItemRow>

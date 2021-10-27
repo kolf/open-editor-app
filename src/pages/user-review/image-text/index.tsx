@@ -22,10 +22,10 @@ import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/e
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import { useOptions } from 'src/hooks/useSelect';
+import { IFormItemKey } from 'src/hooks/useFormItems';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
-const copyrightOptions = options.get(CopyrightType);
 
 const initialData = {
   list: [],
@@ -48,6 +48,7 @@ export default React.memo(function List() {
     mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
+      console.log(query, 'query');
       const res = await imageService.getList(formatQuery(query));
       return res;
     },
@@ -106,6 +107,10 @@ export default React.memo(function List() {
         qualityAuditorId: partyId
       }
     );
+
+    if (!query.qualityStatus) {
+      result['qualityStatus'] = '14,24,34';
+    }
 
     if (keywords) {
       result['keyword'] = keywords;
@@ -486,8 +491,8 @@ export default React.memo(function List() {
     }
   };
 
-  const getFormItemKeys = React.useMemo(() => {
-    return () => [
+  const formItemKeys: IFormItemKey[] = React.useMemo(() => {
+    return [
       3,
       1,
       2,
@@ -504,16 +509,13 @@ export default React.memo(function List() {
     ];
   }, [categoryOptions, providerOptions]);
 
-  const onFormListChange = React.useCallback(
-    values => {
-      setQuery({ ...query, ...values, pageNum: 1 });
-    },
-    [query]
-  );
-
   return (
     <>
-      <FormList itemKeys={getFormItemKeys()} initialValues={query} onChange={onFormListChange} />
+      <FormList
+        itemKeys={formItemKeys}
+        initialValues={query}
+        onChange={values => setQuery({ ...query, ...values, pageNum: 1 })}
+      />
       <Toolbar
         onSelectIds={setSelectedIds}
         onRefresh={onRefresh}
@@ -523,8 +525,8 @@ export default React.memo(function List() {
           total,
           current: query.pageNum,
           pageSize: query.pageSize,
-          onChange: value => {
-            setQuery({ ...query, ...value });
+          onChange: values => {
+            setQuery({ ...query, ...values });
           }
         }}
       >

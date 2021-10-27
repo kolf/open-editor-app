@@ -12,6 +12,7 @@ import { ModeType as KeywordModeType } from 'src/components/KeywordTextAreaGroup
 import { useDocumentTitle } from 'src/hooks/useDom';
 import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
+import { IFormItemKey } from 'src/hooks/useFormItems';
 import imageService from 'src/services/imageService';
 
 import config from 'src/config';
@@ -140,26 +141,27 @@ export default React.memo(function List() {
     }
   };
 
+  const formItemKeys: IFormItemKey[] = React.useMemo(() => {
+    return [
+      3,
+      1,
+      2,
+      14,
+      { key: 5, options: providerOptions },
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      { key: 13, options: categoryOptions }
+    ];
+  }, [categoryOptions, providerOptions]);
+
   return (
     <>
-      <FormList
-        itemKeys={[
-          3,
-          1,
-          2,
-          14,
-          { key: 5, options: providerOptions },
-          6,
-          7,
-          8,
-          9,
-          10,
-          11,
-          12,
-          { key: 13, options: categoryOptions }
-        ]}
-        onChange={value => setQuery({ ...query, ...value, pageNum: 1 })}
-      />
+      <FormList itemKeys={formItemKeys} onChange={value => setQuery({ ...query, ...value, pageNum: 1 })} />
       <Toolbar
         onRefresh={onRefresh}
         pagerProps={{
