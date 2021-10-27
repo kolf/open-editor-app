@@ -96,7 +96,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
             allowClear
             placeholder={formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
             onChange={e => {
-              const value = e.target.value.replaceAll('，', ',');
+              const value = e.target.value.replace(/，/g, ',');
               dispatch(setKeywords(value));
             }}
             onSearch={e => {

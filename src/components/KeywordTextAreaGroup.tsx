@@ -43,7 +43,7 @@ export const updateValueSource = <T extends IKeywordsTag>(value: T[], nextValue:
         if (addedSourceTypeReg.test(rv.source)) {
           nextSource = (rv.source + 'Del') as IKeywordsTag['source'];
         } else if (removedSourceTypeReg.test(rv.source)) {
-          nextSource = rv.source.replaceAll('Del', '') as IKeywordsTag['source'];
+          nextSource = rv.source.replace(/Del/g, '') as IKeywordsTag['source'];
         }
 
         return [

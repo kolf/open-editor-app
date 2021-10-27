@@ -47,7 +47,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
             keywordArr.push(keywordStr);
           }
         } else if (type === 2) {
-          keywordStr = `${label}|${value.replaceAll(',', '::')}|2|0`;
+          keywordStr = `${label}|${value.replace(/,/g, '::')}|2|0`;
           if (!removedSourceTypeReg.test(source)) {
             keywordsAuditArr.push(keywordStr);
           }
@@ -216,7 +216,10 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       const currentList = listRef.current;
       const changedList: ITitleInListItem[] = idList.map(id => {
         const item = currentList.find(c => c.id === id);
-        return { id, title: tools.trim(item.title).replaceAll(tools.trim(searchValue), tools.trim(replaceValue)) };
+        return {
+          id,
+          title: tools.trim(item.title).replace(new RegExp(tools.trim(searchValue), 'g'), tools.trim(replaceValue))
+        };
       });
 
       setSelectedList(changedList);
