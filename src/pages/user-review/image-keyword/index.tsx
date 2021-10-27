@@ -19,6 +19,7 @@ import imageService from 'src/services/imageService';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
+import modal from 'src/utils/modal';
 
 const initialData = {
   list: [],
@@ -202,54 +203,22 @@ export default React.memo(function List() {
 
   // 设置通过
   const setResolve = async (index: number) => {
-    const idList = index === -1 ? selectedIds : [list[index].id];
-
-    if (idList.length === 0) {
-      message.info(formatMessage({ id: 'image.error.unselect' }));
-      return;
-    }
+    const idList: IdList = index === -1 ? selectedIds : [list[index].id];
 
     let mod = null;
     try {
+      const submitList = await validatorList(idList);
+
       mod = await confirm({
         title: formatMessage({ id: 'image.action.setResolve' }),
         content: formatMessage({ id: 'image.action.setResolve.content' })
       });
 
-      const imageList = list
-        .filter(item => idList.includes(item.id) && item.osiImageReview.keywordsCallbackStatus !== 2)
-        .map(item => {
-          const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
-          return {
-            ...item,
-            keywords,
-            osiKeywodsData: {
-              ...item.osiKeywodsData,
-              keywordsAudit,
-              keywordsAll
-            },
-            keywordTags: undefined,
-            osiImageReview: undefined,
-            createdTime: undefined,
-            updatedTime: undefined
-          };
-        });
-      if (imageList.length === 0) {
-        mod.close();
-        return;
-      }
       mod.confirmLoading();
 
-      const sensitiveWordsList = await imageService.checkSensitiveWords(imageList);
-      if (sensitiveWordsList.length) {
-        mod.close();
-        showSensitiveWowrds(sensitiveWordsList);
-        return;
-      }
-
-      const res = await review({ body: imageList, query: { status: 1 } });
-
+      const res = await review({ body: submitList, query: { status: 1 } });
       mod.close();
+
       message.success(formatMessage({ id: 'message.setting.success' }));
       setList(
         idList.map(id => {
@@ -266,7 +235,97 @@ export default React.memo(function List() {
       );
     } catch (error) {
       mod && mod.close();
-      error && message.error(error);
+      error?.message && message.error(error.message);
+    }
+
+    async function validatorList(idList: IdList) {
+      // 没有选中图片
+      if (idList.length === 0) {
+        throw new Error(formatMessage({ id: 'image.error.unselect' }));
+      }
+
+      let submitList = list.filter(
+        item => idList.includes(item.id) && item.osiImageReview.keywordsCallbackStatus !== 2
+      );
+      // 没有可以提交的数据
+      if (submitList.length === 0) {
+        throw new Error(formatMessage({ id: 'image.error.nosubmit' }));
+      }
+
+      // 标题为空
+      if (submitList.some(item => !item.title)) {
+        const mod = modal({
+          title: formatMessage({ id: 'modal.title' }),
+          content: (
+            <div>
+              <FormattedMessage id="image.error.unTitle" /> ID：
+              {submitList
+                .filter(item => !item.title)
+                .map(item => (
+                  <span key={item.id + ''} className="text-error">
+                    {item.id}，
+                  </span>
+                ))}
+            </div>
+          ),
+          footer: null
+        });
+        throw new Error('');
+      }
+
+      submitList = submitList.map(item => {
+        const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
+        return {
+          ...item,
+          keywords,
+          osiKeywodsData: {
+            ...item.osiKeywodsData,
+            keywordsAudit,
+            keywordsAll
+          },
+          keywordTags: undefined,
+          osiImageReview: undefined,
+          createdTime: undefined,
+          updatedTime: undefined
+        };
+      });
+      // 关键词小于5个 大于45个
+      if (
+        submitList.some(item => {
+          const keywordIdList = item.keywords?.match(/\d+/g);
+          return keywordIdList.length < 5 || keywordIdList.length > 45;
+        })
+      ) {
+        const mod = modal({
+          title: formatMessage({ id: 'modal.title' }),
+          content: (
+            <div>
+              <FormattedMessage id="image.error.keywordLetFive" /> ID：
+              {submitList
+                .filter(item => {
+                  const keywordIdList = item.keywords?.match(/\d+/g);
+                  return keywordIdList.length < 5 || keywordIdList.length > 45;
+                })
+                .map(item => (
+                  <span key={item.id + ''} className="text-error">
+                    {item.id}，
+                  </span>
+                ))}
+            </div>
+          ),
+          footer: null
+        });
+        throw new Error('');
+      }
+
+      // 含有敏感词
+      const sensitiveWordsList = await imageService.checkSensitiveWords(submitList);
+      if (sensitiveWordsList.length) {
+        showSensitiveWowrds(sensitiveWordsList);
+        throw new Error('');
+      }
+
+      return submitList;
     }
   };
 

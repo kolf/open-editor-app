@@ -25,6 +25,7 @@
   "list.nodata": "可能这个资源已经飞走了，请修改搜索条件",
   "list.loading": "加载中...",
 
+  "modal.title": "系统提示",
   "modal.okText": "确定",
   "modal.cancelText": "取消",
   "modal.submitText": "提交",

@@ -72,7 +72,10 @@
 
   "image.callbackStatus.2": "Waiting for confirmation！",
 
+  "image.error.unTitle": "Title is empty",
+  "image.error.keywordLetFive": "Key words cannot be less than 5, more than 45",
   "image.error.unselect": "Please select a picture",
+  "image.error.nosubmit": "No data to submit",
   "image.error.langeType": "Inconsistent language types!",
   "image.setting.qualityRank.message": "",
   "image.setting.qualityRank.success": ""

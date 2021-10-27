@@ -72,7 +72,10 @@
 
   "image.callbackStatus.2": "等待社区审核中！",
 
+  "image.error.unTitle": "图片标题不能为空！",
+  "image.error.keywordLetFive": "关键词不能小于5个，大于45个！",
   "image.error.unselect": "请选择图片！",
+  "image.error.nosubmit": "没有可以提交的图片！",
   "image.error.langeType": "图片数据类型不一致!",
   "image.setting.qualityRank.message": "",
   "image.setting.qualityRank.success": ""

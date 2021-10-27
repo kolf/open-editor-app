@@ -24,6 +24,7 @@
   "list.nodata": "No Results, please try other filters",
   "list.loading": "Loading...",
 
+  "modal.title": "Error",
   "modal.okText": "OK",
   "modal.cancelText": "Cancel",
   "modal.submitText": "Submit",
