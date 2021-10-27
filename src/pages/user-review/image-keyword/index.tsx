@@ -238,7 +238,6 @@ export default React.memo(function List() {
         return;
       }
       mod.confirmLoading();
-      const res = await review({ body: imageList, query: { status: 1 } });
 
       const sensitiveWordsList = await imageService.checkSensitiveWords(imageList);
       if (sensitiveWordsList.length) {
@@ -246,6 +245,8 @@ export default React.memo(function List() {
         showSensitiveWowrds(sensitiveWordsList);
         return;
       }
+
+      const res = await review({ body: imageList, query: { status: 1 } });
 
       mod.close();
       message.success(formatMessage({ id: 'message.setting.success' }));
