@@ -10,7 +10,7 @@ export enum InStorageTime {
 // 分配模式
 export enum AssignType {
   人工 = '1',
-  自动 = '2'
+  系统 = '2'
 }
 
 // 优先级
@@ -20,16 +20,30 @@ export enum Priority {
 }
 
 // 敏感检测
-export enum IfSensitveCheck {
+export enum IfSensitiveCheck {
   未命中敏感词 = '0',
   命中敏感词 = '1'
 }
 
 // 是否敏感检测
-export enum IfSensitveCheckBool {
+export enum IfSensitiveCheckBool {
   否 = '0',
   是 = '1'
 }
+
+export enum QualitySensitiveCheckType {
+  入库检测 = '1'
+}
+
+export enum KeywordSensitiveCheckType {
+  入库检测 = '1',
+  提交检测 = '2'
+}
+
+export const SensitiveCheckType = {
+  ...QualitySensitiveCheckType,
+  ...KeywordSensitiveCheckType
+};
 
 // AI检测
 export enum AIDetection {
@@ -37,6 +51,15 @@ export enum AIDetection {
   AI美学评分 = '1',
   AI分类 = '2'
 }
+
+export enum KeywordAIService {
+  'AI自动标题/关键词' = '3'
+}
+
+export const AIService = {
+  ...AIDetection,
+  ...KeywordAIService
+};
 
 // 资源/审核类型
 export enum AssetType {
@@ -53,7 +76,7 @@ export enum AssetFamily {
 
 // 数据来源状态
 export enum OsiDbProviderStatus {
-  禁用 = '0',
+  关闭 = '0',
   开通 = '1'
 }
 
@@ -121,6 +144,13 @@ export enum QualityStatus {
   '不通过' = '34'
 }
 
+export enum KeywordsStatus {
+  '待编审' = '14',
+  '待编审(免审)' = '15',
+  '已通过' = '24',
+  '不通过' = '34'
+}
+
 export enum IfHaveRelease {
   无 = '0',
   有 = '1'
@@ -137,6 +167,20 @@ export enum License {
   拍摄许可文件 = '3'
 }
 
+export enum AuditType {
+  质量审核 = '1',
+  关键词审核 = '2'
+}
+
+export enum KeywordAuditDefault {
+  数据来源 = '1',
+  AI = '2'
+}
+
+export enum SensitiveWordList {
+  国内敏感词表 = '1',
+  国外敏感词表 = '2'
+}
 class Options {
   map(enumObj) {
     return Object.keys(enumObj).reduce((result, key) => {
@@ -144,7 +188,7 @@ class Options {
       return result;
     }, {});
   }
-  get(enumObj): { value: string | number; label: string }[] {
+  get(enumObj): Option<string | number>[] {
     return Object.keys(enumObj).reduce((result, key) => {
       result.push({
         value: enumObj[key],

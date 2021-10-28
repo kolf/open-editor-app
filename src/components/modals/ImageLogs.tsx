@@ -1,29 +1,30 @@
-import React from 'react';
+import * as React from 'react';
 import { Table } from 'antd';
+import { useIntl } from 'react-intl';
 
 interface Props {
   dataSource: any;
 }
 
-const columns = [
-  {
-    title: '编审时间',
-    dataIndex: 'createdTime',
-    width: 130
-  },
-  {
-    title: '编审人',
-    dataIndex: 'userName',
-    width: 120
-  },
-  {
-    title: '编审内容',
-    dataIndex: 'message'
-  }
-];
+export default React.memo(function ImageLogs({ dataSource }: Props): React.ReactElement {
+  const { formatMessage } = useIntl();
 
-const ImageLogs = ({ dataSource = [] }: Props) => (
-  <Table rowKey="id" dataSource={dataSource} size="small" pagination={false} columns={columns} />
-);
+  const columns = [
+    {
+      title: formatMessage({ id: 'image.log.date' }),
+      dataIndex: 'createdTime',
+      width: 130
+    },
+    {
+      title: formatMessage({ id: 'image.log.user' }),
+      dataIndex: 'userName',
+      width: 120
+    },
+    {
+      title: formatMessage({ id: 'image.log.actions' }),
+      dataIndex: 'message'
+    }
+  ];
 
-export default ImageLogs;
+  return <Table rowKey="id" dataSource={dataSource} size="small" pagination={false} columns={columns} />;
+});

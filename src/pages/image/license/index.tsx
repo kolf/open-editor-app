@@ -1,5 +1,4 @@
 import React, { ReactElement, useState, useRef } from 'react';
-import { usePdf } from '@mikecousins/react-pdf';
 import { Card, Table } from 'antd';
 import { useRequest } from 'ahooks';
 import { useQuery } from 'src/hooks/useQueryParam';
@@ -7,6 +6,7 @@ import { useDocumentTitle } from 'src/hooks/useDom';
 import imageService from 'src/services/imageService';
 
 import './style.less';
+import { useIntl } from 'react-intl';
 
 interface Props {}
 
@@ -21,23 +21,21 @@ function makeData(data: any) {
   return data.map((item, index) => ({ ...item, index: index + 1 }));
 }
 
-export default function LicenseType({}: Props): ReactElement {
+export default React.memo(function LicenseType({}: Props): ReactElement {
+  const { formatMessage } = useIntl();
   useDocumentTitle(`版权文件-VCG内容审核管理平台`);
   const { id } = useQuery();
   const { data, loading, error } = useRequest(() => imageService.getLicenseList({ imageId: id }), { initialData: [] });
   const [index, setIndex] = useState(-1);
 
-  const [page, setPage] = useState(1);
-  const canvasRef = useRef(null);
-
   const columns = [
     {
-      title: '序号',
+      title: formatMessage({ id: 'table.column.no' }),
       dataIndex: 'index',
       width: 60
     },
     {
-      title: '文件名',
+      title: formatMessage({ id: 'table.column.fileName' }),
       dataIndex: 'name',
       render: (text, creds) => (
         <div className="click-row" onClick={e => handleRowClick(creds)}>
@@ -46,12 +44,12 @@ export default function LicenseType({}: Props): ReactElement {
       )
     },
     {
-      title: '操作',
+      title: formatMessage({ id: 'table.column.actions' }),
       dataIndex: 'url',
       width: 100,
       render: text => (
         <a href={text} target="_blank">
-          查看源文件
+          {formatMessage({ id: 'image.action.openLiceseFile' })}
         </a>
       )
     }
@@ -60,7 +58,6 @@ export default function LicenseType({}: Props): ReactElement {
   const handleRowClick = row => {
     const index = data.findIndex(item => item.id === row.id);
     setIndex(index);
-    console.log(index, 'res');
   };
 
   const getRowClassName = (row, i) => {
@@ -88,7 +85,7 @@ export default function LicenseType({}: Props): ReactElement {
 
   return (
     <div className="license-root">
-      <Card title="肖像权/物权文件" bordered={false} style={{ width: 1200 }}>
+      <Card title={formatMessage({ id: 'image.action.liceseFile' })} bordered={false} style={{ width: 1200 }}>
         <div className="license-inner">
           <div className="license-sidebar">
             <Table
@@ -104,4 +101,4 @@ export default function LicenseType({}: Props): ReactElement {
       </Card>
     </div>
   );
-}
+});

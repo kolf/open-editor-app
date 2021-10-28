@@ -1,25 +1,39 @@
-import React, { useEffect, Suspense } from 'react';
+import React, { useEffect, Suspense, useRef, useCallback } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { Spin } from 'antd';
+import { ConfigProvider, Spin } from 'antd';
 import { RootRouter } from './routes/index';
-import { setShow } from 'src/features/search/search';
-
+import { setShow, setKeywords } from 'src/features/search/search';
 import './App.less';
+import { IntlProvider } from 'react-intl';
+import { useLanguagePkg } from './hooks/useLanguage';
 
 function App() {
+  const { language, languagePkg } = useLanguagePkg();
   const history = useHistory();
   const dispatch = useDispatch();
+  const ref = useRef(null);
 
   useEffect(() => {
     history.listen(location => {
-      dispatch(setShow(false));
+      if (!ref.current) {
+        ref.current = location.pathname;
+      }
+      if (ref.current !== location.pathname) {
+        ref.current = location.pathname;
+        dispatch(setShow(false));
+        dispatch(setKeywords(''));
+      }
     });
-  }, []);
+  }, [ref]);
 
   return (
     <Suspense fallback={<Spin size="large" />}>
-      <RootRouter />
+      <ConfigProvider locale={languagePkg}>
+        <IntlProvider locale={language} messages={languagePkg}>
+          <RootRouter />
+        </IntlProvider>
+      </ConfigProvider>
     </Suspense>
   );
 }

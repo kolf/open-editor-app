@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import { useIntl } from 'react-intl';
 import { Spin, Row, Col, Empty } from 'antd';
 import './GridList.less';
 
@@ -11,23 +12,19 @@ const layout = {
   xxl: 4
 };
 
-interface Props {
-  dataSource: any;
-  renderItem: any;
+type Props<T> = {
+  dataSource: T[];
+  renderItem: (item: T, index: number) => ReactElement;
   loading: boolean;
   rowKey?: string;
-  error?: string;
-}
-
-const defaultProps = {
-  rowKey: 'id',
-  dataSource: []
 };
 
-function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): ReactElement {
+export default function GridList<T>({ dataSource = [], renderItem, rowKey = 'id', loading }: Props<T>): ReactElement {
+  const { formatMessage } = useIntl();
+
   if (loading) {
     return (
-      <Spin tip="加载中...">
+      <Spin tip={formatMessage({ id: 'list.loading' })}>
         <div className="grid-loading"></div>
       </Spin>
     );
@@ -35,7 +32,7 @@ function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): Re
   if (dataSource.length === 0) {
     return (
       <div style={{ padding: '48px 0' }}>
-        <Empty description="可能这个资源已经飞走了，请修改搜索条件" />
+        <Empty description={formatMessage({ id: 'list.nodata' })} />
       </div>
     );
   }
@@ -51,7 +48,3 @@ function GridList({ dataSource, renderItem, rowKey, loading, error }: Props): Re
     </div>
   );
 }
-
-GridList.defaultProps = defaultProps;
-
-export default GridList;

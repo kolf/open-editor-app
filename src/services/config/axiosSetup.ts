@@ -27,6 +27,8 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
           toastMessage('你没有权限！', message, TypeToast.ERROR);
           localStorage.removeItem('accessToken');
           break;
+        case 400:
+          return Promise.reject(response.data);
         default:
       }
       return response;

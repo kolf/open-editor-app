@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 interface searchState {
   keywords: string;
   show: boolean;
-  fire: boolean
+  fire: boolean;
 }
 
 const initialState: searchState = {
