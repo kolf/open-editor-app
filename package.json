@@ -17,6 +17,7 @@
     "pdf-viewer-reactjs": "^2.2.3",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
+    "react-intl": "^5.20.12",
     "react-native-gcanvas": "^0.0.7-dev",
     "react-pdf": "^5.3.2",
     "react-redux": "^7.2.4",

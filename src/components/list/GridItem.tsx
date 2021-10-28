@@ -1,38 +1,44 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, CSSProperties } from 'react';
 import { Space, Button, Tag, Tooltip, Popover } from 'antd';
 import Iconfont from 'src/components/Iconfont';
 import className from 'classnames';
+import { useIntl } from 'react-intl';
 
-interface Props {
-  onClick?: any;
-  cover: any;
-  indexProps: any;
-  actions?: any;
-  coverActions?: any;
-  children?: any;
-  selected?: boolean;
-  style?: any;
-  height: number;
+interface IIndexProps {
+  title: string;
+  color: string;
+  text: string;
+}
+interface IAction {
+  label: string;
+  value: IImageActionType;
+  icon: ReactElement | string;
 }
 
-const defaultProps = {
-  onClick: () => {},
-  indexProps: {},
-  coverActions: [
-    {
-      value: 'showMiddleImage',
-      label: '查看中图',
-      icon: 'icon-tupian'
-    },
-    {
-      value: 'openOriginImage',
-      label: '查看原图',
-      icon: 'icon-xiangjipaizhao'
-    }
-  ]
+type Props = {
+  onClick?: (value: IImageActionType) => void;
+  cover: ReactElement;
+  indexProps: IIndexProps;
+  actions?: (IAction & { disabledMessage?: string })[];
+  coverActions?: IAction[];
+  children?: ReactElement[] | ReactElement;
+  selected?: boolean;
+  style?: CSSProperties;
+  height: number;
 };
 
-const TopTag = ({ children, align, color, onClick }) => {
+// TODO
+const TopTag = ({
+  children,
+  align,
+  color,
+  onClick
+}: {
+  children: string;
+  align: string;
+  color: string;
+  onClick?: any;
+}) => {
   let style = null;
   if (align === 'left') {
     style = { left: 0 };
@@ -40,41 +46,59 @@ const TopTag = ({ children, align, color, onClick }) => {
     style = { right: -8 };
   }
   return (
-    <Tag color={color} style={style} className="grid-item-topTag active" title={children} onClick={onClick} onClose={e => e.preventDefault()} >
+    <Tag
+      color={color}
+      style={style}
+      className="grid-item-topTag active"
+      title={children}
+      onClick={onClick}
+      onClose={e => e.preventDefault()}
+    >
       {children}
     </Tag>
   );
 };
 
-const CoverActions = ({ dataSource, onClick }) => {
-  return (
-    <div className="grid-item-cover-actions">
-      {dataSource.map(o => (
-        <Tooltip key={o.value} title={o.label}>
-          <Iconfont type={o.icon} onClick={e => onClick(o.value)} />
-        </Tooltip>
-      ))}
-    </div>
-  );
-};
-
 const GridItem = ({
-  onClick,
+  onClick = () => {},
   cover,
   indexProps,
-  coverActions,
+  coverActions: propsCoverActions,
   actions,
   children,
   height,
   selected
 }: Props): ReactElement => {
+  const { formatMessage } = useIntl();
+
+  const coverActions = propsCoverActions || [
+    {
+      value: 'middleImage',
+      label: formatMessage({ id: 'image.action.showMiddleImage' }),
+      icon: 'icon-tupian'
+    },
+    {
+      value: 'originImage',
+      label: formatMessage({ id: 'image.action.openOriginImage' }),
+      icon: 'icon-xiangjipaizhao'
+    }
+  ];
+
   return (
     <div className={className('grid-item-root', { active: selected })} style={{ height }}>
       <div className="grid-item-header">
         <div className="grid-item-cover" onClick={e => onClick('cover')}>
           {cover}
         </div>
-        {coverActions && <CoverActions dataSource={coverActions} onClick={onClick} />}
+        {coverActions && (
+          <div className="grid-item-cover-actions">
+            {coverActions.map(o => (
+              <Tooltip key={o.value} title={o.label}>
+                <Iconfont type={o.icon as string} onClick={e => onClick(o.value)} />
+              </Tooltip>
+            ))}
+          </div>
+        )}
       </div>
       {children}
       <div className="grid-item-footer">
@@ -83,8 +107,8 @@ const GridItem = ({
             <Space>
               {actions.map(action => (
                 <Button
-                  disabled={action.disabled}
-                  title={action.disabled ? '等待社区审核中' :action.label}
+                  disabled={!!action.disabledMessage}
+                  title={action.disabledMessage || action.label}
                   key={action.value}
                   size="small"
                   icon={action.icon}
@@ -103,8 +127,6 @@ const GridItem = ({
     </div>
   );
 };
-
-GridItem.defaultProps = defaultProps;
 
 GridItem.TopTag = TopTag;
 

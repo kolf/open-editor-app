@@ -1,25 +1,20 @@
 import React, { ReactElement, useState } from 'react';
 import { Space } from 'antd';
 
-interface Props {
-  value: string;
-  onChange: any;
-  // TODO
-  options: any;
+interface Props<T> {
+  value: T;
+  onChange?: (value: T) => void;
+  options: Option<T>[];
 }
 
-const defaultProps = {
-  onChange() {}
-};
-
-function RadioText({ value, options, onChange }: Props): ReactElement {
+export default function RadioText<T>({ value, options, onChange }: Props<T>): ReactElement {
   return (
     <Space>
       {options.map(o => (
         <a
-          key={o.value}
+          key={o.value + ''}
           onClick={e => onChange(o.value)}
-          style={value === o.value ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444'}}
+          style={value === o.value ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
         >
           {o.label}
         </a>
@@ -27,7 +22,3 @@ function RadioText({ value, options, onChange }: Props): ReactElement {
     </Space>
   );
 }
-
-RadioText.defaultProps = defaultProps;
-
-export default RadioText;

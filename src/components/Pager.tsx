@@ -1,43 +1,45 @@
 import React, { ReactElement } from 'react';
+import { FormattedMessage } from 'react-intl';
 import { Select, Pagination, Space } from 'antd';
-const { Option } = Select;
 
-export interface IPagerProps {
+export interface Props {
   total?: number;
-  onChange?: any;
+  onChange?: (value: { pageNum?: number; pageSize?: number }) => void;
   current: number;
-  pageSize: number
+  pageSize: number;
 }
 
-const pageOptions = [
-  { value: '60', label: '60条/页' },
-  { value: '100', label: '100条/页' },
-  { value: '200', label: '200条/页' }
-];
+const pageOptions = [60, 100, 200];
 
-function Pager({ onChange, ...otherProps }: IPagerProps): ReactElement {
+export default React.memo(function Pager({ onChange, ...restProps }: Props): ReactElement {
+  // console.log(restProps.total,'restProps.total')
   const pageProps = {
     simple: true,
-    ...otherProps,
-    onChange: pageNum => {
+    ...restProps,
+    onChange: (pageNum: number) => {
       onChange({
-        pageNum: pageNum
+        pageNum
       });
     }
   };
+
   return (
     <Space>
-      <span>共{otherProps.total}条</span>
+      <span>
+        <FormattedMessage id="pager.result.total" values={{ total: restProps.total }} />
+      </span>
       <Pagination {...pageProps} />
-      <Select size='small' defaultValue={pageOptions[0].value} onChange={pageSize => onChange({ pageSize: pageSize * 1 })}>
+      <Select
+        size="small"
+        defaultValue={pageOptions[0]}
+        onChange={(pageSize: number) => onChange({ pageSize: pageSize })}
+      >
         {pageOptions.map(o => (
-          <Option key={o.value} value={o.value}>
-            {o.label}
-          </Option>
+          <Select.Option key={o} value={o}>
+            <FormattedMessage id="pager.result.size" values={{ size: o }} />
+          </Select.Option>
         ))}
       </Select>
     </Space>
   );
-}
-
-export default Pager;
+});

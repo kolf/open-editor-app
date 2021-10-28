@@ -1,0 +1,34 @@
+{
+  "keywords": "Keyword",
+  "keywords.nodata": "No data",
+
+  "keywords.source.aiKeywordsSelected": "AI（Selected by user）",
+  "keywords.source.aiKeywordsUnselected": "AI（Not-select by user）",
+  "keywords.source.userKeywords|userKeywordsAudit": "Added by user",
+  "keywords.source.editorKeywordsAdd": "Added by editors",
+  "keywords.source.aiKeywordsSelectedDel|aiKeywordsUnselectedDel|userKeywordsDel|userKeywordsAuditDel": "Deleted by editors",
+
+  "keywords.kind.-1": "Others or not confirmaction",
+  "keywords.kind.0": "Themes related",
+  "keywords.kind.1": "Conception related",
+  "keywords.kind.2": "Size related",
+  "keywords.kind.3": "People related",
+  "keywords.kind.4": "Location related",
+
+  "keywords.mode.all": "Show all",
+  "keywords.mode.source": "Show by source",
+  "keywords.mode.kind": "Show by kind",
+
+  "keywords.details.cnname": "Keywords (Cn)",
+  "keywords.details.cnsyno": "Synonym (Cn)",
+  "keywords.details.enname": "Keywords (En)",
+  "keywords.details.ensyno": "Synonym (En)",
+  "keywords.details.kind": "Type",
+  "keywords.details.pid": "Parent ID",
+  "keywords.details.memo": "Notes",
+
+  "keywords.modal.details": "Keyword Details",
+  "keywords.modal.select": "Choose keywords",
+
+  "keywords.textarea.placeholder": "Please Enter"
+}

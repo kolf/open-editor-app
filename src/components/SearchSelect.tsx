@@ -8,11 +8,13 @@ function filterOption(input, option) {
   return option.label.toLowerCase().indexOf(input.toLowerCase()) >= 0;
 }
 
+type Options = Option<string | number>[];
+
 export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'options' | 'children'> {
   type: 'category' | 'provider' | 'editUser';
   manual?: boolean;
-  options?: any;
-  fixedOptions?: any;
+  options?: Options;
+  fixedOptions?: Options;
 }
 /**
  *
@@ -22,9 +24,19 @@ export interface Props<ValueType = any> extends Omit<SelectProps<ValueType>, 'op
  * }
  * @returns
  */
-export default function SearchSelect({ type, manual, fixedOptions, options, ...otherProps }: Props): ReactElement {
+export default React.memo(function SearchSelect({
+  type,
+  manual,
+  fixedOptions,
+  options,
+  ...restProps
+}: Props): ReactElement {
   const [inputValue, setInputValue] = useState('');
-  const { run, loading, data } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
+  const {
+    run,
+    loading,
+    data = []
+  } = useRequest(() => commonService.getOptions({ type, value: inputValue }), {
     initialData: options || [],
     manual,
     debounceInterval: 900,
@@ -46,7 +58,7 @@ export default function SearchSelect({ type, manual, fixedOptions, options, ...o
       notFoundContent={loading ? <Spin size="small" /> : null}
       onSearch={setInputValue}
       options={fixedOptions ? [...fixedOptions, ...data] : data}
-      {...otherProps}
+      {...restProps}
     />
   );
-}
+});
