@@ -13,7 +13,7 @@ export default function RadioText<T>({ value, options, onChange }: Props<T>): Re
       {options.map(o => (
         <a
           key={o.value + ''}
-          onClick={e => onChange(o.value)}
+          onClick={e => onChange && onChange(o.value)}
           style={value === o.value ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
         >
           {o.label}

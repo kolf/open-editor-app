@@ -321,8 +321,11 @@ export default React.memo(function List() {
       // 含有敏感词
       const sensitiveWordsList = await imageService.checkSensitiveWords(submitList);
       if (sensitiveWordsList.length) {
-        showSensitiveWowrds(sensitiveWordsList);
-        throw new Error('');
+        try {
+          await showSensitiveWowrds(sensitiveWordsList);
+        } catch (error) {
+          throw new Error('');
+        }
       }
 
       return submitList;
