@@ -23,7 +23,7 @@ export default function SelectReject({ dataSource, onChange }: Props): React.Rea
     let nextValue = [];
     if (checked) {
       if (value.length >= 3) {
-        message.info(formatMessage({ id: 'selectRejct.error' }));
+        message.info(formatMessage({ id: 'selectReject.error' }));
         return;
       }
       nextValue = [...value, newValue];
