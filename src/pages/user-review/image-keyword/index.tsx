@@ -334,7 +334,6 @@ export default React.memo(function List() {
 
   const formItemKeys: IFormItemKey[] = React.useMemo(() => {
     return [
-      3,
       1,
       2,
       14,
