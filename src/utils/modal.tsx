@@ -30,11 +30,11 @@ class Mod extends React.Component<IModleProps> {
     dragable: true,
     style: {
       top: 50
-    },
-    isMobile: false
+    }
   };
 
   created = false;
+
   simpleClass = Math.random().toString(36).substring(2);
 
   componentDidMount() {
@@ -50,7 +50,7 @@ class Mod extends React.Component<IModleProps> {
 
   componentWillUnmount() {
     this.removeHandleMove();
-    window.removeEventListener('mouseup', this.removeHandleUp, false);
+    window.removeEventListener('mouseup', this.handleUp, false);
   }
 
   get bodyMaxHeight() {
@@ -72,7 +72,7 @@ class Mod extends React.Component<IModleProps> {
     window.removeEventListener('mousemove', this.handleMove, false);
   };
 
-  removeHandleUp = () => {
+  handleUp = () => {
     document.body.onselectstart = () => true;
     this.removeHandleMove();
   };
@@ -90,7 +90,7 @@ class Mod extends React.Component<IModleProps> {
 
   create = visible => {
     if (this.created) return false;
-    const { title, dragable, autoIndex, style, width, isMobile } = this.props;
+    const { title, dragable, autoIndex, style, width } = this.props;
     if (title && dragable && visible) {
       this.created = true;
       const timer = setTimeout(() => {
@@ -116,17 +116,8 @@ class Mod extends React.Component<IModleProps> {
           document.body.onselectstart = () => false;
           window.addEventListener('mousemove', this.handleMove, false);
         };
-        window.addEventListener('mouseup', this.removeHandleUp, false);
+        window.addEventListener('mouseup', this.handleUp, false);
       }, 0);
-    }
-
-    if (isMobile) {
-      // 移动端弹窗兼容
-      // 注意点：移动端将dragable同时修改为false
-      this.container = document.getElementsByClassName(this.simpleClass)[0];
-      const containerChild = this.container.children[0];
-      containerChild.style.display = 'block';
-      containerChild.style.margin = '20px';
     }
   };
 
