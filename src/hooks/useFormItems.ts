@@ -22,9 +22,6 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       field: 'createdTime',
       formType: 'TimeRange',
       placeholder: formatMessage({ id: 'image.createdTime' }),
-      restProps: {
-        width: 240
-      }
     },
     {
       key: 2,
