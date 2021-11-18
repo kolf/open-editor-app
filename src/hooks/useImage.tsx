@@ -66,47 +66,55 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
     []
   );
 
-  const showSensitiveWowrds = React.useCallback(sensitiveWordsList => {
-    const [idList, keywordList]: [IdList, string[]] = sensitiveWordsList.reduce(
-      (result, item) => {
-        const keywords = item.sensitiveWords.split(/,|，/) || [];
-        if (!result[0].includes(item.id)) {
-          result[0].push(item.id);
+  const showSensitiveWowrds = React.useCallback((sensitiveWordsList): Promise<boolean> => {
+    return new Promise((resolve, reject) => {
+      const [idList, keywordList]: [IdList, string[]] = sensitiveWordsList.reduce(
+        (result, item) => {
+          const keywords = item.sensitiveWords.split(/,|，/) || [];
+          if (!result[0].includes(item.id)) {
+            result[0].push(item.id);
+          }
+
+          result[1] = [...result[1], ...keywords.filter(k => !result[1].includes(k))];
+          return result;
+        },
+
+        [[], []]
+      );
+
+      const mod = modal({
+        title: <FormattedMessage id="checkSensitiveWords.title" />,
+        content: (
+          <>
+            <p>
+              <FormattedMessage id="checkSensitiveWords.content" />
+            </p>
+            <p>
+              <FormattedMessage id="checkSensitiveWords.id" />：
+              {idList.map(id => (
+                <span key={id + ''} className="text-error">
+                  {id}，
+                </span>
+              ))}
+            </p>
+            <p>
+              <FormattedMessage id="checkSensitiveWords.keywords" />：
+              {keywordList.map(k => (
+                <span key={k} className="text-error">
+                  {k}，
+                </span>
+              ))}
+            </p>
+          </>
+        ),
+        onOk() {
+          mod.close();
+          resolve(true);
+        },
+        onCancel() {
+          reject();
         }
-
-        result[1] = [...result[1], ...keywords.filter(k => !result[1].includes(k))];
-        return result;
-      },
-
-      [[], []]
-    );
-
-    const mod = modal({
-      title: <FormattedMessage id="checkSensitiveWords.title" />,
-      content: (
-        <>
-          <p>
-            <FormattedMessage id="checkSensitiveWords.content" />
-          </p>
-          <p>
-            <FormattedMessage id="checkSensitiveWords.id" />：
-            {idList.map(id => (
-              <span key={id + ''} className="text-error">
-                {id}，
-              </span>
-            ))}
-          </p>
-          <p>
-            <FormattedMessage id="checkSensitiveWords.keywords" />：
-            {keywordList.map(k => (
-              <span key={k} className="text-error">
-                {k}，
-              </span>
-            ))}
-          </p>
-        </>
-      ),
-      footer: null
+      });
     });
   }, []);
 

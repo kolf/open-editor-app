@@ -9,7 +9,7 @@ import statisticJobService from 'src/services/statisticJobService';
 const columns: Column<StatisticJobSchema.ListALl>[] = [
   {
     title: '序号',
-    dataIndex: 'index',
+    dataIndex: 'index'
   },
   {
     title: '编辑',
@@ -31,8 +31,8 @@ const columns: Column<StatisticJobSchema.ListALl>[] = [
   {
     title: '共计',
     dataIndex: 'total',
-    render: (value, tr) =>  tr.passTotal + tr.dismissTotal
-  },
+    render: (value, tr) => tr.passTotal + tr.dismissTotal
+  }
 ];
 // .map<Column>(c => ({...c, align: 'center'}));
 
@@ -53,7 +53,7 @@ function Statistic() {
               memo[q] = {
                 from: start.format(config.data.SECOND_FORMAT),
                 to: end.format(config.data.SECOND_FORMAT)
-              }
+              };
             } else {
               Reflect.deleteProperty(memo, q);
             }
@@ -84,6 +84,7 @@ function Statistic() {
         dataSource={data.map((l, i) => ({ ...l, ...{ index: i + 1 } }))}
         columns={columns}
         bordered
+        size="small"
         loading={loading}
       />
     </>

@@ -74,7 +74,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
       <div className="formList-list" style={{ height: collapse ? 'auto' : 40 }}>
         <Form form={form} layout="inline" initialValues={initialValues} onValuesChange={onChange}>
           {formItems.map(item => (
-            <Form.Item key={item.field} name={item.field} className="form-list-item">
+            <Form.Item key={item.field} name={item.field}>
               {renderFormItem(item)}
             </Form.Item>
           ))}
