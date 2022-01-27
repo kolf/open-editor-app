@@ -59,7 +59,8 @@ const otherPart = {
   'Inspection Platform': '内容审核管理平台',
   'Modify Password': '修改密码',
   'New Password': '新密码',
-  'Confirm New Password': '新密码',
+  'Old Password': '旧密码',
+  'Confirm New Password': '确认新密码',
 
   Exit: '退出',
   Login: '登录',

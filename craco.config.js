@@ -1,4 +1,3 @@
-
 const CracoLessPlugin = require('craco-less');
 const theme = require('./theme');
 const ALI_CONTAINER = 'cb16adeacafeb4b9b988ae5d7e8bf0fc1.cn-beijing.alicontainer.com';
@@ -24,6 +23,12 @@ module.exports = {
         changeOrigin: true,
         secure: false,
         pathRewrite: { '^/api/passport': '' }
+      },
+      '/api/boss3': {
+        target: `http://vcg-boss3-usercenter.${ALI_CONTAINER}`,
+        changeOrigin: true,
+        secure: false,
+        pathRewrite: { '^/api/boss3': '' }
       },
       '/api/editor': {
         target: `http://editservice-vcg-com.${ALI_CONTAINER}`,

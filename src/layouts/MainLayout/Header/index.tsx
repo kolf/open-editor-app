@@ -6,8 +6,6 @@ import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { logout } from 'src/features/auth/authenticate';
 import { setKeywords, openFire } from 'src/features/search/search';
-import { PATH } from 'src/routes/path';
-import { menus } from 'src/routes/menus';
 import { RootState } from 'src/store';
 import modal from 'src/utils/modal';
 import UpdatePasswordModal from './UpdatePasswordModal';
@@ -15,6 +13,7 @@ import authService from 'src/services/authService';
 import { setLanguage } from 'src/features/language/language';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useLanguagePkg } from 'src/hooks/useLanguage';
+import { getFirstChild } from 'src/utils/tools';
 
 const { Search } = Input;
 
@@ -22,13 +21,14 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const { language } = useLanguagePkg();
   const { formatMessage } = useIntl();
   const user = useSelector((state: RootState) => state.user.user);
+  const menus = useSelector((state: RootState) => state.user.menus);
   const { show: showSearch } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
   const history = useHistory();
 
   const handleLogout = () => {
     dispatch(logout());
-    history.push(PATH.LOGIN);
+    history.push('/login');
   };
 
   const updatePassword = () => {
@@ -46,21 +46,25 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
 
       try {
         const modifyPasswordResult = await authService.modifyPassword({
-          ucId: user.ucId,
+          oldPassword: values.oldPassword,
           newPassword: values.password
         });
-        if (modifyPasswordResult.data.status !== '200') {
-          throw modifyPasswordResult.data.msg;
-        } else {
-          mod && mod.close();
-          handleLogout();
+        if (!modifyPasswordResult.data.success) {
+          throw modifyPasswordResult.data.errMessage;
         }
+        mod.close();
+        handleLogout()
       } catch (e) {
-        mod && mod.close();
+        mod.close();
         message.error(e);
       }
     }
   };
+
+  const getMenuPath = (menu) => {
+    const firstChild = getFirstChild(menu.children || [])
+    return firstChild ? firstChild.path : menu.path
+  }
 
   const menu = (
     <Menu>
@@ -82,10 +86,10 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
           {menus
-            .filter(menu => !menu.hidden)
+            .filter(menu => menu.isEnabled)
             .map(menu => (
-              <Menu.Item key={menu.key}>
-                <Link to={menu.path}>{menu.name}</Link>
+              <Menu.Item key={menu.id + ''}>
+                <Link to={getMenuPath(menu)}>{menu.name}</Link>
               </Menu.Item>
             ))}
         </Menu>
@@ -108,9 +112,9 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
         </div>
       )}
       <Dropdown overlay={menu} className="header-profile">
-        <div>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <Avatar icon={<UserOutlined />}></Avatar>
-          <span className="userName">{user?.name}</span>
+          <span className="userName">{user?.truename}</span>
         </div>
       </Dropdown>
     </div>

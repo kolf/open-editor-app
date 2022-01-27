@@ -35,7 +35,7 @@ const initialData = {
 export default React.memo(function List() {
   const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
-  const { partyId } = useCurrentUser();
+  const { id } = useCurrentUser();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
@@ -104,7 +104,7 @@ export default React.memo(function List() {
         return result;
       },
       {
-        qualityAuditorId: partyId
+        qualityAuditorId: id
       }
     );
 
