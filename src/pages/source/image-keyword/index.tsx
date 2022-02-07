@@ -35,7 +35,7 @@ function VcgImageText() {
   const intl = useIntl();
 
   const {
-    data = { list: [], total: 0 },
+    data,
     loading,
     run: fetchData,
     refresh
@@ -43,6 +43,10 @@ function VcgImageText() {
     manual: true,
     ready: !!providerOptions
   });
+
+  const { list, total } = data || {
+    list: [], total: 0
+  };
 
   useEffect(() => {
     fetchData(query);
@@ -240,7 +244,7 @@ function VcgImageText() {
       <FormList onChange={formListOnChange} {...query} />
       <Toolbar
         pagerProps={{
-          total: data.total,
+          total,
           current: query.pageNum,
           pageSize: query.pageSize,
           onChange: values => {
@@ -250,7 +254,7 @@ function VcgImageText() {
       ></Toolbar>
       <Table
         pagination={false}
-        dataSource={data.list.map((l, i) => Object.assign(l, { index: i + 1 }))}
+        dataSource={list.map((l, i) => Object.assign(l, { index: i + 1 }))}
         columns={columns}
         bordered
         loading={loading}

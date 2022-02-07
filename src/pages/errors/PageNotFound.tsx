@@ -1,20 +1,27 @@
 import { Button, Result } from 'antd';
 import React from 'react';
+import { useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
-import { PATH } from 'src/routes/path';
+import { FormattedMessage, useIntl } from 'react-intl';
 import './styles.less';
+import { getFirstChild } from 'src/utils/tools';
 
-function PageNotFound() {
+const PageNotFound: React.FC = () => {
+  const { formatMessage } = useIntl();
   const history = useHistory();
+  const menus = useSelector((state: any) => state.user.menus);
+  const indexPath = getFirstChild(menus).path;
+
   return (
     <div className="main">
       <Result
         status="404"
         title="404"
-        subTitle="对不起，页面不存在，请检测URL"
+        subTitle={formatMessage({ id: 'page.notFound' })}
         extra={
-          <Button type="primary" onClick={() => history.push(PATH.HOME)}>
-            返回首页
+          <Button type="primary" onClick={() => history.push(indexPath)}>
+
+            {formatMessage({ id: 'page.goHome' })}
           </Button>
         }
       />

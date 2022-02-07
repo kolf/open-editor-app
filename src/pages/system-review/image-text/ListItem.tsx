@@ -90,7 +90,7 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
       <GridItemRow>
         <div
           title={dataSource.title}
-          style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-all' }}
         >
           {dataSource.title}
         </div>

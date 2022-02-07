@@ -6,11 +6,11 @@ import { DataProvider } from 'src/components/contexts/DataProvider';
 import { getMe } from 'src/features/auth/authenticate';
 import { setIsCollapsed } from 'src/features/collapsedMenu/collapsedMenu';
 import { RootState } from 'src/store';
-import { menus } from 'src/routes/menus';
 import MenuLink from './MenuLink';
 import AppHeader from './Header';
 
 const { Header, Content, Sider } = Layout;
+
 type Props = {
   children: React.ReactNode;
 };
@@ -20,7 +20,7 @@ function getMenukey(menus) {
     secondKey = '';
 
   function getKey(menu, rootK, secondK) {
-    if (!menu.hasChild) {
+    if (!menu.children || menu.children.length === 0) {
       if (menu.path === window.location.pathname) {
         rootKey = rootK;
         secondKey = secondK;
@@ -38,22 +38,25 @@ function getMenukey(menus) {
     }
   }
   menus.forEach(menu => {
-    if (menu.hasChild) menu.children.forEach(m => getKey(m, menu.key, m.key));
+    if (menu.children && menu.children.length > 0) {
+      menu.children.forEach(m => getKey(m, menu.id + '', m.id + ''));
+    }
   });
   return rootKey
     ? {
-        rootKey,
-        secondKey
-      }
+      rootKey,
+      secondKey
+    }
     : {
-        rootKey: menus[0].key,
-        secondKey: menus[0]?.children[0]?.key
-      };
+      rootKey: menus[0].id + '',
+      secondKey: menus[0]?.children[0]?.id + ''
+    };
 }
 
 const MainLayout: FC<Props> = props => {
   const collapsed = useSelector((state: RootState) => state.collapsed.isCollapsed);
   const user = useSelector((state: RootState) => state.user.user);
+  const menus = useSelector((state: RootState) => state.user.menus);
   const [menuKey, setMenuKey] = useState(getMenukey(menus));
 
   const loading = useSelector((state: RootState) => state.user.loading);
@@ -69,6 +72,10 @@ const MainLayout: FC<Props> = props => {
       rootKey: e.key
     });
   };
+
+  const getMenu = () => {
+    return menus.find(menu => menu.id+'' === menuKey.rootKey)?.children || []
+  }
 
   useEffect(() => {
     if (!user) dispatch(getMe());
@@ -90,7 +97,7 @@ const MainLayout: FC<Props> = props => {
             collapsed={collapsed}
             onCollapse={handleCollapse}
           >
-            <MenuLink menuKey={menuKey.rootKey} siderbarKey={menuKey.secondKey} />
+            <MenuLink menu={getMenu()} current={menuKey.secondKey} />
           </Sider>
           <Content style={{ margin: `16px 16px 0 ${collapsed ? 96 : 216}px` }}>
             <div className="site-layout-background site-layout-content">{props.children}</div>

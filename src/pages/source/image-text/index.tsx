@@ -35,13 +35,18 @@ function VcgImageText() {
   const intl = useIntl();
 
   const {
-    data = { list: [], total: 0 },
+    data,
     loading,
     refresh
   } = useRequest(() => bacthService.getList(query), {
     ready: !!providerOptions,
     refreshDeps: [query]
   });
+
+
+  const { list, total } = data || {
+    list: [], total: 0
+  };
 
   // 数据分配弹窗
   function assignData(osiBatchId) {
@@ -236,7 +241,7 @@ function VcgImageText() {
       <FormList onChange={formListOnChange} {...query} />
       <Toolbar
         pagerProps={{
-          total: data.total,
+          total,
           current: query.pageNum,
           pageSize: query.pageSize,
           onChange: values => {
@@ -246,7 +251,7 @@ function VcgImageText() {
       />
       <Table
         pagination={false}
-        dataSource={data.list.map((l, i) => Object.assign(l, { index: i + 1 }))}
+        dataSource={list.map((l, i) => Object.assign(l, { index: i + 1 }))}
         columns={columns}
         bordered
         loading={loading}
