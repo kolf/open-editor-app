@@ -12,6 +12,7 @@ import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
 import { setLanguage } from 'src/features/language/language';
 import { FormattedMessage, useIntl } from 'react-intl';
+import { getMenuName } from '../MenuLink'
 import { useLanguagePkg } from 'src/hooks/useLanguage';
 import { getFirstChild } from 'src/utils/tools';
 
@@ -89,7 +90,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
             .filter(menu => menu.isEnabled)
             .map(menu => (
               <Menu.Item key={menu.id + ''}>
-                <Link to={getMenuPath(menu)}>{menu.name}</Link>
+                <Link to={getMenuPath(menu)}>{getMenuName(language, menu.name)}</Link>
               </Menu.Item>
             ))}
         </Menu>
