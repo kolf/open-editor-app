@@ -78,8 +78,13 @@ const MainLayout: FC<Props> = props => {
   }
 
   useEffect(() => {
-    if (!user) dispatch(getMe());
-  }, [user]);
+    
+    console.log(menus,'menus')
+
+    if (!user){
+      dispatch(getMe())
+    };
+  }, [user, menus]);
 
   if (loading || !user) return <Loading />;
 
