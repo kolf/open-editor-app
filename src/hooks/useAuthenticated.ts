@@ -8,5 +8,7 @@ export const useAuthenticated = (): boolean => {
 
 export const useAuthenticatedByLocalStorage = (): boolean => {
   const token = getLocalStorageItem('accessToken');
-  return !!token;
+  const menus =getLocalStorageItem('menus') || []
+  return token && menus.length>0
 };
+
