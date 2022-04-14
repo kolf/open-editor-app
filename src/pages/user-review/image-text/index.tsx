@@ -23,6 +23,7 @@ import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import { useOptions } from 'src/hooks/useSelect';
 import { IFormItemKey } from 'src/hooks/useFormItems';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -35,12 +36,13 @@ const initialData = {
 export default React.memo(function List() {
   const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
-  const { partyId } = useCurrentUser();
+  const { id } = useCurrentUser();
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, qualityStatus: '14' });
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
   const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
 
   const {
     data: { list, total } = initialData,
@@ -104,7 +106,7 @@ export default React.memo(function List() {
         return result;
       },
       {
-        qualityAuditorId: partyId
+        qualityAuditorId: id
       }
     );
 
@@ -498,6 +500,12 @@ export default React.memo(function List() {
       4,
       { key: 5, options: providerOptions },
       6,
+      {
+        key: 15,
+        options: permissions
+          .filter(p => p.includes('PHOTO-REVIEW_QUALITY-REVIEW'))
+          .map(p => p.match(/PHOTO-REVIEW_QUALITY-REVIEW:(\d+)/)[1])
+      },
       7,
       8,
       9,

@@ -29,11 +29,13 @@ function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
   const {
-    data = { list: [], total: 0 },
+    data,
     loading,
     run: fetchData
   } = useRequest(providerService.getList, { manual: true });
-  const { list, total } = data;
+  const { list, total } = data || {
+    list: [], total: 0
+  };
 
   useEffect(() => {
     fetchData(query);

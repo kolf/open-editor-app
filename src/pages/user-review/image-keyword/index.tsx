@@ -20,6 +20,7 @@ import imageService from 'src/services/imageService';
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import modal from 'src/utils/modal';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 const initialData = {
   list: [],
@@ -35,6 +36,7 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
   const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
 
   const {
     data: { list, total } = initialData,
@@ -338,6 +340,12 @@ export default React.memo(function List() {
       2,
       14,
       { key: 5, options: providerOptions },
+      {
+        key: 15,
+        options: permissions
+          .filter(p => p.includes('PHOTO-REVIEW_QUALITY-REVIEW'))
+          .map(p => p.match(/PHOTO-REVIEW_QUALITY-REVIEW:(\d+)/)[1])
+      },
       6,
       7,
       8,

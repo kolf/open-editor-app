@@ -59,7 +59,8 @@ const otherPart = {
   'Inspection Platform': '内容审核管理平台',
   'Modify Password': '修改密码',
   'New Password': '新密码',
-  'Confirm New Password': '新密码',
+  'Old Password': '旧密码',
+  'Confirm New Password': '确认新密码',
 
   Exit: '退出',
   Login: '登录',
@@ -89,9 +90,15 @@ const table = {
   Open: '开通',
   Close: '关闭',
   Edit: '编辑',
+  
   'Confirm Close?': '是否确认关闭？',
   'Confirm Open?': '是否确认开通？',
   'Distribution Success': '设置分配成功！',
+  'Batch Rules': '批次生成规则',
+  'Automatic': '系统自动生成',
+  "A batch is generated when 5000 pictures are met or the creation time exceeds 12 hours": "满5000张/创建时间超过12小时生成一个批次",
+  manual: '手动生成',
+  "Push to generate one batch at a time": "推送一次生成一个批次",
 
   Title: '名称',
   'Please enter the data source name, no more than 200 characters': '请输入数据来源名称，不超过200个字符',

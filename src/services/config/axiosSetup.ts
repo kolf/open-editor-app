@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig, AxiosInstance } from 'axios';
-import { PATH } from 'src/routes/path';
 import { toastMessage, TypeToast } from 'src/components/common/ToastMessage';
 
 const initialization = (config: AxiosRequestConfig): AxiosInstance => {
@@ -11,7 +10,8 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
     config => {
       const accessToken = localStorage.getItem('accessToken');
       if (accessToken) {
-        config.headers.common['Authorization'] = `${accessToken}`;
+        config.headers.common['token'] = `${accessToken}`;
+        // config.headers.common['authorization'] = `${accessToken}`;
       }
       return config;
     },
@@ -20,11 +20,11 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
 
   axiosInstance.interceptors.response.use(
     response => {
-      const { code, message } = response.data;
-      switch (code) {
+      const { errCode, errMessage } = response.data;
+      switch (errCode) {
         case 401:
-          window.location.href = PATH.LOGIN;
-          toastMessage('你没有权限！', message, TypeToast.ERROR);
+          window.location.href = '/login'
+          toastMessage('你没有权限！', errMessage, TypeToast.ERROR);
           localStorage.removeItem('accessToken');
           break;
         case 400:
@@ -34,18 +34,19 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
       return response;
     },
     error => {
+      debugger;
       switch (error.response.status) {
         case 401:
-          window.location.href = PATH.LOGIN;
+          window.location.href = '/login'
           toastMessage('你没有权限', error.response.data.error, TypeToast.ERROR);
           localStorage.removeItem('accessToken');
           break;
         // case 404:
-          // window.location.href = PATH.PAGE_404;
+        // window.location.href = PATH.PAGE_404;
         //   break;
         // case 500:
-          // toastMessage('请求错误', error.response.data.error, TypeToast.ERROR);
-          // break;
+        // toastMessage('请求错误', error.response.data.error, TypeToast.ERROR);
+        // break;
         // default:
         // toastMessage('请求错误', error.response.data.error, TypeToast.ERROR);
       }

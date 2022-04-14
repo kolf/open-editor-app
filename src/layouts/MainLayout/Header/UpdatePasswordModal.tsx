@@ -32,6 +32,23 @@ export default React.memo(function UpdatePasswordModal({ saveRef }: Props): Reac
   return (
     <Form form={form} {...formItemLayout}>
       <Form.Item
+        name="oldPassword"
+        label={<FormattedMessage id="Old Password" />}
+        rules={[
+          {
+            required: true,
+            message: formatMessage({ id: 'input.placeholder' })
+          },
+          {
+            min: 6,
+            message: formatMessage({ id: 'form.password.error' })
+          }
+        ]}
+        hasFeedback
+      >
+        <Input.Password visibilityToggle={false} />
+      </Form.Item>
+      <Form.Item
         name="password"
         label={<FormattedMessage id="New Password" />}
         rules={[
