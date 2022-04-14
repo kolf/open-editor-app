@@ -22,6 +22,7 @@ import Toolbar from 'src/components/list/Toolbar';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { getTableDisplay } from 'src/utils/tools';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -92,6 +93,8 @@ function VcgImageText() {
       return memo;
     }, {});
 
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
+
   const columns: Column[] = [
     { title: <FormattedMessage id="No." />, align: 'center', dataIndex: 'index' },
     { title: 'ID', align: 'center', dataIndex: 'id' },
@@ -124,7 +127,6 @@ function VcgImageText() {
       align: 'center',
       dataIndex: 'sensitiveCheckType',
       render: value => {
-        console.log(value, 'value');
         const texts = (value && value.split(',').map(v => getTableDisplay(v, SensitiveCheckType))) || [];
         return (
           (texts.length > 0 &&
@@ -183,7 +185,7 @@ function VcgImageText() {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
           <Button
-            disabled={!(tr.status + '' === BatchStatus.入库完成 && tr.assignStatus === 1)}
+            disabled={!(tr.status + '' === BatchStatus.入库完成 && tr.assignStatus === 1 && permissions.includes(`DATA-DISTRIBUTION_QUALITY-REVIEW:${tr.osiDbProviderId}`))}
             type="text"
             onClick={() => assignData(tr.id)}
           >

@@ -181,6 +181,22 @@ export enum SensitiveWordList {
   国内敏感词表 = '1',
   国外敏感词表 = '2'
 }
+
+// export enum BatchGeneratedRules {
+//   "系统自动生成（满5000张/创建时间超过12小时生成一个批次）" = '1',
+//   "手动生成（推送一次生成一个批次）" = '2'
+// }
+
+export enum BatchGeneratedRules {
+  系统自动生成 = '1',
+  手动生成 = '2'
+}
+
+export const BatchGeneratedRulesDesMap = {
+  [BatchGeneratedRules.系统自动生成]: 'A batch is generated when 5000 pictures are met or the creation time exceeds 12 hours',
+  [BatchGeneratedRules.手动生成]: 'Push to generate one batch at a time',
+}
+
 class Options {
   map(enumObj) {
     return Object.keys(enumObj).reduce((result, key) => {
