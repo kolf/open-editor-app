@@ -192,22 +192,19 @@ export default function CreateDataModal({
                 })}
               </div>
             ),
-            overlayStyle: {maxWidth: 400},
+            overlayStyle: { maxWidth: 400 },
             icon: <QuestionCircleOutlined />
           }}
         >
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <Radio.Group>
-              {Object.keys(BatchGeneratedRules).map((t, i) => {
-                return (
-                  <Radio value={BatchGeneratedRules[t]} key={`${t}${i}`}>
-                    <FormattedMessage id={zhCNMap[t]} />
-                  </Radio>
-                );
-              })}
-            </Radio.Group>
-            {/* <FormattedMessage id={BatchGeneratedRulesDesMap[BatchGeneratedRules[t]]} /> */}
-          </div>
+          <Radio.Group>
+            {Object.keys(BatchGeneratedRules).map((t, i) => {
+              return (
+                <Radio value={BatchGeneratedRules[t]} key={`${t}${i}`}>
+                  <FormattedMessage id={zhCNMap[t]} />
+                </Radio>
+              );
+            })}
+          </Radio.Group>
         </Form.Item>
         <Form.Item
           label={<FormattedMessage id="NSFW Scan" />}
