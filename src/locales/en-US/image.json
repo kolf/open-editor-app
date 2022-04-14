@@ -78,5 +78,14 @@
   "image.error.nosubmit": "No data to submit",
   "image.error.langeType": "Inconsistent language types!",
   "image.setting.qualityRank.message": "",
-  "image.setting.qualityRank.success": ""
+  "image.setting.qualityRank.success": "",
+
+  "image.imageType": "Image Type",
+  "image.imageType.1": "Photo",
+  "image.imageType.2": "Illustration",
+  "image.imageType.3": "Vector",
+  "image.imageType.4": "Design template",
+  "image.imageType.5": "Element",
+  "image.imageType.6": "Background",
+  "image.imageType.7": "PPT-Template"
 }

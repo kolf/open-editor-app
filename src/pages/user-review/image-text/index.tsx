@@ -23,6 +23,7 @@ import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import { useOptions } from 'src/hooks/useSelect';
 import { IFormItemKey } from 'src/hooks/useFormItems';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -41,6 +42,7 @@ export default React.memo(function List() {
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
   const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
 
   const {
     data: { list, total } = initialData,
@@ -498,6 +500,12 @@ export default React.memo(function List() {
       4,
       { key: 5, options: providerOptions },
       6,
+      {
+        key: 15,
+        options: permissions
+          .filter(p => p.includes('PHOTO-REVIEW_QUALITY-REVIEW'))
+          .map(p => p.match(/PHOTO-REVIEW_QUALITY-REVIEW:(\d+)/)[1])
+      },
       7,
       8,
       9,
