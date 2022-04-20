@@ -28,13 +28,10 @@ export enum ModalType {
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
-  const {
-    data,
-    loading,
-    run: fetchData
-  } = useRequest(providerService.getList, { manual: true });
+  const { data, loading, run: fetchData } = useRequest(providerService.getList, { manual: true });
   const { list, total } = data || {
-    list: [], total: 0
+    list: [],
+    total: 0
   };
 
   useEffect(() => {
@@ -96,6 +93,7 @@ function List() {
         case 'name':
         case 'assetType':
         case 'assignType':
+        case 'batchOverType':
           memo[key] = v + '';
           break;
         case 'id':

@@ -1,7 +1,7 @@
 import { useRequest } from 'ahooks';
 import { Table, Button, message } from 'antd';
 import moment from 'moment';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useEffect, useState } from 'react';
 import config from 'src/config';
 import {
@@ -22,6 +22,7 @@ import Toolbar from 'src/components/list/Toolbar';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { getTableDisplay } from 'src/utils/tools';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -29,10 +30,20 @@ function VcgImageText() {
     pageNum: 1,
     pageSize: 60,
     assignStatus: BatchAssignStatus.未分配,
-    auditStage: AuditType.关键词审核
+    auditStage: AuditType.关键词审核,
+    osiProviderId: ''
   });
-  const { providerOptions } = useContext(DataContext);
   const intl = useIntl();
+
+  const { providerOptions } = useContext(DataContext);
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
+  const dataSourceOptions = useMemo(() => providerOptions?.filter(o =>
+    permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
+  ), [providerOptions]);
+
+   useEffect(() => {
+    setQuery({ ...query, osiProviderId: dataSourceOptions?.map(o => o.value).join(',') });
+  }, [dataSourceOptions]);
 
   const {
     data,
@@ -45,7 +56,8 @@ function VcgImageText() {
   });
 
   const { list, total } = data || {
-    list: [], total: 0
+    list: [],
+    total: 0
   };
 
   useEffect(() => {
@@ -186,7 +198,13 @@ function VcgImageText() {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
           <Button
-            disabled={!(tr.status + '' === BatchStatus.入库完成 && tr.assignStatus === 1)}
+            disabled={
+              !(
+                tr.status + '' === BatchStatus.入库完成 &&
+                tr.assignStatus === 1 &&
+                permissions.includes(`DATA-SOURCE:${tr.osiDbProviderId}`)
+              )
+            }
             type="text"
             onClick={() => assignData(tr.id)}
           >
@@ -227,7 +245,7 @@ function VcgImageText() {
             memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');
             break;
           case 'osiProviderId':
-            memo[q] = nextQuery[q] && nextQuery[q].value;
+            memo[q] = nextQuery[q] && nextQuery[q].value || dataSourceOptions?.map(o => o.value).join(',');
             break;
           default:
             memo[q] = nextQuery[q];
