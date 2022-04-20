@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import GridList from 'src/components/list/GridList';
@@ -12,6 +12,7 @@ import useImage from 'src/hooks/useImage';
 import { IFormItemKey } from 'src/hooks/useFormItems';
 import imageService from 'src/services/imageService';
 import config from 'src/config';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 const initialData = {
   list: [],
@@ -23,6 +24,15 @@ export default React.memo(function List() {
 
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
+  const { dataSourceOptions, imageTypeOptions } = useMemo(() => {
+    return {
+      dataSourceOptions: providerOptions?.filter(o =>
+        permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
+      ),
+      imageTypeOptions: permissions.filter(p => p.includes('IMAGE-TYPE')).map(p => p.match(/IMAGE-TYPE:(\d+)/)[1])
+    };
+  }, [providerOptions, permissions]);
 
   const {
     data: { list, total } = initialData,
@@ -62,6 +72,13 @@ export default React.memo(function List() {
     if (keywords) {
       result['keyword'] = keywords;
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
+    }
+
+    if (!query.imageType) {
+      result['imageType'] = imageTypeOptions.join(',')
+    }
+    if (!query.osiProviderId) {
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
     }
 
     return result;
@@ -143,8 +160,11 @@ export default React.memo(function List() {
       1,
       2,
       4,
-      { key: 5, options: providerOptions },
-      15,
+      { key: 5, options: dataSourceOptions },
+      {
+        key: 15,
+        options: imageTypeOptions
+      },
       6,
       7,
       8,
