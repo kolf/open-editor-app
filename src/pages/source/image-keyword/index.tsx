@@ -1,7 +1,7 @@
 import { useRequest } from 'ahooks';
 import { Table, Button, message } from 'antd';
 import moment from 'moment';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useEffect, useState } from 'react';
 import config from 'src/config';
 import {
@@ -30,10 +30,20 @@ function VcgImageText() {
     pageNum: 1,
     pageSize: 60,
     assignStatus: BatchAssignStatus.未分配,
-    auditStage: AuditType.关键词审核
+    auditStage: AuditType.关键词审核,
+    osiProviderId: ''
   });
-  const { providerOptions } = useContext(DataContext);
   const intl = useIntl();
+
+  const { providerOptions } = useContext(DataContext);
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
+  const dataSourceOptions = useMemo(() => providerOptions?.filter(o =>
+    permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
+  ), [providerOptions]);
+
+   useEffect(() => {
+    setQuery({ ...query, osiProviderId: dataSourceOptions?.map(o => o.value).join(',') });
+  }, [dataSourceOptions]);
 
   const {
     data,
@@ -97,8 +107,6 @@ function VcgImageText() {
       memo[provider.value] = provider.label;
       return memo;
     }, {});
-
-  const permissions = JSON.parse(getLocalStorageItem('permissons'));
 
   const columns: Column[] = [
     { title: <FormattedMessage id="No." />, align: 'center', dataIndex: 'index' },
@@ -237,7 +245,7 @@ function VcgImageText() {
             memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');
             break;
           case 'osiProviderId':
-            memo[q] = nextQuery[q] && nextQuery[q].value;
+            memo[q] = nextQuery[q] && nextQuery[q].value || dataSourceOptions?.map(o => o.value).join(',');
             break;
           default:
             memo[q] = nextQuery[q];
