@@ -185,7 +185,7 @@ function VcgImageText() {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
           <Button
-            disabled={!(tr.status + '' === BatchStatus.入库完成 && tr.assignStatus === 1 && permissions.includes(`DATA-DISTRIBUTION_QUALITY-REVIEW:${tr.osiDbProviderId}`))}
+            disabled={!(tr.status + '' === BatchStatus.入库完成 && tr.assignStatus === 1 && permissions.includes(`DATA-SOURCE:${tr.osiDbProviderId}`))}
             type="text"
             onClick={() => assignData(tr.id)}
           >

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
@@ -37,7 +37,15 @@ export default React.memo(function List() {
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
   const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
   const permissions = JSON.parse(getLocalStorageItem('permissons'));
-
+  const { dataSourceOptions, imageTypeOptions } = useMemo(() => {
+    return {
+      dataSourceOptions: providerOptions?.filter(o =>
+        permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
+      ),
+      imageTypeOptions: permissions.filter(p => p.includes('IMAGE-TYPE')).map(p => p.match(/IMAGE-TYPE:(\d+)/)[1])
+    };
+  }, [providerOptions, permissions]);
+  
   const {
     data: { list, total } = initialData,
     loading = true,
@@ -121,6 +129,13 @@ export default React.memo(function List() {
     if (keywords) {
       result['keyword'] = keywords;
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
+    }
+
+    if (!query.imageType) {
+      result['imageType'] = imageTypeOptions.join(',')
+    }
+    if (!query.osiProviderId) {
+      result['osiProviderId'] = dataSourceOptions.map(o => o.value).join(',')
     }
 
     return result;
@@ -339,12 +354,13 @@ export default React.memo(function List() {
       1,
       2,
       14,
-      { key: 5, options: providerOptions },
+      {
+        key: 5,
+        options: dataSourceOptions
+      },
       {
         key: 15,
-        options: permissions
-          .filter(p => p.includes('PHOTO-REVIEW_QUALITY-REVIEW'))
-          .map(p => p.match(/PHOTO-REVIEW_QUALITY-REVIEW:(\d+)/)[1])
+        options: imageTypeOptions
       },
       6,
       7,

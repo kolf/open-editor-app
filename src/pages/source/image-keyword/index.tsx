@@ -194,7 +194,7 @@ function VcgImageText() {
               !(
                 tr.status + '' === BatchStatus.入库完成 &&
                 tr.assignStatus === 1 &&
-                permissions.includes(`DATA-DISTRIBUTION_QUALITY-REVIEW:${tr.osiDbProviderId}`)
+                permissions.includes(`DATA-SOURCE:${tr.osiDbProviderId}`)
               )
             }
             type="text"
