@@ -132,7 +132,7 @@ export default React.memo(function List() {
       result['imageType'] = imageTypeOptions.join(',')
     }
     if (!query.osiProviderId) {
-      result['osiProviderId'] = dataSourceOptions.map(o => o.value).join(',')
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
     }
 
     return result;
