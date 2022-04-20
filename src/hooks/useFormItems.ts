@@ -5,13 +5,13 @@ export type IFormItem = {
   field: string;
   formType: IFormType;
   placeholder: string;
-  options?: Option<string>[];
+  options?: (Option<string> | number | string)[];
   restProps?: any;
 };
 
 export type IFormType = 'TimeRange' | 'Select' | 'SearchSelect' | 'InputSplit';
 
-export type IFormItemKey = number | { key: number; options: Option<string>[] };
+export type IFormItemKey = number | ({ key: number } & Pick<IFormItem, 'options'>);
 
 export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] {
   const { formatMessage } = useIntl();
@@ -21,7 +21,7 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       key: 1,
       field: 'createdTime',
       formType: 'TimeRange',
-      placeholder: formatMessage({ id: 'image.createdTime' }),
+      placeholder: formatMessage({ id: 'image.createdTime' })
     },
     {
       key: 2,
@@ -152,6 +152,21 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
         { value: '24', label: formatMessage({ id: 'image.status.24' }) },
         { value: '34', label: formatMessage({ id: 'image.status.34' }) }
       ]
+    },
+    {
+      key: 15,
+      field: 'imageType',
+      formType: 'Select',
+      placeholder: formatMessage({ id: 'image.imageType' }),
+      options: [
+        { value: '1', label: formatMessage({ id: 'image.imageType.1' }) },
+        { value: '2', label: formatMessage({ id: 'image.imageType.2' }) },
+        { value: '3', label: formatMessage({ id: 'image.imageType.3' }) },
+        { value: '4', label: formatMessage({ id: 'image.imageType.4' }) },
+        { value: '5', label: formatMessage({ id: 'image.imageType.5' }) },
+        { value: '6', label: formatMessage({ id: 'image.imageType.6' }) },
+        { value: '7', label: formatMessage({ id: 'image.imageType.7' }) }
+      ]
     }
   ];
 
@@ -160,9 +175,17 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
       if (typeof key === 'number') {
         return (formItems as IFormItem[]).find(item => item.key === key);
       } else {
+        const originalItem = (formItems as IFormItem[]).find(item => item.key === key.key);
         return {
-          ...(formItems as IFormItem[]).find(item => item.key === key.key),
-          ...key
+          ...originalItem,
+          ...key,
+          ...(originalItem.options && (key as Pick<IFormItem, 'options'>).options
+            ? {
+                options: originalItem?.options?.filter(o =>
+                  key?.options?.find(k => ((k as Option<string>).value || k) == (o as Option<string>).value)
+                )
+              }
+            : {})
         };
       }
     });
