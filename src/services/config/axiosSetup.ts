@@ -34,7 +34,7 @@ const initialization = (config: AxiosRequestConfig): AxiosInstance => {
       return response;
     },
     error => {
-      debugger;
+      // debugger;
       switch (error.response.status) {
         case 401:
           window.location.href = '/login'

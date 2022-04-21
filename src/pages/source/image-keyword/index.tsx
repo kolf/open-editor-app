@@ -19,10 +19,9 @@ import FormList from './FormList';
 import AssignForm from './AssignForm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Toolbar from 'src/components/list/Toolbar';
-import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { getTableDisplay } from 'src/utils/tools';
-import { getLocalStorageItem } from 'src/utils/localStorage';
+import { usePermissions } from 'src/hooks/usePermissions';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -34,12 +33,8 @@ function VcgImageText() {
     osiProviderId: ''
   });
   const intl = useIntl();
-
-  const { providerOptions } = useContext(DataContext);
-  const permissions = JSON.parse(getLocalStorageItem('permissons'));
-  const dataSourceOptions = useMemo(() => providerOptions?.filter(o =>
-    permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
-  ), [providerOptions]);
+  
+  const { permissions, dataSourceOptions } = usePermissions(AuditType.关键词审核);
 
    useEffect(() => {
     setQuery({ ...query, osiProviderId: dataSourceOptions?.map(o => o.value).join(',') });
@@ -52,7 +47,7 @@ function VcgImageText() {
     refresh
   } = useRequest(bacthService.getList, {
     manual: true,
-    ready: !!providerOptions
+    ready: !!dataSourceOptions
   });
 
   const { list, total } = data || {
@@ -102,8 +97,8 @@ function VcgImageText() {
   }
 
   const providerMap =
-    providerOptions &&
-    providerOptions.reduce((memo, provider) => {
+    dataSourceOptions &&
+    dataSourceOptions.reduce((memo, provider) => {
       memo[provider.value] = provider.label;
       return memo;
     }, {});

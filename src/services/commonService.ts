@@ -22,7 +22,8 @@ export class CommonService {
         result = res.data.data.map(item => ({
           value: item.id + '',
           label: item.name,
-          enLabel: item.nameEn
+          enLabel: item.nameEn,
+          auditFlows: item.auditFlows
         }));
       } else if (data.type === 'editUser') {
         const res = await Api.post<AxiosResponse<CommonSchema.EditUserList>>(`/api/editor/param/pageList?paramType=4`, {

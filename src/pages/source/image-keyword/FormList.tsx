@@ -2,22 +2,19 @@ import React, { FC, memo, useState } from 'react';
 import { Form, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import options, {
-  AIDetection,
   AIService,
+  AuditType,
   BatchAssignMode,
   BatchAssignStatus,
-  IfSensitiveCheckBool,
   Priority,
   SensitiveCheckType,
   SensitiveWordList
 } from 'src/declarations/enums/query';
 import SearchSelect from 'src/components/SearchSelect';
 import 'src/styles/FormList.less';
-import { useContext } from 'react';
-import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { zhCNMap } from 'src/locales/zhCN';
-import { getLocalStorageItem } from 'src/utils/localStorage';
+import { usePermissions } from 'src/hooks/usePermissions';
 
 const { Option } = Select;
 
@@ -25,12 +22,7 @@ const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
   const intl = useIntl();
 
-  const permissions = JSON.parse(getLocalStorageItem('permissons'));
-
-  const { providerOptions } = useContext(DataContext);
-  const dataSourceOptions = providerOptions?.filter(o =>
-    permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
-  )
+  const { dataSourceOptions } = usePermissions(AuditType.关键词审核);
   
   return (
     <div className="formList-root">
