@@ -17,13 +17,13 @@ import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
-import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
+import options, { Quality, LicenseType, AuditType } from 'src/declarations/enums/query';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import { useOptions } from 'src/hooks/useSelect';
 import { IFormItemKey } from 'src/hooks/useFormItems';
-import { getLocalStorageItem } from 'src/utils/localStorage';
+import { usePermissions } from 'src/hooks/usePermissions';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -42,15 +42,8 @@ export default React.memo(function List() {
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
   const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
-  const permissions = JSON.parse(getLocalStorageItem('permissons'));
-  const { dataSourceOptions, imageTypeOptions } = useMemo(() => {
-    return {
-      dataSourceOptions: providerOptions?.filter(o =>
-        permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
-      ),
-      imageTypeOptions: permissions.filter(p => p.includes('IMAGE-TYPE')).map(p => p.match(/IMAGE-TYPE:(\d+)/)[1])
-    };
-  }, [providerOptions, permissions]);
+  
+  const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.质量审核);
 
   const {
     data: { list, total } = initialData,

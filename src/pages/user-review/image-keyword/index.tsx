@@ -20,7 +20,8 @@ import imageService from 'src/services/imageService';
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import modal from 'src/utils/modal';
-import { getLocalStorageItem } from 'src/utils/localStorage';
+import { usePermissions } from 'src/hooks/usePermissions';
+import { AuditType } from 'src/declarations/enums/query';
 
 const initialData = {
   list: [],
@@ -36,15 +37,8 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
   const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
-  const permissions = JSON.parse(getLocalStorageItem('permissons'));
-  const { dataSourceOptions, imageTypeOptions } = useMemo(() => {
-    return {
-      dataSourceOptions: providerOptions?.filter(o =>
-        permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
-      ),
-      imageTypeOptions: permissions.filter(p => p.includes('IMAGE-TYPE')).map(p => p.match(/IMAGE-TYPE:(\d+)/)[1])
-    };
-  }, [providerOptions, permissions]);
+  
+  const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.关键词审核);
   
   const {
     data: { list, total } = initialData,

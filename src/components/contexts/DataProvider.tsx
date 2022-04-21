@@ -53,7 +53,7 @@ export const DataProvider = ({ children }) => {
   const makeData = (data: Props): Props => {
     return Object.keys(data).reduce((result, key: keyof Props) => {
       const value = data[key];
-      if (/Options$/.test(key) && value) {
+      if (/Options$/.test(key) && value && key !== 'providerOptions') {
         result[key] = getAsyncOptions(value);
       } else {
         result[key] = value;
