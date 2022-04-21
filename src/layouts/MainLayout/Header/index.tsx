@@ -86,6 +86,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
           {menus
+            .filter(menu =>  menu.code !== 'open-editor-global')
             .filter(menu => menu.isEnabled)
             .map(menu => (
               <Menu.Item key={menu.id + ''}>

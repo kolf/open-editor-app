@@ -17,6 +17,7 @@ import { useContext } from 'react';
 import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { zhCNMap } from 'src/locales/zhCN';
+import { getLocalStorageItem } from 'src/utils/localStorage';
 
 const { Option } = Select;
 
@@ -24,7 +25,13 @@ const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
   const intl = useIntl();
 
+  const permissions = JSON.parse(getLocalStorageItem('permissons'));
+
   const { providerOptions } = useContext(DataContext);
+  const dataSourceOptions = providerOptions?.filter(o =>
+    permissions.find(permission => permission.includes(`DATA-SOURCE:${o.value}`))
+  )
+  
   return (
     <div className="formList-root">
       <Form
@@ -73,7 +80,7 @@ const FormList = (props: any) => {
             type="provider"
             style={{ width: 160 }}
             placeholder={<FormattedMessage id="Data Source" />}
-            options={providerOptions}
+            options={dataSourceOptions}
             manual
           />
         </Form.Item>

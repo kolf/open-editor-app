@@ -45,7 +45,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
       case 'Select':
         return (
           <Select allowClear filterOption={filterOption} showSearch style={{ width: 110 }} placeholder={placeholder}>
-            {(options || []).map(o => (
+            {(options || []).map((o: Option<string>) => (
               <Select.Option key={o.value} value={o.value}>
                 {o.label}
               </Select.Option>
@@ -57,7 +57,7 @@ export default React.memo(function FormList({ initialValues, onChange, itemKeys 
           <SearchSelect
             type={restProps.type}
             manual
-            options={options}
+            options={options as Option<string>[]}
             style={{ width: 160 }}
             placeholder={placeholder}
           />

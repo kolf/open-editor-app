@@ -6,6 +6,8 @@ import {
   AssetType,
   AssignType,
   AuditType,
+  BatchGeneratedRules,
+  BatchGeneratedRulesDesMap,
   KeywordAIService,
   KeywordAuditDefault,
   KeywordSensitiveCheckType,
@@ -16,6 +18,7 @@ import {
 import { ModalType } from '.';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { zhCNMap } from 'src/locales/zhCN';
+import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const defaultOptions: any = {
   sensitiveCheckType: SensitiveCheckType,
@@ -104,8 +107,6 @@ export default function CreateDataModal({
     saveRef(form);
   }, [form]);
 
-  console.log(values, 'values');
-
   return (
     <>
       <Form
@@ -172,6 +173,37 @@ export default function CreateDataModal({
                 )}
               </Radio>
             ))}
+          </Radio.Group>
+        </Form.Item>
+        <Form.Item
+          label={<FormattedMessage id="Batch Rules" />}
+          name="batchOverType"
+          rules={[{ required: true, message: intl.formatMessage({ id: 'select.placeholder' }) }]}
+          tooltip={{
+            title: (
+              <div>
+                {Object.keys(BatchGeneratedRules).map((t, i) => {
+                  return (
+                    <div>
+                      {intl.formatMessage({ id: zhCNMap[t] })}:
+                      {intl.formatMessage({ id: BatchGeneratedRulesDesMap[BatchGeneratedRules[t]] })}
+                    </div>
+                  );
+                })}
+              </div>
+            ),
+            overlayStyle: { maxWidth: 400 },
+            icon: <QuestionCircleOutlined />
+          }}
+        >
+          <Radio.Group>
+            {Object.keys(BatchGeneratedRules).map((t, i) => {
+              return (
+                <Radio value={BatchGeneratedRules[t]} key={`${t}${i}`}>
+                  <FormattedMessage id={zhCNMap[t]} />
+                </Radio>
+              );
+            })}
           </Radio.Group>
         </Form.Item>
         <Form.Item
