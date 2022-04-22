@@ -303,7 +303,7 @@ export default React.memo(function List() {
       // 关键词小于5个 大于45个
       if (
         submitList.some(item => {
-          const keywordIdList = item.keywords?.match(/\d+/g);
+          const keywordIdList = item.keywords?.match(/\d+/g) || [];
           return keywordIdList.length < 5 || keywordIdList.length > 45;
         })
       ) {
@@ -314,7 +314,7 @@ export default React.memo(function List() {
               <FormattedMessage id="image.error.keywordLetFive" /> ID：
               {submitList
                 .filter(item => {
-                  const keywordIdList = item.keywords?.match(/\d+/g);
+                  const keywordIdList = item.keywords?.match(/\d+/g) || [];
                   return keywordIdList.length < 5 || keywordIdList.length > 45;
                 })
                 .map(item => (
