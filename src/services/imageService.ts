@@ -45,10 +45,12 @@ export class ImageService {
     try {
       const res = await Api.get(`/api/outsourcing/osiImage/keywordsInfoView?${queryString.stringify(data)}`);
       const res1 = await this.getKeywordTags([res.data.data]);
-      const { title, keywordTags = [] } = res1[0];
+      const { title, osiKeywodsData = {}, osiOriginalData = {}, keywordTags = [] } = res1[0];
 
       return {
         title,
+        aiTitle: osiKeywodsData.aiTitle,
+        originalTitle: osiOriginalData.originalTitle,
         ...keywordTags.reduce((result, item) => {
           const { source, label } = item;
           if (result[source]) {

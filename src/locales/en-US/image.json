@@ -70,7 +70,7 @@
   "image.copyright.7": "Have PR",
   "image.copyright.9": "No MR or PR",
 
-  "image.callbackStatus.2": "Waiting for confirmation！",
+  "image.callbackStatus.2": "committed！",
 
   "image.error.unTitle": "Title is empty",
   "image.error.keywordLetFive": "Key words cannot be less than 5, more than 45",
