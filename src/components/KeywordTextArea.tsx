@@ -50,6 +50,7 @@ export default React.memo(function KeywordTextArea({
 }: Props<IKeywordsTag>): ReactElement {
   const { formatMessage } = useIntl();
   const wrapRef = useRef<HTMLDivElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const inputMirrorRef = useRef<HTMLSpanElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [contenteditable, setContenteditable] = useState<boolean>(false);
@@ -235,6 +236,12 @@ export default React.memo(function KeywordTextArea({
     return colorMap[valueItem.type] || valueItem.color || '';
   }
 
+  useEffect(() => {
+    if (contenteditable) {
+      textareaRef.current.style.height = textareaRef.current.scrollHeight+'px';
+    }
+  }, [contenteditable])
+
   return (
     <div
       className="KeywordTextArea-root"
@@ -246,6 +253,7 @@ export default React.memo(function KeywordTextArea({
     >
       {contenteditable ? (
         <textarea
+          ref={textareaRef}
           placeholder={placeholder || defaultPlaceholder}
           className="KeywordTextArea-textarea"
           style={{ width: wrapRef.current.clientWidth - 4, height: wrapRef.current.clientHeight - 8 }}
