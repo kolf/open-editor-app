@@ -98,7 +98,8 @@ export enum Quality {
   A = '1',
   B = '2',
   C = '3',
-  D = '4'
+  D = '4',
+  E = '5'
 }
 
 // 授权
@@ -172,7 +173,7 @@ export enum AuditType {
   关键词审核 = '2'
 }
 
-export enum KeywordAuditDefault {
+export enum keywordsReviewKeywords {
   数据来源 = '1',
   AI = '2'
 }

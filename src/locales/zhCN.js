@@ -3,6 +3,7 @@ import component from './zh-CN/component.json';
 import image from './zh-CN/image.json';
 import keywords from './zh-CN/keywords.json';
 import system from './zh-CN/system.json';
+import dataSource from './zh-CN/dataSource.json';
 
 // 导航
 export const menuPart = {
@@ -102,15 +103,15 @@ const table = {
 
   Title: '名称',
   'Please enter the data source name, no more than 200 characters': '请输入数据来源名称，不超过200个字符',
-  'Title Reivew Default Data': '标题审核默认数据',
-  'Keywords Review Default Data': '关键词审核默认数据',
+  'Title Reivew Default Data': '标题审核初始化数据',
+  'Keywords Review Default Data': '关键词审核初始化数据',
   AI: 'AI',
   'Please Enter Title!': '请输入名称！',
   'Please Select Inspection Type!': '请选择审核类型！',
   'Please Select NSFW Keywords!': '请选择敏感词表！',
   'Please Select NSFW Scan!': '请选择敏感检测！',
-  'Please Select Title Reivew Default Data': '请选择标题审核默认数据！',
-  'Please Select Keywords Review Default Data': '请选择关键词审核默认数据！',
+  'Please Select Title Reivew Default Data': '请选择标题审核初始化数据！',
+  'Please Select Keywords Review Default Data': '请选择关键词审核初始化数据！',
 
   'Please Enter Distribution Editor!': '请选择/输入分配对象！',
 
@@ -150,4 +151,4 @@ const exp = {
 
 export const zhCNMap = options.map(exp);
 
-export default { ...component, ...image, ...keywords, ...system, ...exp };
+export default { ...component, ...image, ...keywords, ...system, ...dataSource, ...exp };

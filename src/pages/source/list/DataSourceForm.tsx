@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { Checkbox, Form, Input, Radio } from 'antd';
 import {
   AIDetection,
@@ -9,7 +9,7 @@ import {
   BatchGeneratedRules,
   BatchGeneratedRulesDesMap,
   KeywordAIService,
-  KeywordAuditDefault,
+  keywordsReviewKeywords,
   KeywordSensitiveCheckType,
   QualitySensitiveCheckType,
   SensitiveCheckType,
@@ -21,10 +21,10 @@ import { zhCNMap } from 'src/locales/zhCN';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 
 const defaultOptions: any = {
-  sensitiveCheckType: SensitiveCheckType,
-  AIDetection: AIService,
-  titleAuditDefault: KeywordAuditDefault,
-  keywordAuditDefault: KeywordAuditDefault
+  sensitiveCheckType: QualitySensitiveCheckType
+  // AIDetection: AIService,
+  // keywordsReivewTitle: keywordsReviewKeywords,
+  // keywordsReviewKeywords: keywordsReviewKeywords
 };
 export default function CreateDataModal({
   saveRef,
@@ -44,31 +44,8 @@ export default function CreateDataModal({
   const [form] = Form.useForm(null);
   const [values, setValues] = useState(initialValues);
 
-  useEffect(() => {
-    // 如果弹窗为修改数据来源 且 审核类型只勾选质量审核、关键词审核其中一个
-    if (modalType === ModalType.修改数据来源 && initialValues?.auditFlows?.length === 1) {
-      if (initialValues?.auditFlows?.includes(AuditType.质量审核)) {
-        setOptions({
-          sensitiveCheckType: QualitySensitiveCheckType,
-          AIDetection: AIDetection
-        });
-      } else if (initialValues?.auditFlows?.includes(AuditType.关键词审核)) {
-        setOptions({
-          sensitiveCheckType: KeywordSensitiveCheckType,
-          AIDetection: KeywordAIService,
-          titleAuditDefault: KeywordAuditDefault,
-          keywordAuditDefault: KeywordAuditDefault
-        });
-      }
-    }
-  }, []);
-
-  // 审核类型不同导致的选项不同
-  const onFieldsChange = v => {
-    v = v[0];
-    if (!v.name.includes('auditFlows')) return;
-
-    const auditTypeMap = {
+  const auditTypeMap = useMemo(() => {
+    return {
       [AuditType.质量审核]: {
         sensitiveCheckType: QualitySensitiveCheckType,
         AIDetection: AIDetection
@@ -76,31 +53,84 @@ export default function CreateDataModal({
       [AuditType.关键词审核]: {
         sensitiveCheckType: KeywordSensitiveCheckType,
         AIDetection: KeywordAIService,
-        titleAuditDefault: KeywordAuditDefault,
-        keywordAuditDefault: KeywordAuditDefault
+        keywordsReivewTitle: keywordsReviewKeywords,
+        keywordsReviewKeywords: keywordsReviewKeywords
       }
     };
+  }, []);
+
+  useEffect(() => {
+    // 弹窗选项初始化
+    setOptions(getOpts(values.auditFlows));
+  }, []);
+
+  // 获取对应审核类型的选项
+  const getOpts = (auditFlows: string[]) => {
+    if (!auditFlows || auditFlows.length === 0) {
+      return opts;
+    }
+    return auditFlows
+      .sort()
+      .map(item => auditTypeMap[item])
+      .reduce((memo, item) => {
+        Object.keys(item).forEach(name => {
+          if (!memo[name]) {
+            memo[name] = item[name];
+          } else {
+            memo[name] = Object.assign({}, memo[name], item[name]);
+          }
+        });
+        return memo;
+      }, {});
+  };
+
+  // 审核类型不同导致的选项不同
+  const onFieldsChange = v => {
+    v = v[0];
+    if (!v?.name?.includes('auditFlows')) return;
 
     let optionsMap;
     if (!v.value.length) {
       optionsMap = defaultOptions;
     } else {
-      optionsMap = v.value
-        .sort()
-        .map(item => auditTypeMap[item])
-        .reduce((memo, item) => {
-          Object.keys(item).forEach(name => {
-            if (!memo[name]) {
-              memo[name] = item[name];
-            } else {
-              memo[name] = Object.assign({}, memo[name], item[name]);
-            }
-          });
-          return memo;
-        }, {});
+      optionsMap = getOpts(v.value);
+    }
+    setOptions(optionsMap);
+  };
+
+  const onValuesChange = newValue => {
+    if (newValue?.auditFlows?.length === 1) {
+      // AI检测，敏感词检测，标题审核初始化数据，关键词审核初始化数据，需要根据审核类型过滤数据
+      ['AIDetection', 'sensitiveCheckType', 'keywordsReivewTitle', 'keywordsReviewKeywords'].forEach(key => {
+        newValue[key] =
+          values?.[key]?.filter(v => Object.values(auditTypeMap[newValue.auditFlows]?.[key] || {}).includes(v)) || [];
+      });
     }
 
-    setOptions(optionsMap);
+    // 标题审核初始化数据、关键词审核初始化数据与AI检测的关联关系
+    if (
+      newValue?.keywordsReivewTitle?.includes(keywordsReviewKeywords.AI) ||
+      newValue?.keywordsReviewKeywords?.includes(keywordsReviewKeywords.AI)
+    ) {
+      newValue.AIDetection = [...new Set([...(values.AIDetection || []), KeywordAIService['AI自动标题/关键词']])];
+    }
+    if (newValue?.AIDetection && !newValue?.AIDetection?.includes(KeywordAIService['AI自动标题/关键词'])) {
+      newValue.keywordsReivewTitle = values?.keywordsReivewTitle?.filter(v => v !== keywordsReviewKeywords.AI);
+      newValue.keywordsReviewKeywords = values?.keywordsReviewKeywords?.filter(v => v !== keywordsReviewKeywords.AI);
+    }
+
+    // 敏感检测与敏感词表的关联关系
+    if (newValue?.sensitiveCheckType && !newValue?.sensitiveCheckType?.length) {
+      newValue.sensitiveKeywordsTable = [];
+    }
+    if (newValue?.sensitiveKeywordsTable && !newValue?.sensitiveKeywordsTable?.length) {
+      newValue.sensitiveCheckType = [];
+    }
+
+    const nextValues = { ...values, ...newValue };
+
+    setValues(nextValues);
+    form.setFieldsValue(nextValues);
   };
 
   useEffect(() => {
@@ -112,7 +142,7 @@ export default function CreateDataModal({
       <Form
         form={form}
         onFieldsChange={onFieldsChange}
-        onValuesChange={newValue => setValues({ ...values, ...newValue })}
+        onValuesChange={onValuesChange}
         initialValues={initialValues}
         labelCol={{ span: 8 }}
         wrapperCol={{ span: 12 }}
@@ -155,6 +185,53 @@ export default function CreateDataModal({
             })}
           </Checkbox.Group>
         </Form.Item>
+        {opts.AIDetection && (
+          <Form.Item label={<FormattedMessage id="dataSource.form.AI" />} name="AIDetection">
+            <Checkbox.Group>
+              {Object.keys(opts.AIDetection).map((t, i) => {
+                return (
+                  <Checkbox key={`${t}${i}`} value={opts.AIDetection[t]}>
+                    <FormattedMessage id={zhCNMap[t]} />
+                  </Checkbox>
+                );
+              })}
+            </Checkbox.Group>
+          </Form.Item>
+        )}
+        {opts?.keywordsReivewTitle && (
+          <Form.Item
+            label={<FormattedMessage id="Title Reivew Default Data" />}
+            name="keywordsReivewTitle"
+            // rules={[{ required: true, message: <FormattedMessage id="Please Select Title Reivew Default Data" /> }]}
+          >
+            <Checkbox.Group>
+              {Object.keys(opts.keywordsReivewTitle).map((t, i) => {
+                return (
+                  <Checkbox key={`${t}${i}`} value={opts.keywordsReivewTitle[t]}>
+                    <FormattedMessage id={zhCNMap[t]} />
+                  </Checkbox>
+                );
+              })}
+            </Checkbox.Group>
+          </Form.Item>
+        )}
+        {opts?.keywordsReviewKeywords && (
+          <Form.Item
+            label={<FormattedMessage id="Keywords Review Default Data" />}
+            name="keywordsReviewKeywords"
+            // rules={[{ required: true, message: <FormattedMessage id="Please Select Keywords Review Default Data" /> }]}
+          >
+            <Checkbox.Group>
+              {Object.keys(opts.keywordsReviewKeywords).map((t, i) => {
+                return (
+                  <Checkbox key={`${t}${i}`} value={opts.keywordsReviewKeywords[t]}>
+                    <FormattedMessage id={zhCNMap[t]} />
+                  </Checkbox>
+                );
+              })}
+            </Checkbox.Group>
+          </Form.Item>
+        )}
         <Form.Item
           label={<FormattedMessage id="Distribution" />}
           name="assignType"
@@ -224,66 +301,23 @@ export default function CreateDataModal({
             ))}
           </Checkbox.Group>
         </Form.Item>
-        <Form.Item
-          label={<FormattedMessage id="NSFW Keywords" />}
-          name="sensitiveKeywordsTable"
-          rules={[
-            {
-              required: values.sensitiveCheckType?.length > 0,
-              message: <FormattedMessage id="Please Select NSFW Keywords!" />
-            }
-          ]}
-        >
-          <Checkbox.Group>
-            {Object.keys(SensitiveWordList).map((t, i) => (
-              <Checkbox key={`${t}${i}`} value={SensitiveWordList[t]}>
-                <FormattedMessage id={zhCNMap[t]} />
-              </Checkbox>
-            ))}
-          </Checkbox.Group>
-        </Form.Item>
-        <Form.Item label={<FormattedMessage id="AI" />} name="AIDetection">
-          <Checkbox.Group>
-            {Object.keys(opts.AIDetection).map((t, i) => {
-              return (
-                <Checkbox key={`${t}${i}`} value={opts.AIDetection[t]}>
+        {values.sensitiveCheckType?.length > 0 && (
+          <Form.Item
+            label={<FormattedMessage id="NSFW Keywords" />}
+            name="sensitiveKeywordsTable"
+            rules={[
+              {
+                required: values.sensitiveCheckType?.length > 0,
+                message: <FormattedMessage id="Please Select NSFW Keywords!" />
+              }
+            ]}
+          >
+            <Checkbox.Group>
+              {Object.keys(SensitiveWordList).map((t, i) => (
+                <Checkbox key={`${t}${i}`} value={SensitiveWordList[t]}>
                   <FormattedMessage id={zhCNMap[t]} />
                 </Checkbox>
-              );
-            })}
-          </Checkbox.Group>
-        </Form.Item>
-        {opts?.titleAuditDefault && (
-          <Form.Item
-            label={<FormattedMessage id="Title Reivew Default Data" />}
-            name="keywordsReivewTitle"
-            rules={[{ required: true, message: <FormattedMessage id="Please Select Title Reivew Default Data" /> }]}
-          >
-            <Checkbox.Group>
-              {Object.keys(opts.titleAuditDefault).map((t, i) => {
-                return (
-                  <Checkbox key={`${t}${i}`} value={opts.titleAuditDefault[t]}>
-                    <FormattedMessage id={zhCNMap[t]} />
-                  </Checkbox>
-                );
-              })}
-            </Checkbox.Group>
-          </Form.Item>
-        )}
-        {opts?.keywordAuditDefault && (
-          <Form.Item
-            label={<FormattedMessage id="Keywords Review Default Data" />}
-            name="keywordsReviewKeywords"
-            rules={[{ required: true, message: <FormattedMessage id="Please Select Keywords Review Default Data" /> }]}
-          >
-            <Checkbox.Group>
-              {Object.keys(opts.keywordAuditDefault).map((t, i) => {
-                return (
-                  <Checkbox key={`${t}${i}`} value={opts.keywordAuditDefault[t]}>
-                    <FormattedMessage id={zhCNMap[t]} />
-                  </Checkbox>
-                );
-              })}
+              ))}
             </Checkbox.Group>
           </Form.Item>
         )}
