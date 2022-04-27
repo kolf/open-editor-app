@@ -128,7 +128,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
       if (otherValue) {
         result.push(otherValue);
       }
-      return result.join(',');
+      return result.join('；');
     },
     [reasonMap]
   );
