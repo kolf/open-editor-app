@@ -291,7 +291,7 @@ export default function useImage({ list, onChange }: Props<IImage[]>) {
     }
     idList.forEach(id => {
       const { urlYuan } = listRef.current.find(item => item.id === id);
-      window.open(urlYuan);
+      window.open(urlYuan, '_blank');
     });
   };
 
