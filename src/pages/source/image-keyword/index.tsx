@@ -252,10 +252,15 @@ function VcgImageText() {
     setQuery(result);
   };
 
+  const onRefresh = () => {
+    setQuery({ ...query, pageNum: 1 });
+  };
+
   return (
     <>
       <FormList onChange={formListOnChange} {...query} />
       <Toolbar
+        onRefresh={onRefresh}
         pagerProps={{
           total,
           current: query.pageNum,
