@@ -85,8 +85,7 @@ export default function useFormItems(formItemKeys: IFormItemKey[]): IFormItem[] 
         { value: '1', label: 'A' },
         { value: '2', label: 'B' },
         { value: '3', label: 'C' },
-        { value: '4', label: 'D' },
-        { value: '5', label: 'E' },
+        { value: '4', label: 'D' }
       ]
     },
     {
