@@ -78,7 +78,7 @@ export default React.memo(function ImageDetails({ dataSource }: Props): ReactEle
             <Col span={8}>
               <FormattedMessage id="keywords.source.userKeywords|userKeywordsAudit" />
             </Col>
-            <Col span={16}>{dataSource.userKeywords ? dataSource.userKeywords.join('，') : defaultName}</Col>
+            <Col span={16}>{dataSource.userKeywords ? dataSource.userKeywords : defaultName}</Col>
           </Row>
           {dataSource && (
             <>
