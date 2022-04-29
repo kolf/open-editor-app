@@ -59,7 +59,9 @@ export class ImageService {
             result[source] = [label];
           }
           return result;
-        }, {})
+        }, {}),
+        // 覆盖 osiKeywodsData.keywordsAll里的userKeywords
+        userKeywords: JSON.parse(osiOriginalData.originalKeywords||'{}').text || ''
       };
     } catch (error) {
       console.error(error);
