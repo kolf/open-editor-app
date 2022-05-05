@@ -40,6 +40,21 @@ export class ImageService {
       return {};
     }
   }
+  joinTitle(data: any[]): any[] {
+    return data.map(item => {
+      const { title, osiKeywodsData = {}, osiImageReview = {} } = item;
+      if (
+        (/^1/.test(osiImageReview.qualityStatus) || /^1/.test(osiImageReview.qualityStatus)) &&
+        osiKeywodsData.aiTitle
+      ) {
+        return {
+          ...item,
+          title: title + '/' + osiKeywodsData.aiTitle
+        };
+      }
+      return item;
+    });
+  }
   async getKeywords(data: any): Promise<any> {
     let result = {};
     try {

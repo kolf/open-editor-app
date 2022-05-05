@@ -37,9 +37,9 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
   const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
-  
+
   const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.关键词审核);
-  
+
   const {
     data: { list, total } = initialData,
     loading = true,
@@ -47,7 +47,19 @@ export default React.memo(function List() {
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
-      let nextList = await imageService.getKeywordTags(res.list);
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle
+          };
+        }
+        return item;
+      });
+      console.log(nextList,'list')
+      nextList = await imageService.getKeywordTags(nextList);
       nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
@@ -126,10 +138,10 @@ export default React.memo(function List() {
     }
 
     if (!query.imageType) {
-      result['imageType'] = imageTypeOptions.join(',')
+      result['imageType'] = imageTypeOptions.join(',');
     }
     if (!query.osiProviderId) {
-      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',');
     }
 
     return result;
