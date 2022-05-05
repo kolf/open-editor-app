@@ -1,6 +1,8 @@
 import { Menu } from 'antd';
 import React, { memo, useState, useEffect } from 'react';
+import { useSelector } from 'react-redux';
 import { NavLink, withRouter } from 'react-router-dom';
+import { RootState } from 'src/store';
 import Iconfont from 'src/components/Iconfont';
 import './styles.less';
 
@@ -10,7 +12,8 @@ const getCurrentMenu = (data, path) => {
   let result = data.find(item => item.path === path);
   if (!result) {
     data.forEach(item => {
-      result = getCurrentMenu(item.children, path)
+      const r = getCurrentMenu(item.children, path);
+      if (r) result = r;
     })
   }
   return result
@@ -24,7 +27,19 @@ const getOpenKey = (data, path) => {
   return ''
 }
 
+export const getMenuName = (language: RootState['language']['language'], name: string): string => {
+  // debugger
+  const cnname: string = name.match(/(\S+)\(/)[1];
+  const enname: string = name.match(/(([\w\s]+))/)[1];
+  if (language === 'en-US') {
+    return enname
+  } else {
+    return cnname
+  }
+}
+
 const MenuLink: React.FC<any> = ({ location, menu }) => {
+  const { language } = useSelector((state: RootState) => state.language);
   const [openKey, setOpenKey] = useState([getOpenKey(menu, location.pathname)]);
   const selectedKey = React.useMemo(() => {
     const currentMenu = getCurrentMenu(menu, location.pathname);
@@ -38,6 +53,10 @@ const MenuLink: React.FC<any> = ({ location, menu }) => {
   const handleClick = e => {
     setOpenKey(e);
   };
+
+
+
+
 
   return (
     <Menu
@@ -55,7 +74,7 @@ const MenuLink: React.FC<any> = ({ location, menu }) => {
               <SubMenu
                 key={menuItem.id + ''}
                 className="dashboard-menu_sub"
-                title={<span>{menuItem.name}</span>}
+                title={<span>{getMenuName(language, menuItem.name)}</span>}
                 icon={menuItem.icon ? <Iconfont type={menuItem.icon} /> : null}
               >
                 {menuItem.children.map((item: any) => {
@@ -63,7 +82,7 @@ const MenuLink: React.FC<any> = ({ location, menu }) => {
                     return (
                       <Menu.Item key={item.id + ''}>
                         <NavLink to={item.path || ''} className="dashboard-menu-link">
-                          <span>{item.name}</span>
+                          <span>{getMenuName(language, item.name)}</span>
                         </NavLink>
                       </Menu.Item>
                     );
@@ -78,7 +97,7 @@ const MenuLink: React.FC<any> = ({ location, menu }) => {
               icon={menuItem.icon ? <Iconfont type={menuItem.icon} /> : null}
             >
               <NavLink to={menuItem.path || ''} className="dashboard-menu-link">
-                <span>{menuItem.name}</span>
+                <span>{getMenuName(language, menuItem.name)}</span>
               </NavLink>
             </Menu.Item>
           );

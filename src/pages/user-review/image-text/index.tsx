@@ -51,7 +51,6 @@ export default React.memo(function List() {
     mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
-      console.log(query, 'query');
       const res = await imageService.getList(formatQuery(query));
       return res;
     },

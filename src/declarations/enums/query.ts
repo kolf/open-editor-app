@@ -172,7 +172,7 @@ export enum AuditType {
   关键词审核 = '2'
 }
 
-export enum KeywordAuditDefault {
+export enum keywordsReviewKeywords {
   数据来源 = '1',
   AI = '2'
 }

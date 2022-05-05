@@ -3,6 +3,7 @@ import component from './en-US/component.json';
 import image from './en-US/image.json';
 import keywords from './en-US/keywords.json';
 import system from './en-US/system.json';
+import dataSource from './en-US/dataSource.json';
 
 export default Object.keys(zhCN).reduce(
   (memo, item) => {
@@ -16,6 +17,7 @@ export default Object.keys(zhCN).reduce(
     ...component,
     ...image,
     ...keywords,
-    ...system
+    ...system,
+    ...dataSource
   }
 );
