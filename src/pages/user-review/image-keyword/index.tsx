@@ -121,9 +121,6 @@ export default React.memo(function List() {
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
     }
 
-    result['imageType'] = '6,7,4,5,2,3,1';
-    result['osiProviderId'] = '5,91,93';
-
     return result;
   };
 
