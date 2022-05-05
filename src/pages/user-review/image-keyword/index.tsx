@@ -53,13 +53,15 @@ export default React.memo(function List() {
           return {
             ...item,
             keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
-            keywordsReivewTitle: providerObj.keywordsReivewTitle
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
           };
         }
         return item;
       });
-      console.log(nextList,'list')
+      console.log(nextList, 'list');
       nextList = await imageService.getKeywordTags(nextList);
+      nextList = await imageService.joinTitle(nextList);
       nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
@@ -153,7 +155,7 @@ export default React.memo(function List() {
       return {
         total: data.total,
         list: data.list.map(item => {
-          const { osiImageReview, osiProviderId, category, standardReason, customReason, keywordTags } = item;
+          const { osiImageReview, category, standardReason, customReason, keywordTags } = item;
           const categoryList: IImage['categoryNames'][] = (category || '')
             .split(',')
             .filter((item, index) => item && index < 2);
@@ -167,7 +169,6 @@ export default React.memo(function List() {
             ...item,
             reasonTitle,
             keywordTags: keywordTags || [],
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
