@@ -44,13 +44,13 @@ function getMenukey(menus) {
   });
   return rootKey
     ? {
-      rootKey,
-      secondKey
-    }
+        rootKey,
+        secondKey
+      }
     : {
-      rootKey: menus[0].id + '',
-      secondKey: menus[0]?.children[0]?.id + ''
-    };
+        rootKey: menus[0].id + '',
+        secondKey: menus[0]?.children[0]?.id + ''
+      };
 }
 
 const MainLayout: FC<Props> = props => {
@@ -74,16 +74,13 @@ const MainLayout: FC<Props> = props => {
   };
 
   const getMenu = () => {
-    return menus.find(menu => menu.id+'' === menuKey.rootKey)?.children || []
-  }
+    return menus.find(menu => menu.id + '' === menuKey.rootKey)?.children || [];
+  };
 
   useEffect(() => {
-    
-    console.log(menus,'menus')
-
-    if (!user){
-      dispatch(getMe())
-    };
+    if (!user) {
+      dispatch(getMe());
+    }
   }, [user, menus]);
 
   if (loading || !user) return <Loading />;

@@ -35,7 +35,21 @@ export default React.memo(function List() {
   const { data: { list, total } = initialData, loading = true }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
-      let nextList = await imageService.getKeywordTags(res.list);
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
+          };
+        }
+        return item;
+      });
+
+      nextList = await imageService.getKeywordTags(nextList);
+      nextList = await imageService.joinTitle(nextList);
       nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
@@ -99,7 +113,7 @@ export default React.memo(function List() {
       return {
         total: data.total,
         list: data.list.map(item => {
-          const { osiImageReview, osiProviderId, category, standardReason, customReason, keywordTags } = item;
+          const { osiImageReview, category, standardReason, customReason, keywordTags } = item;
           const categoryList: IImage['categoryNames'][] = (category || '')
             .split(',')
             .filter((item, index) => item && index < 2);
@@ -113,7 +127,6 @@ export default React.memo(function List() {
             ...item,
             reasonTitle,
             keywordTags: keywordTags || [],
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)

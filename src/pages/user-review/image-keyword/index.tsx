@@ -37,9 +37,9 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
   const { run: review } = useRequest(imageService.keywordsReview, { manual: true, throwOnError: true });
-  
+
   const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.关键词审核);
-  
+
   const {
     data: { list, total } = initialData,
     loading = true,
@@ -47,7 +47,21 @@ export default React.memo(function List() {
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
-      let nextList = await imageService.getKeywordTags(res.list);
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
+          };
+        }
+        return item;
+      });
+
+      nextList = await imageService.getKeywordTags(nextList);
+      nextList = await imageService.joinTitle(nextList);
       nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
@@ -126,10 +140,10 @@ export default React.memo(function List() {
     }
 
     if (!query.imageType) {
-      result['imageType'] = imageTypeOptions.join(',')
+      result['imageType'] = imageTypeOptions.join(',');
     }
     if (!query.osiProviderId) {
-      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',');
     }
 
     return result;
@@ -141,7 +155,7 @@ export default React.memo(function List() {
       return {
         total: data.total,
         list: data.list.map(item => {
-          const { osiImageReview, osiProviderId, category, standardReason, customReason, keywordTags } = item;
+          const { osiImageReview, category, standardReason, customReason, keywordTags } = item;
           const categoryList: IImage['categoryNames'][] = (category || '')
             .split(',')
             .filter((item, index) => item && index < 2);
@@ -155,7 +169,6 @@ export default React.memo(function List() {
             ...item,
             reasonTitle,
             keywordTags: keywordTags || [],
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
@@ -285,14 +298,50 @@ export default React.memo(function List() {
       }
 
       submitList = submitList.map(item => {
-        const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
+        const { osiKeywodsData, keywordTags, keywordsReviewKeywords } = item;
+        const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(keywordTags);
+
+        const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
+        let nextKeywordsAllObj = JSON.parse(keywordsAll);
+
+        if (!keywordsReviewKeywords.includes('2')) {
+          // 只有数据源
+          const _aiKeywords = Object.entries(keywordsAllObj).reduce((result, [key, value]) => {
+            if (/^aiKeywords/.test(key)) {
+              result[key] = value;
+            }
+            return result;
+          }, {});
+          if (_aiKeywords) {
+            nextKeywordsAllObj = {
+              ...nextKeywordsAllObj,
+              ..._aiKeywords
+            };
+          }
+        }
+        if (!keywordsReviewKeywords.includes('1')) {
+          // 只有AI
+          const _userKeywords = Object.entries(keywordsAllObj).reduce((result, [key, value]) => {
+            if (/^userKeywords/.test(key)) {
+              result[key] = value;
+            }
+            return result;
+          }, {});
+          if (_userKeywords) {
+            nextKeywordsAllObj = {
+              ...nextKeywordsAllObj,
+              ..._userKeywords
+            };
+          }
+        }
+
         return {
           ...item,
           keywords,
           osiKeywodsData: {
-            ...item.osiKeywodsData,
+            ...osiKeywodsData,
             keywordsAudit,
-            keywordsAll
+            keywordsAll:JSON.stringify(nextKeywordsAllObj)
           },
           keywordTags: undefined,
           osiImageReview: undefined,
@@ -300,6 +349,8 @@ export default React.memo(function List() {
           updatedTime: undefined
         };
       });
+
+      // return Promise.reject([]);
       // 关键词小于5个 大于45个
       if (
         submitList.some(item => {

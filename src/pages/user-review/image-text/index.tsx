@@ -52,7 +52,24 @@ export default React.memo(function List() {
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
-      return res;
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
+          };
+        }
+        return item;
+      });
+      nextList = await imageService.joinTitle(nextList);
+
+      return {
+        total: res.total,
+        list: nextList
+      };
     },
     {
       ready: !!(providerOptions && categoryOptions && allReason),
@@ -165,7 +182,6 @@ export default React.memo(function List() {
             qualityRank: qualityRank ? ((qualityRank + '') as IImage['qualityRank']) : undefined,
             licenseType: (licenseType + '') as IImage['licenseType'],
             reasonTitle,
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
