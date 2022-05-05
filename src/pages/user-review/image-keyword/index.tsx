@@ -59,7 +59,7 @@ export default React.memo(function List() {
         }
         return item;
       });
-      console.log(nextList, 'list');
+
       nextList = await imageService.getKeywordTags(nextList);
       nextList = await imageService.joinTitle(nextList);
       nextList = await imageService.checkAmbiguityKeywords(nextList);
@@ -298,14 +298,50 @@ export default React.memo(function List() {
       }
 
       submitList = submitList.map(item => {
-        const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(item.keywordTags);
+        const { osiKeywodsData, keywordTags, keywordsReviewKeywords } = item;
+        const { keywords, keywordsAudit, keywordsAll } = keywordTags2string(keywordTags);
+
+        const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
+        let nextKeywordsAllObj = JSON.parse(keywordsAll);
+
+        if (!keywordsReviewKeywords.includes('2')) {
+          // 只有数据源
+          const _aiKeywords = Object.entries(keywordsAllObj).reduce((result, [key, value]) => {
+            if (/^aiKeywords/.test(key)) {
+              result[key] = value;
+            }
+            return result;
+          }, {});
+          if (_aiKeywords) {
+            nextKeywordsAllObj = {
+              ...nextKeywordsAllObj,
+              ..._aiKeywords
+            };
+          }
+        }
+        if (!keywordsReviewKeywords.includes('1')) {
+          // 只有AI
+          const _userKeywords = Object.entries(keywordsAllObj).reduce((result, [key, value]) => {
+            if (/^userKeywords/.test(key)) {
+              result[key] = value;
+            }
+            return result;
+          }, {});
+          if (_userKeywords) {
+            nextKeywordsAllObj = {
+              ...nextKeywordsAllObj,
+              ..._userKeywords
+            };
+          }
+        }
+
         return {
           ...item,
           keywords,
           osiKeywodsData: {
-            ...item.osiKeywodsData,
+            ...osiKeywodsData,
             keywordsAudit,
-            keywordsAll
+            keywordsAll:JSON.stringify(nextKeywordsAllObj)
           },
           keywordTags: undefined,
           osiImageReview: undefined,
@@ -313,6 +349,8 @@ export default React.memo(function List() {
           updatedTime: undefined
         };
       });
+
+      // return Promise.reject([]);
       // 关键词小于5个 大于45个
       if (
         submitList.some(item => {

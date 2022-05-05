@@ -177,11 +177,15 @@ export class ImageService {
         let keywordTags: IKeywordsTag[] = [];
         if (osiKeywodsData) {
           const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
+          let _userKeywords = {};
+          let _aiKeywords = {};
 
           for (let key in keywordsAllObj) {
             if (keywordsReviewKeywords.includes('1') && !/^userKeywords/.test(key)) {
+              _aiKeywords[key] = keywordsAllObj[key];
               break;
             } else if (keywordsReviewKeywords.includes('2') && !/^aiKeywords/.test(key)) {
+              _userKeywords[key] = keywordsAllObj[key];
               break;
             }
 
@@ -218,7 +222,9 @@ export class ImageService {
         }
         return {
           ...item,
-          keywordTags
+          keywordTags,
+          // _userKeywords,
+          // _aiKeywords
         };
       });
     } catch (error) {

@@ -32,13 +32,37 @@ export default React.memo(function List() {
   const {
     data: { list, total } = initialData,
     loading = true,
+    mutate,
     run
-  }: FetchResult<IImageResponse, any> = useRequest(() => imageService.getList(formatQuery(query)), {
-    ready: !!(providerOptions && categoryOptions && allReason),
-    throttleInterval: 600,
-    formatResult: data => formatResult(data),
-    refreshDeps: [query]
-  });
+  }: FetchResult<IImageResponse, any> = useRequest(
+    async () => {
+      const res = await imageService.getList(formatQuery(query));
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
+          };
+        }
+        return item;
+      });
+      nextList = await imageService.joinTitle(nextList);
+
+      return {
+        total: res.total,
+        list: nextList
+      };
+    },
+    {
+      ready: !!(providerOptions && categoryOptions && allReason),
+      throttleInterval: 600,
+      formatResult: data => formatResult(data),
+      refreshDeps: [query]
+    }
+  );
 
   const [keywords] = useHeaderSearch(run);
   const { getReasonTitle, showDetails, showLogs, openLicense, showMiddleImage, openOriginImage } = useImage({ list });
@@ -110,7 +134,6 @@ export default React.memo(function List() {
             qualityRank: qualityRank ? ((qualityRank + '') as IImage['qualityRank']) : undefined,
             licenseType: (licenseType + '') as IImage['licenseType'],
             reasonTitle,
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter((o, index) => categoryList.includes(o.value + ''))
               .map(o => o.label)
