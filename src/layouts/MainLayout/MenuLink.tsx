@@ -12,7 +12,10 @@ const getCurrentMenu = (data, path) => {
   let result = data.find(item => item.path === path);
   if (!result) {
     data.forEach(item => {
-      result = getCurrentMenu(item.children, path)
+      const r = getCurrentMenu(item.children, path);
+      if(r){
+        result = r
+      }
     })
   }
   return result
@@ -52,10 +55,6 @@ const MenuLink: React.FC<any> = ({ location, menu }) => {
   const handleClick = e => {
     setOpenKey(e);
   };
-
-
-
-
 
   return (
     <Menu

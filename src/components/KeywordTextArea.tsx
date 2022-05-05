@@ -254,7 +254,7 @@ export default React.memo(function KeywordTextArea({
           onBlur={handleTextAreaBlur}
         />
       ) : (
-        <>
+        <div style={{height:height-6}} className='KeywordTextArea-tags'>
           {value.map((o, index) => (
             <Tag
               title={o.label}
@@ -286,7 +286,7 @@ export default React.memo(function KeywordTextArea({
           ) : (
             value.length === 0 && <span>{placeholder || defaultPlaceholder}</span>
           )}
-        </>
+        </div>
       )}
     </div>
   );

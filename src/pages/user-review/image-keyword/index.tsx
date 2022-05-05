@@ -29,7 +29,7 @@ const initialData = {
 export default React.memo(function List() {
   const { formatMessage } = useIntl();
   useDocumentTitle(`我的审核-VCG内容审核管理平台`);
-  const { partyId } = useCurrentUser();
+  const { id } = useCurrentUser();
 
   const { providerOptions, categoryOptions, allReason } = useContext(DataContext);
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60, keywordsStatus: '14' });
@@ -108,7 +108,7 @@ export default React.memo(function List() {
         return result;
       },
       {
-        keywordsAuditorId: partyId
+        keywordsAuditorId: id
       }
     );
 
@@ -120,6 +120,9 @@ export default React.memo(function List() {
       result['keyword'] = keywords;
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
     }
+
+    result['imageType'] = '6,7,4,5,2,3,1';
+    result['osiProviderId'] = '5,91,93';
 
     return result;
   };
