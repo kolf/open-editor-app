@@ -5,8 +5,13 @@
     padding: 2px;
     width: 100%;
     height: 100px;
+<<<<<<< HEAD
     // overflow-y: auto;
     overflow-x:hidden
+=======
+    overflow: auto;
+    overflow: hidden;
+>>>>>>> feature/boss-v3
   }
   &-input {
     border: none;
@@ -17,7 +22,7 @@
     outline: none;
     background-color: transparent !important;
   }
-  &-textarea{
+  &-textarea {
     resize: none;
     outline: none;
     background-color: transparent !important;
@@ -33,8 +38,12 @@
     opacity: 0;
     pointer-events: none;
   }
-  &-tag{
+  &-tag {
     margin: 2px !important;
-    user-select:none
+    user-select: none;
+  }
+  &-tags {
+    overflow-x: hidden;
+    overflow-y: auto;
   }
 }
