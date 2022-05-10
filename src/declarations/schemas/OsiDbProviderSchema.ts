@@ -9,5 +9,7 @@ export namespace OsiDbProviderSchema {
     id: number; // id
     assetFamily: AssetFamily; // 资源分类
     assetType: AssetType; // 资源/审核类型
+    keywordsReviewKeywords?: string;
+    keywordsReivewTitle?: string;
   }
 }

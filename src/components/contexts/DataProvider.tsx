@@ -5,8 +5,8 @@ import { useLanguagePkg } from 'src/hooks/useLanguage';
 import { useAsyncOptions } from 'src/hooks/useSelect';
 
 interface Props {
-  providerOptions?: Option<string>[];
-  categoryOptions?: Option<string>[];
+  providerOptions?: any[];
+  categoryOptions?: any[];
   allReason?: any[];
   reasonMap?: Map<string, string>;
 }

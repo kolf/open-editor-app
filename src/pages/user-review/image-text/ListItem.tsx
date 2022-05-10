@@ -83,10 +83,10 @@ export default React.memo(function ListItem({
     >
       <GridItemRow>
         <Row>
-          <Col title={formatMessage({ id: 'image.createdTime' })} flex="auto">
+          <Col title={formatMessage({ id: 'image.createdTime' })} flex="auto" style={{ letterSpacing: -1 }}>
             {dataSource.createdTime}
           </Col>
-          <Col title={formatMessage({ id: 'image.qualityEditTime' })} style={{ textAlign: 'right' }}>
+          <Col title={formatMessage({ id: 'image.qualityEditTime' })} style={{ textAlign: 'right', letterSpacing: -1 }}>
             {dataSource.osiImageReview.qualityEditTime}
           </Col>
         </Row>
@@ -103,7 +103,13 @@ export default React.memo(function ListItem({
           />
         )}
       </GridItemRow>
-      <GridItemRow label={<IconFont type="icon-wode" />}>{dataSource.osiProviderName}</GridItemRow>
+      <GridItemRow
+        label={<IconFont type="icon-wode" />}
+        childrenStyle={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+        childrenTitle={dataSource.osiProviderName}
+      >
+        {dataSource.osiProviderName}
+      </GridItemRow>
       <GridItemRow>
         <Space>
           <span>LAI</span>
