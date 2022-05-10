@@ -62,7 +62,7 @@ export class ImageService {
     let result = {};
     try {
       const res = await Api.get(`/api/outsourcing/osiImage/keywordsInfoView?${queryString.stringify(data)}`);
-      const res1 = await this.getKeywordTags([res.data.data]);
+      const res1 = await this.getKeywordTags([res.data.data], true);
       const { title, osiKeywodsData = {}, osiOriginalData = {}, keywordTags = [] } = res1[0];
 
       return {
@@ -163,7 +163,7 @@ export class ImageService {
     }
   }
 
-  async getKeywordTags<T extends IImage>(data: T[]): Promise<T[]> {
+  async getKeywordTags<T extends IImage>(data: T[], isAll?: boolean): Promise<T[]> {
     const idList = this.joinKeywordIds(data);
     if (idList.length === 0) {
       return Promise.resolve(data.map(item => ({ ...item, keywordTags: [] })));
@@ -173,20 +173,18 @@ export class ImageService {
       const res = await keywordService.getList(idList.join(','));
       return data.map(item => {
         const { osiKeywodsData, keywordsReivewTitle, keywordsReviewKeywords } = item;
-        console.log(keywordsReivewTitle, keywordsReviewKeywords, 'keywordsReivewTitle,keywordsReviewKeywords');
+        // console.log(keywordsReivewTitle, keywordsReviewKeywords, 'keywordsReivewTitle,keywordsReviewKeywords');
         let keywordTags: IKeywordsTag[] = [];
         if (osiKeywodsData) {
           const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
-          let _userKeywords = {};
-          let _aiKeywords = {};
 
           for (let key in keywordsAllObj) {
-            if (keywordsReviewKeywords.includes('1') && !/^userKeywords/.test(key)) {
-              _aiKeywords[key] = keywordsAllObj[key];
-              break;
-            } else if (keywordsReviewKeywords.includes('2') && !/^aiKeywords/.test(key)) {
-              _userKeywords[key] = keywordsAllObj[key];
-              break;
+            if (!isAll) {
+              if (!keywordsReviewKeywords.includes('1') && /^userKeywords/.test(key)) {
+                continue;
+              } else if (!keywordsReviewKeywords.includes('2') && /^aiKeywords/.test(key)) {
+                continue;
+              }
             }
 
             keywordsAllObj[key].split(',').map((k: string) => {
@@ -222,7 +220,7 @@ export class ImageService {
         }
         return {
           ...item,
-          keywordTags,
+          keywordTags
           // _userKeywords,
           // _aiKeywords
         };
