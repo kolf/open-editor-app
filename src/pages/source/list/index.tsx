@@ -28,13 +28,10 @@ export enum ModalType {
 function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
 
-  const {
-    data,
-    loading,
-    run: fetchData
-  } = useRequest(providerService.getList, { manual: true });
+  const { data, loading, run: fetchData } = useRequest(providerService.getList, { manual: true });
   const { list, total } = data || {
-    list: [], total: 0
+    list: [],
+    total: 0
   };
 
   useEffect(() => {
@@ -43,29 +40,33 @@ function List() {
 
   // 发送请求前的数据处理
   function makeRequestPayLoad(payload) {
-    const result = Object.keys(payload).reduce((memo, p) => {
-      const v = payload[p] || [];
+    const result = Object.keys(payload).reduce(
+      (memo, p) => {
+        const v = payload[p] || [];
 
-      switch (p) {
-        case 'AIDetection':
-          memo['ifAiQualityScore'] = v.includes(AIService.AI质量评分) ? 1 : 0;
-          memo['ifAiBeautyScore'] = v.includes(AIService.AI美学评分) ? 1 : 0;
-          memo['ifAiCategory'] = v.includes(AIService.AI分类) ? 1 : 0;
-          memo['ifAiKeywords'] = v.includes(AIService['AI自动标题/关键词']) ? 1 : 0;
-          Reflect.deleteProperty(payload, p);
-          break;
-        case 'auditFlows':
-        case 'sensitiveCheckType':
-        case 'keywordsReivewTitle':
-        case 'keywordsReviewKeywords':
-        case 'sensitiveKeywordsTable':
-          memo[p] = v ? v.join(',') : [];
-          break;
-        default:
-          memo[p] = payload[p];
-      }
-      return memo;
-    }, {});
+        switch (p) {
+          case 'AIDetection':
+            memo['ifAiQualityScore'] = v.includes(AIService.AI质量评分) ? 1 : 0;
+            memo['ifAiBeautyScore'] = v.includes(AIService.AI美学评分) ? 1 : 0;
+            memo['ifAiCategory'] = v.includes(AIService.AI分类) ? 1 : 0;
+            memo['ifAiKeywords'] = v.includes(AIService['AI自动标题/关键词']) ? 1 : 0;
+            Reflect.deleteProperty(payload, p);
+            break;
+          case 'auditFlows':
+          case 'sensitiveCheckType':
+          case 'keywordsReivewTitle':
+          case 'keywordsReviewKeywords':
+          case 'sensitiveKeywordsTable':
+            memo[p] = v ? v.join(',') : [];
+            break;
+          default:
+            memo[p] = payload[p];
+        }
+        return memo;
+      },
+      { keywordsReivewTitle: '', keywordsReviewKeywords: '' }
+    );
+
     return result;
   }
 
@@ -96,6 +97,7 @@ function List() {
         case 'name':
         case 'assetType':
         case 'assignType':
+        case 'batchOverType':
           memo[key] = v + '';
           break;
         case 'id':
@@ -114,7 +116,7 @@ function List() {
     const title = `${modalType === ModalType.修改数据来源 ? '编辑' : '创建'}数据来源`;
     let form;
     const mod = modal({
-      width: 720,
+      width: 900,
       title: <FormattedMessage id={zhCNMap[title]} />,
       content: <CreateDataModal saveRef={f => (form = f)} initialValues={initialValues} modalType={modalType} />,
       onOk

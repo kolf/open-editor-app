@@ -40,15 +40,35 @@ export class ImageService {
       return {};
     }
   }
+  joinTitle(data: any[]): any[] {
+    return data.map(item => {
+      const { title, keywordsReivewTitle, osiKeywodsData = {}, osiImageReview = {} } = item;
+      if (
+        (/^1/.test(osiImageReview.qualityStatus) || /^1/.test(osiImageReview.keywordsStatus)) &&
+        osiKeywodsData.aiTitle
+      ) {
+        return {
+          ...item,
+          title:
+            (keywordsReivewTitle.includes('1') ? title : '') +
+            '/' +
+            (keywordsReivewTitle.includes('2') ? osiKeywodsData.aiTitle : '')
+        };
+      }
+      return item;
+    });
+  }
   async getKeywords(data: any): Promise<any> {
     let result = {};
     try {
       const res = await Api.get(`/api/outsourcing/osiImage/keywordsInfoView?${queryString.stringify(data)}`);
       const res1 = await this.getKeywordTags([res.data.data]);
-      const { title, keywordTags = [] } = res1[0];
+      const { title, osiKeywodsData = {}, osiOriginalData = {}, keywordTags = [] } = res1[0];
 
       return {
         title,
+        aiTitle: osiKeywodsData.aiTitle,
+        originalTitle: osiOriginalData.originalTitle,
         ...keywordTags.reduce((result, item) => {
           const { source, label } = item;
           if (result[source]) {
@@ -57,7 +77,9 @@ export class ImageService {
             result[source] = [label];
           }
           return result;
-        }, {})
+        }, {}),
+        // 覆盖 osiKeywodsData.keywordsAll里的userKeywords
+        userKeywords: JSON.parse(osiOriginalData.originalKeywords || '{}').text || ''
       };
     } catch (error) {
       console.error(error);
@@ -150,11 +172,23 @@ export class ImageService {
     try {
       const res = await keywordService.getList(idList.join(','));
       return data.map(item => {
-        const { osiKeywodsData } = item;
+        const { osiKeywodsData, keywordsReivewTitle, keywordsReviewKeywords } = item;
+        console.log(keywordsReivewTitle, keywordsReviewKeywords, 'keywordsReivewTitle,keywordsReviewKeywords');
         let keywordTags: IKeywordsTag[] = [];
         if (osiKeywodsData) {
           const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
+          let _userKeywords = {};
+          let _aiKeywords = {};
+
           for (let key in keywordsAllObj) {
+            if (keywordsReviewKeywords.includes('1') && !/^userKeywords/.test(key)) {
+              _aiKeywords[key] = keywordsAllObj[key];
+              break;
+            } else if (keywordsReviewKeywords.includes('2') && !/^aiKeywords/.test(key)) {
+              _userKeywords[key] = keywordsAllObj[key];
+              break;
+            }
+
             keywordsAllObj[key].split(',').map((k: string) => {
               if (/^\d+$/.test(k)) {
                 const keywordObj = res.find(r => r.id + '' === k);
@@ -188,7 +222,9 @@ export class ImageService {
         }
         return {
           ...item,
-          keywordTags
+          keywordTags,
+          // _userKeywords,
+          // _aiKeywords
         };
       });
     } catch (error) {

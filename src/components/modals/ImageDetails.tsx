@@ -35,6 +35,12 @@ function open(imgUrl: string) {
 }
 
 export default React.memo(function ImageDetails({ dataSource }: Props): ReactElement {
+  const aiKeywordsSelected = [...(dataSource.aiKeywordsSelected || []), ...(dataSource.aiKeywordsSelectedDel || [])];
+  const aiKeywordsUnSelected = [
+    ...(dataSource.aiKeywordsUnselected || []),
+    ...(dataSource.aiKeywordsUnselectedDel || [])
+  ];
+
   return (
     <>
       <Row>
@@ -51,11 +57,11 @@ export default React.memo(function ImageDetails({ dataSource }: Props): ReactEle
             <Col span={4}>
               <FormattedMessage id="AI" />
             </Col>
-            <Col span={19}>{dataSource.aiTitle || defaultName}</Col>
+            <Col span={19}>{dataSource?.aiTitle || defaultName}</Col>
             <Col span={4}>
               <FormattedMessage id="User" />
             </Col>
-            <Col span={19}>{dataSource.title || defaultName}</Col>
+            <Col span={19}>{dataSource?.originalTitle || defaultName}</Col>
           </Row>
           <h3 style={{ textAlign: 'center' }}>
             <FormattedMessage id="Keywords" />
@@ -64,19 +70,15 @@ export default React.memo(function ImageDetails({ dataSource }: Props): ReactEle
             <Col span={8}>
               <FormattedMessage id="keywords.source.aiKeywordsSelected" />
             </Col>
-            <Col span={16}>
-              {dataSource.aiKeywordsSelected ? dataSource.aiKeywordsSelected.join('，') : defaultName}
-            </Col>
+            <Col span={16}>{aiKeywordsSelected.length ? aiKeywordsSelected.join('，') : defaultName}</Col>
             <Col span={8}>
               <FormattedMessage id="keywords.source.aiKeywordsUnselected" />
             </Col>
-            <Col span={16}>
-              {dataSource.aiKeywordsUnselected ? dataSource.aiKeywordsUnselected.join('，') : defaultName}
-            </Col>
+            <Col span={16}>{aiKeywordsUnSelected.length ? aiKeywordsUnSelected.join('，') : defaultName}</Col>
             <Col span={8}>
               <FormattedMessage id="keywords.source.userKeywords|userKeywordsAudit" />
             </Col>
-            <Col span={16}>{dataSource.userKeywords ? dataSource.userKeywords.join('，') : defaultName}</Col>
+            <Col span={16}>{dataSource.userKeywords ? dataSource.userKeywords : defaultName}</Col>
           </Row>
           {dataSource && (
             <>

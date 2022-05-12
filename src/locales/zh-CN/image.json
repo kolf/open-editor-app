@@ -70,7 +70,7 @@
   "image.copyright.7": "未取得物权授权",
   "image.copyright.9": "未取得肖像权或物权授权",
 
-  "image.callbackStatus.2": "等待社区审核中！",
+  "image.callbackStatus.2": "已提交！",
 
   "image.error.unTitle": "图片标题不能为空！",
   "image.error.keywordLetFive": "关键词不能小于5个，大于45个！",
@@ -78,5 +78,14 @@
   "image.error.nosubmit": "没有可以提交的图片！",
   "image.error.langeType": "图片数据类型不一致!",
   "image.setting.qualityRank.message": "",
-  "image.setting.qualityRank.success": ""
+  "image.setting.qualityRank.success": "",
+
+  "image.imageType": "图片类型",
+  "image.imageType.1": "摄影图片",
+  "image.imageType.2": "插画",
+  "image.imageType.3": "矢量图",
+  "image.imageType.4": "设计模板",
+  "image.imageType.5": "元素",
+  "image.imageType.6": "背景",
+  "image.imageType.7": "PPT模板"
 }

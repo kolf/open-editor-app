@@ -13,9 +13,7 @@ const getCurrentMenu = (data, path) => {
   if (!result) {
     data.forEach(item => {
       const r = getCurrentMenu(item.children, path);
-      if(r){
-        result = r
-      }
+      if (r) result = r;
     })
   }
   return result

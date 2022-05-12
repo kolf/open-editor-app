@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@ant-design/icons": "^4.7.0",
     "@antv/f2-context": "^0.0.1",
     "@gcanvas/core": "^1.0.0",
     "@mikecousins/react-pdf": "^5.5.1",

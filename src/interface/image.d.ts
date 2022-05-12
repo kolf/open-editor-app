@@ -100,6 +100,8 @@ declare type IImage = Partial<{
   qualityRank: '1' | '2' | '3' | '4';
   licenseType: '1' | '2';
   copyright: '0' | '1' | '2' | '3' | '7' | '9';
+  keywordsReivewTitle?: string;
+  keywordsReviewKeywords?: string;
   urlSmall: string;
   urlYuan: string;
   aiQualityScore: number;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
@@ -17,12 +17,13 @@ import { useHeaderSearch } from 'src/hooks/useHeaderSearch';
 import useImage from 'src/hooks/useImage';
 import imageService from 'src/services/imageService';
 
-import options, { Quality, LicenseType, CopyrightType } from 'src/declarations/enums/query';
+import options, { Quality, LicenseType, AuditType } from 'src/declarations/enums/query';
 
 import config from 'src/config';
 import confirm from 'src/utils/confirm';
 import { useOptions } from 'src/hooks/useSelect';
 import { IFormItemKey } from 'src/hooks/useFormItems';
+import { usePermissions } from 'src/hooks/usePermissions';
 
 const qualityOptions = options.get(Quality);
 const licenseTypeOptions = options.get(LicenseType);
@@ -41,6 +42,8 @@ export default React.memo(function List() {
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
   const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
+  
+  const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.质量审核);
 
   const {
     data: { list, total } = initialData,
@@ -48,9 +51,25 @@ export default React.memo(function List() {
     mutate
   }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
-      console.log(query, 'query');
       const res = await imageService.getList(formatQuery(query));
-      return res;
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
+          };
+        }
+        return item;
+      });
+      nextList = await imageService.joinTitle(nextList);
+
+      return {
+        total: res.total,
+        list: nextList
+      };
     },
     {
       ready: !!(providerOptions && categoryOptions && allReason),
@@ -117,6 +136,13 @@ export default React.memo(function List() {
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
     }
 
+    if (!query.imageType) {
+      result['imageType'] = imageTypeOptions.join(',')
+    }
+    if (!query.osiProviderId) {
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
+    }
+
     return result;
   };
 
@@ -155,7 +181,6 @@ export default React.memo(function List() {
             qualityRank: qualityRank ? ((qualityRank + '') as IImage['qualityRank']) : undefined,
             licenseType: (licenseType + '') as IImage['licenseType'],
             reasonTitle,
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
@@ -496,8 +521,12 @@ export default React.memo(function List() {
       1,
       2,
       4,
-      { key: 5, options: providerOptions },
+      { key: 5, options: dataSourceOptions },
       6,
+      {
+        key: 15,
+        options: imageTypeOptions
+      },
       7,
       8,
       9,

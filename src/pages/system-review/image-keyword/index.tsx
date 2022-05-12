@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext, useMemo } from 'react';
 import { useRequest } from 'ahooks';
 import { FetchResult } from '@ahooksjs/use-request/lib/types';
 import { Radio } from 'antd';
@@ -16,6 +16,8 @@ import { IFormItemKey } from 'src/hooks/useFormItems';
 import imageService from 'src/services/imageService';
 
 import config from 'src/config';
+import { usePermissions } from 'src/hooks/usePermissions';
+import { AuditType } from 'src/declarations/enums/query';
 
 const initialData = {
   list: [],
@@ -28,10 +30,26 @@ export default React.memo(function List() {
   const [query, setQuery] = useState({ pageNum: 1, pageSize: 60 });
   const [keywordMode, setKeywordMode] = useState<KeywordModeType>('all');
 
+  const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.关键词审核);
+
   const { data: { list, total } = initialData, loading = true }: FetchResult<IImageResponse, any> = useRequest(
     async () => {
       const res = await imageService.getList(formatQuery(query));
-      let nextList = await imageService.getKeywordTags(res.list);
+      let nextList = res.list.map(item => {
+        const providerObj = providerOptions.find(o => o.value === item.osiProviderId + '');
+        if (providerObj) {
+          return {
+            ...item,
+            keywordsReviewKeywords: providerObj.keywordsReviewKeywords,
+            keywordsReivewTitle: providerObj.keywordsReivewTitle,
+            osiProviderName: providerObj.label
+          };
+        }
+        return item;
+      });
+
+      nextList = await imageService.getKeywordTags(nextList);
+      nextList = await imageService.joinTitle(nextList);
       nextList = await imageService.checkAmbiguityKeywords(nextList);
 
       return {
@@ -79,6 +97,13 @@ export default React.memo(function List() {
       result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
     }
 
+    if (!query.imageType) {
+      result['imageType'] = imageTypeOptions.join(',')
+    }
+    if (!query.osiProviderId) {
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
+    }
+    
     return result;
   };
 
@@ -88,7 +113,7 @@ export default React.memo(function List() {
       return {
         total: data.total,
         list: data.list.map(item => {
-          const { osiImageReview, osiProviderId, category, standardReason, customReason, keywordTags } = item;
+          const { osiImageReview, category, standardReason, customReason, keywordTags } = item;
           const categoryList: IImage['categoryNames'][] = (category || '')
             .split(',')
             .filter((item, index) => item && index < 2);
@@ -102,7 +127,6 @@ export default React.memo(function List() {
             ...item,
             reasonTitle,
             keywordTags: keywordTags || [],
-            osiProviderName: providerOptions.find(o => o.value === osiProviderId + '').label,
             categoryNames: categoryOptions
               .filter(o => categoryList.includes(o.value + ''))
               .map(o => o.label)
@@ -147,7 +171,14 @@ export default React.memo(function List() {
       1,
       2,
       14,
-      { key: 5, options: providerOptions },
+      {
+        key: 5,
+        options: dataSourceOptions
+      },
+      {
+        key: 15,
+        options: imageTypeOptions
+      },
       6,
       7,
       8,
