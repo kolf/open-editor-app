@@ -3,6 +3,7 @@ import component from './zh-CN/component.json';
 import image from './zh-CN/image.json';
 import keywords from './zh-CN/keywords.json';
 import system from './zh-CN/system.json';
+import dataSource from './zh-CN/dataSource.json';
 
 // 导航
 export const menuPart = {
@@ -59,7 +60,8 @@ const otherPart = {
   'Inspection Platform': '内容审核管理平台',
   'Modify Password': '修改密码',
   'New Password': '新密码',
-  'Confirm New Password': '新密码',
+  'Old Password': '旧密码',
+  'Confirm New Password': '确认新密码',
 
   Exit: '退出',
   Login: '登录',
@@ -89,21 +91,27 @@ const table = {
   Open: '开通',
   Close: '关闭',
   Edit: '编辑',
+  
   'Confirm Close?': '是否确认关闭？',
   'Confirm Open?': '是否确认开通？',
   'Distribution Success': '设置分配成功！',
+  'Batch Rules': '批次生成规则',
+  'Automatic': '系统自动生成',
+  "A batch is generated when 5000 pictures are met or the creation time exceeds 12 hours": "满5000张/创建时间超过12小时生成一个批次",
+  manual: '手动生成',
+  "Push to generate one batch at a time": "推送一次生成一个批次",
 
   Title: '名称',
   'Please enter the data source name, no more than 200 characters': '请输入数据来源名称，不超过200个字符',
-  'Title Reivew Default Data': '标题审核默认数据',
-  'Keywords Review Default Data': '关键词审核默认数据',
+  'Title Reivew Default Data': '标题审核初始化数据',
+  'Keywords Review Default Data': '关键词审核初始化数据',
   AI: 'AI',
   'Please Enter Title!': '请输入名称！',
   'Please Select Inspection Type!': '请选择审核类型！',
   'Please Select NSFW Keywords!': '请选择敏感词表！',
   'Please Select NSFW Scan!': '请选择敏感检测！',
-  'Please Select Title Reivew Default Data': '请选择标题审核默认数据！',
-  'Please Select Keywords Review Default Data': '请选择关键词审核默认数据！',
+  'Please Select Title Reivew Default Data': '请选择标题审核初始化数据！',
+  'Please Select Keywords Review Default Data': '请选择关键词审核初始化数据！',
 
   'Please Enter Distribution Editor!': '请选择/输入分配对象！',
 
@@ -143,4 +151,4 @@ const exp = {
 
 export const zhCNMap = options.map(exp);
 
-export default { ...component, ...image, ...keywords, ...system, ...exp };
+export default { ...component, ...image, ...keywords, ...system, ...dataSource, ...exp };

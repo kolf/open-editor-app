@@ -13,7 +13,7 @@ export const useAsyncOptions = (language): any => {
   return (options: { enLabel: string; label: string; value: string }[]) => {
     return options.map(o => ({
       value: o.value,
-      label: language === 'en-US' ? o.enLabel : o.label
+      label: language === 'en-US' ? o.enLabel : o.label,
     }));
   };
 };

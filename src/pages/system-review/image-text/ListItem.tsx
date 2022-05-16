@@ -90,7 +90,7 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
       <GridItemRow>
         <div
           title={dataSource.title}
-          style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis' }}
+          style={{ height: 36, fontWeight: 700, overflow: 'hidden', textOverflow: 'ellipsis', wordBreak: 'break-all' }}
         >
           {dataSource.title}
         </div>
@@ -103,7 +103,11 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
             {licenseOptions.map(o => {
               const isActvie = isLicenseActive(dataSource.releases, o.value);
               return (
-                <a key={o.value} style={isActvie ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}>
+                <a
+                  key={o.value}
+                  onClick={e => (isActvie ? onClick(index, 'releases') : null)}
+                  style={isActvie ? { color: '#e30e09', fontWeight: 700 } : { color: '#444444' }}
+                >
                   {o.label}
                 </a>
               );

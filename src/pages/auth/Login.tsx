@@ -1,26 +1,23 @@
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useHistory } from 'react-router';
 import { Button, Col, Form, Input, Row, Checkbox, message } from 'antd';
-import { login } from 'src/features/auth/authenticate';
-import { PATH } from 'src/routes/path';
+import { login, logout } from 'src/features/auth/authenticate';
 import './styles.less';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { useLanguage } from 'src/hooks/useLanguage';
 import { setLanguage } from 'src/features/language/language';
+import { getFirstChild } from 'src/utils/tools';
 
 export default React.memo(function Login() {
   const { formatMessage } = useIntl();
   const dispatch = useDispatch();
-  const history = useHistory();
   const [forgot, setForgot] = useState(true);
-  const token = useSelector((state: any) => state.user.token);
   const loading = useSelector((state: any) => state.user.loading);
   const isChinese = useLanguage();
 
   useEffect(() => {
-    if (token) history.push(PATH.USER_REVIEW_IMAGE_TEXT);
-  }, [token]);
+    dispatch(logout())
+  }, []);
 
   const onFinish = async (values: any) => {
     if (forgot) {
@@ -31,6 +28,13 @@ export default React.memo(function Login() {
       if (res.error) {
         throw res.error;
       }
+
+      const firstMenuItem = getFirstChild(res.payload.menus)
+      if (!firstMenuItem) {
+        throw new Error(`对不起，您没有任何菜单访问权限！`)
+      }
+
+      window.location.href = firstMenuItem.path
     } catch (error) {
       message.error(error.message);
     }

@@ -1,7 +1,7 @@
 import { useRequest } from 'ahooks';
 import { Table, Button, message } from 'antd';
 import moment from 'moment';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { useEffect, useState } from 'react';
 import config from 'src/config';
 import {
@@ -19,9 +19,9 @@ import FormList from './FormList';
 import AssignForm from './AssignForm';
 import { useDocumentTitle } from 'src/hooks/useDom';
 import Toolbar from 'src/components/list/Toolbar';
-import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { getTableDisplay } from 'src/utils/tools';
+import { usePermissions } from 'src/hooks/usePermissions';
 
 function VcgImageText() {
   useDocumentTitle('数据分配-创意类质量审核-VCG内容审核管理平台');
@@ -29,20 +29,31 @@ function VcgImageText() {
     pageNum: 1,
     pageSize: 60,
     assignStatus: BatchAssignStatus.未分配,
-    auditStage: AuditType.关键词审核
+    auditStage: AuditType.关键词审核,
+    osiProviderId: ''
   });
-  const { providerOptions } = useContext(DataContext);
   const intl = useIntl();
+  
+  const { permissions, dataSourceOptions } = usePermissions(AuditType.关键词审核);
+
+   useEffect(() => {
+    setQuery({ ...query, osiProviderId: dataSourceOptions?.map(o => o.value).join(',') });
+  }, [dataSourceOptions]);
 
   const {
-    data = { list: [], total: 0 },
+    data,
     loading,
     run: fetchData,
     refresh
   } = useRequest(bacthService.getList, {
     manual: true,
-    ready: !!providerOptions
+    ready: !!dataSourceOptions
   });
+
+  const { list, total } = data || {
+    list: [],
+    total: 0
+  };
 
   useEffect(() => {
     fetchData(query);
@@ -86,8 +97,8 @@ function VcgImageText() {
   }
 
   const providerMap =
-    providerOptions &&
-    providerOptions.reduce((memo, provider) => {
+    dataSourceOptions &&
+    dataSourceOptions.reduce((memo, provider) => {
       memo[provider.value] = provider.label;
       return memo;
     }, {});
@@ -182,7 +193,13 @@ function VcgImageText() {
         // 分配状态为分配中、分配完成， 或入库状态为入库中，分配按钮禁用
         return (
           <Button
-            disabled={!(tr.status + '' === BatchStatus.入库完成 && tr.assignStatus === 1)}
+            disabled={
+              !(
+                tr.status + '' === BatchStatus.入库完成 &&
+                tr.assignStatus === 1 &&
+                permissions.includes(`DATA-SOURCE:${tr.osiDbProviderId}`)
+              )
+            }
             type="text"
             onClick={() => assignData(tr.id)}
           >
@@ -223,7 +240,7 @@ function VcgImageText() {
             memo['auditorId'] = nextQuery[q].map(u => u.value).join(',');
             break;
           case 'osiProviderId':
-            memo[q] = nextQuery[q] && nextQuery[q].value;
+            memo[q] = nextQuery[q] && nextQuery[q].value || dataSourceOptions?.map(o => o.value).join(',');
             break;
           default:
             memo[q] = nextQuery[q];
@@ -235,12 +252,17 @@ function VcgImageText() {
     setQuery(result);
   };
 
+  const onRefresh = () => {
+    setQuery({ ...query, pageNum: 1 });
+  };
+
   return (
     <>
       <FormList onChange={formListOnChange} {...query} />
       <Toolbar
+        onRefresh={onRefresh}
         pagerProps={{
-          total: data.total,
+          total,
           current: query.pageNum,
           pageSize: query.pageSize,
           onChange: values => {
@@ -250,7 +272,7 @@ function VcgImageText() {
       ></Toolbar>
       <Table
         pagination={false}
-        dataSource={data.list.map((l, i) => Object.assign(l, { index: i + 1 }))}
+        dataSource={list.map((l, i) => Object.assign(l, { index: i + 1 }))}
         columns={columns}
         bordered
         loading={loading}

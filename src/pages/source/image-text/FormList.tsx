@@ -2,21 +2,19 @@ import React, { FC, memo, useState } from 'react';
 import { Form, Select, DatePicker, Button } from 'antd';
 import { DownOutlined, UpOutlined } from '@ant-design/icons';
 import options, {
-  AIDetection,
   AIService,
+  AuditType,
   BatchAssignMode,
   BatchAssignStatus,
-  IfSensitiveCheckBool,
   Priority,
   SensitiveCheckType,
   SensitiveWordList
 } from 'src/declarations/enums/query';
 import SearchSelect from 'src/components/SearchSelect';
 import 'src/styles/FormList.less';
-import { useContext } from 'react';
-import { DataContext } from 'src/components/contexts/DataProvider';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { zhCNMap } from 'src/locales/zhCN';
+import { usePermissions } from 'src/hooks/usePermissions';
 
 const { Option } = Select;
 
@@ -24,7 +22,8 @@ const FormList = (props: any) => {
   const [collapse, setCollapse] = useState(false);
   const intl = useIntl();
 
-  const { providerOptions } = useContext(DataContext);
+  const { dataSourceOptions } = usePermissions(AuditType.质量审核);
+
   return (
     <div className="formList-root">
       <Form
@@ -73,7 +72,7 @@ const FormList = (props: any) => {
             type="provider"
             style={{ width: 160 }}
             placeholder={<FormattedMessage id="Data Source" />}
-            options={providerOptions}
+            options={dataSourceOptions}
             manual
           />
         </Form.Item>

@@ -1,6 +1,9 @@
 {
   "app.language": "English",
-  "app.title": "VCG内容审核管理平台",
+  "app.title": "VCG",
+  "page.notFound": "The requested URL [URL] was not found on this server.",
+  "page.serviceError": "Sorry, something went wrong.",
+  "page.goHome": "go Home",
 
   "menu.image.review": "Photo Review",
   "menu.image.quality": "Quality Review",

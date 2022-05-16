@@ -1,6 +1,9 @@
 {
   "app.language": "中文",
   "app.title": "VCG内容审核管理平台",
+  "page.notFound": "对不起，页面不存在，请检查URL",
+  "page.serviceError": "对不起，服务器异常，请稍候再试",
+  "page.goHome": "返回首页",
 
   "menu.image.review": "图片审核",
   "menu.image.quality": "质量审核",
@@ -9,5 +12,8 @@
   "header.search.placeholder": "请输入关键词或ID，多个用逗号隔开",
 
   "message.api.error": "接口请求错误",
-  "message.setting.success": "提交成功！"
+  "message.setting.success": "提交成功！",
+
+  "form.password.error": "密码不能少于6个字符",
+  "form.rePassword.error": "两次密码不一致，请重新输入"
 }

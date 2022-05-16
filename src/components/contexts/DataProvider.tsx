@@ -5,8 +5,8 @@ import { useLanguagePkg } from 'src/hooks/useLanguage';
 import { useAsyncOptions } from 'src/hooks/useSelect';
 
 interface Props {
-  providerOptions?: Option<string>[];
-  categoryOptions?: Option<string>[];
+  providerOptions?: any[];
+  categoryOptions?: any[];
   allReason?: any[];
   reasonMap?: Map<string, string>;
 }
@@ -53,7 +53,7 @@ export const DataProvider = ({ children }) => {
   const makeData = (data: Props): Props => {
     return Object.keys(data).reduce((result, key: keyof Props) => {
       const value = data[key];
-      if (/Options$/.test(key) && value) {
+      if (/Options$/.test(key) && value && key !== 'providerOptions') {
         result[key] = getAsyncOptions(value);
       } else {
         result[key] = value;
