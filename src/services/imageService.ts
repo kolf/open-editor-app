@@ -47,12 +47,18 @@ export class ImageService {
         (/^1/.test(osiImageReview.qualityStatus) || /^1/.test(osiImageReview.keywordsStatus)) &&
         osiKeywodsData.aiTitle
       ) {
+        let nextTitle = '';
+        if (keywordsReivewTitle.includes('1') && !osiKeywodsData.aiTitle) {
+          nextTitle = title;
+        } else if (keywordsReivewTitle.includes('2') && !title) {
+          nextTitle = osiKeywodsData.aiTitle;
+        } else if (keywordsReivewTitle.includes('1') && keywordsReivewTitle.includes('2')) {
+          nextTitle = title + '/' + osiKeywodsData.aiTitle;
+        }
+
         return {
           ...item,
-          title:
-            (keywordsReivewTitle.includes('1') ? title : '') +
-            '/' +
-            (keywordsReivewTitle.includes('2') ? osiKeywodsData.aiTitle : '')
+          title: nextTitle
         };
       }
       return item;
