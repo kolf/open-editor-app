@@ -7,6 +7,7 @@ import GridItemRow from 'src/components/list/GridItemRow';
 import SensitiveWordsTips from 'src/components/SensitiveWordsTips';
 import KeywordTextAreaGroup, { ModeType } from 'src/components/KeywordTextAreaGroup';
 import { useIntl } from 'react-intl';
+import { createTextCopyAndSelection } from 'src/utils/dom';
 
 type Props<T> = {
   dataSource: T;
@@ -64,6 +65,7 @@ export default React.memo(function ListItem({ dataSource, keywordMode, index, on
         <a style={{ color: '#337ab7' }} onClick={e => onClick(index, 'id')}>
           {dataSource.id}
         </a>
+        <a>（<span onClick={createTextCopyAndSelection}>{dataSource.providerResId}</span>）</a>
         {dataSource.osiImageReview.priority === 2 && (
           <IconFont
             title={formatMessage({ id: 'image.priority.2' })}
