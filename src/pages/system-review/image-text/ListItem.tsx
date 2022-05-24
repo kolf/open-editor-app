@@ -9,6 +9,7 @@ import SensitiveWordsTips from 'src/components/SensitiveWordsTips';
 import options, { Quality } from 'src/declarations/enums/query';
 import { useIntl } from 'react-intl';
 import { useOptions } from 'src/hooks/useSelect';
+import { createTextCopyAndSelection } from 'src/utils/dom';
 const { Option } = Select;
 const qualityOptions = options.get(Quality);
 
@@ -69,6 +70,7 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
         <a style={{ color: '#337ab7' }} onClick={e => onClick(index, 'id')}>
           {dataSource.id}
         </a>
+        <a>（<span onClick={createTextCopyAndSelection}>{dataSource.providerResId}</span>）</a>
         {dataSource.osiImageReview.priority === 2 && (
           <IconFont
             title={formatMessage({ id: 'image.priority.2' })}

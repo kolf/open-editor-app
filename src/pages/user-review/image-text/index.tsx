@@ -79,7 +79,7 @@ export default React.memo(function List() {
     }
   );
 
-  const [keywords] = useHeaderSearch(() => onRefresh());
+  const [searchType, keywords] = useHeaderSearch(() => onRefresh());
 
   const {
     getReasonTitle,
@@ -133,7 +133,7 @@ export default React.memo(function List() {
 
     if (keywords) {
       result['keyword'] = keywords;
-      result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
+      result['searchType'] = searchType;
     }
 
     if (!query.imageType) {

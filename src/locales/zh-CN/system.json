@@ -10,6 +10,9 @@
   "menu.image.keywords": "关键词审核",
   "header.search.button": "搜索",
   "header.search.placeholder": "请输入关键词或ID，多个用逗号隔开",
+  "header.search.select.1": "关键词",
+  "header.search.select.2": "ID",
+  "header.search.select.3": "原始ID",
 
   "message.api.error": "接口请求错误",
   "message.setting.success": "提交成功！",
