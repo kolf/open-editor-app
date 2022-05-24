@@ -70,7 +70,7 @@ export default React.memo(function ListItem({ dataSource, index, onClick }: Prop
         <a style={{ color: '#337ab7' }} onClick={e => onClick(index, 'id')}>
           {dataSource.id}
         </a>
-        <a title={dataSource.providerResId}>（<span onClick={createTextCopyAndSelection}>{dataSource.providerResId}</span>）</a>
+        <a title='原始id'>（<span onClick={createTextCopyAndSelection}>{dataSource.providerResId}</span>）</a>
         {dataSource.osiImageReview.priority === 2 && (
           <IconFont
             title={formatMessage({ id: 'image.priority.2' })}
