@@ -10,6 +10,9 @@
   "menu.image.keywords": "Metadata Review",
   "header.search.button": "Search",
   "header.search.placeholder": "Enter Keywords or ID, using ',' to search multiples",
+  "header.search.select.1": "Keyword",
+  "header.search.select.2": "ID",
+  "header.search.select.3": "Original ID",
 
   "message.api.error": "API Error",
   "message.setting.success": "Success!",
