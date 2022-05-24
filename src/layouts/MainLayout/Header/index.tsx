@@ -103,10 +103,15 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
             allowClear
             placeholder={formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
             onChange={e => {
+              if (e.type !== 'change')  {
+                // 若点击输入框的清空按钮 
+                dispatch(openFire(true));
+              }
               const value = e.target.value.replace(/，/g, ',');
               dispatch(setKeywords(value));
             }}
             style={{ width: 300 }}
+            onPressEnter={() => dispatch(openFire(true))}            
           />
           <Select
             options={[
@@ -127,7 +132,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
             defaultValue={searchType}
             onChange={type => {
               dispatch(setSearchType(type));
-            }}
+            }}            
           />
           <Button type="primary" onClick={() => dispatch(openFire(true))}>
             <FormattedMessage id={'header.search.button'} />
