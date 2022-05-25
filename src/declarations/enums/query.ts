@@ -10,7 +10,8 @@ export enum InStorageTime {
 export enum SearchType {
   关键词 = '1',
   ID = '2',
-  '原始ID' = '3'
+  '原始ID' = '3',
+  标题 = '4'
 }
 
 // 分配模式

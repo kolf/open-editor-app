@@ -13,6 +13,7 @@
   "header.search.select.1": "关键词",
   "header.search.select.2": "ID",
   "header.search.select.3": "原始ID",
+  "header.search.select.4": "标题",
 
   "message.api.error": "接口请求错误",
   "message.setting.success": "提交成功！",

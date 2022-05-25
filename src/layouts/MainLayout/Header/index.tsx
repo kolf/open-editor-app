@@ -126,6 +126,10 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
               {
                 value: SearchType.原始ID,
                 label: formatMessage({ id: 'header.search.select.3' })
+              },
+              {
+                value: SearchType.标题,
+                label: formatMessage({ id: 'header.search.select.4' })
               }
             ]}
             style={{ width: 80 }}

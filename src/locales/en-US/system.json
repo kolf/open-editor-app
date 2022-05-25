@@ -13,6 +13,7 @@
   "header.search.select.1": "Keyword",
   "header.search.select.2": "ID",
   "header.search.select.3": "Original ID",
+  "header.search.select.4": "Title",
 
   "message.api.error": "API Error",
   "message.setting.success": "Success!",
