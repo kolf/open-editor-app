@@ -4,7 +4,7 @@ import { setShow, openFire } from 'src/features/search/search';
 
 export const useHeaderSearch = run => {
   const dispatch = useDispatch();
-  const { keywords, fire, show } = useSelector((state: any) => state.search);
+  const { searchType, keywords, fire, show } = useSelector((state: any) => state.search);
 
   useEffect(() => {
     if (!show) {
@@ -19,5 +19,5 @@ export const useHeaderSearch = run => {
     }
   }, [fire]);
 
-  return [keywords];
+  return [searchType, keywords];
 };

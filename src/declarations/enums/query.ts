@@ -7,6 +7,13 @@ export enum InStorageTime {
   近一周 = '3'
 }
 
+export enum SearchType {
+  关键词 = '1',
+  ID = '2',
+  '原始ID' = '3',
+  标题 = '4'
+}
+
 // 分配模式
 export enum AssignType {
   人工 = '1',
