@@ -64,7 +64,7 @@ export default React.memo(function List() {
     }
   );
 
-  const [keywords] = useHeaderSearch(run);
+  const [searchType, keywords] = useHeaderSearch(run);
   const { getReasonTitle, showDetails, showLogs, openLicense, showMiddleImage, openOriginImage } = useImage({ list });
 
   // 格式化查询参数
@@ -90,7 +90,7 @@ export default React.memo(function List() {
 
     if (keywords) {
       result['keyword'] = keywords;
-      result['searchType'] = /^[\d,]*$/.test(keywords) ? '2' : '1';
+      result['searchType'] = searchType;
     }
 
     if (!query.imageType) {

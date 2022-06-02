@@ -1,20 +1,21 @@
 import { UserOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu, Input, message } from 'antd';
+import { Avatar, Dropdown, Menu, Input, message, Button, Select } from 'antd';
 import React, { memo, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useHistory } from 'react-router';
 import { Link } from 'react-router-dom';
 import { logout } from 'src/features/auth/authenticate';
-import { setKeywords, openFire } from 'src/features/search/search';
+import { setKeywords, openFire, setSearchType } from 'src/features/search/search';
 import { RootState } from 'src/store';
 import modal from 'src/utils/modal';
 import UpdatePasswordModal from './UpdatePasswordModal';
 import authService from 'src/services/authService';
 import { setLanguage } from 'src/features/language/language';
 import { FormattedMessage, useIntl } from 'react-intl';
-import { getMenuName } from '../MenuLink'
+import { getMenuName } from '../MenuLink';
 import { useLanguagePkg } from 'src/hooks/useLanguage';
 import { getFirstChild } from 'src/utils/tools';
+import options, { SearchType } from 'src/declarations/enums/query';
 
 const { Search } = Input;
 
@@ -23,7 +24,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
   const { formatMessage } = useIntl();
   const user = useSelector((state: RootState) => state.user.user);
   const menus = useSelector((state: RootState) => state.user.menus);
-  const { show: showSearch } = useSelector((state: RootState) => state.search);
+  const { show: showSearch, searchType } = useSelector((state: RootState) => state.search);
   const dispatch = useDispatch();
   const history = useHistory();
 
@@ -54,7 +55,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
           throw modifyPasswordResult.data.errMessage;
         }
         mod.close();
-        handleLogout()
+        handleLogout();
       } catch (e) {
         mod.close();
         message.error(e);
@@ -62,10 +63,10 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
     }
   };
 
-  const getMenuPath = (menu) => {
-    const firstChild = getFirstChild(menu.children || [])
-    return firstChild ? firstChild.path : menu.path
-  }
+  const getMenuPath = menu => {
+    const firstChild = getFirstChild(menu.children || []);
+    return firstChild ? firstChild.path : menu.path;
+  };
 
   const menu = (
     <Menu>
@@ -87,7 +88,7 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
       <div className="header-menu">
         <Menu mode="horizontal" selectedKeys={[menuKey]} onClick={onChange}>
           {menus
-            .filter(menu =>  menu.code !== 'open-editor-global')
+            .filter(menu => menu.code !== 'open-editor-global')
             .filter(menu => menu.isEnabled)
             .map(menu => (
               <Menu.Item key={menu.id + ''}>
@@ -98,19 +99,48 @@ const Header: React.FC<any> = ({ menuKey, onChange }) => {
       </div>
       {showSearch && (
         <div className="header-search">
-          <Search
+          <Input
             allowClear
             placeholder={formatMessage({ id: 'Enter Keywords or ID, using "," to search multiples' })}
             onChange={e => {
+              if (e.type !== 'change')  {
+                // 若点击输入框的清空按钮 
+                dispatch(openFire(true));
+              }
               const value = e.target.value.replace(/，/g, ',');
               dispatch(setKeywords(value));
             }}
-            onSearch={e => {
-              dispatch(openFire(true));
-            }}
-            enterButton={formatMessage({ id: 'header.search.button' })}
-            style={{ width: 390 }}
+            style={{ width: 300 }}
+            onPressEnter={() => dispatch(openFire(true))}            
           />
+          <Select
+            options={[
+              {
+                value: SearchType.关键词,
+                label: formatMessage({ id: 'header.search.select.1' })
+              },
+              {
+                value: SearchType.ID,
+                label: formatMessage({ id: 'header.search.select.2' })
+              },
+              {
+                value: SearchType.原始ID,
+                label: formatMessage({ id: 'header.search.select.3' })
+              },
+              {
+                value: SearchType.标题,
+                label: formatMessage({ id: 'header.search.select.4' })
+              }
+            ]}
+            style={{ width: 80 }}
+            defaultValue={searchType}
+            onChange={type => {
+              dispatch(setSearchType(type));
+            }}            
+          />
+          <Button type="primary" onClick={() => dispatch(openFire(true))}>
+            <FormattedMessage id={'header.search.button'} />
+          </Button>
         </div>
       )}
       <Dropdown overlay={menu} className="header-profile">

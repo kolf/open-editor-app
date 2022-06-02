@@ -174,7 +174,6 @@ export class ImageService {
       const res = await keywordService.getList(idList.join(','));
       return data.map(item => {
         const { osiKeywodsData, keywordsReivewTitle, keywordsReviewKeywords } = item;
-        // console.log(keywordsReivewTitle, keywordsReviewKeywords, 'keywordsReivewTitle,keywordsReviewKeywords');
         let keywordTags: IKeywordsTag[] = [];
         if (osiKeywodsData) {
           const keywordsAllObj: IKeywordsAll = JSON.parse(osiKeywodsData.keywordsAll || '{}');
