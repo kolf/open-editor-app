@@ -3,18 +3,22 @@ import { FormattedMessage } from 'react-intl';
 import { Select, Pagination, Space } from 'antd';
 
 export interface Props {
+  pageOptions?: number[];
   total?: number;
   onChange?: (value: { pageNum?: number; pageSize?: number }) => void;
   current: number;
   pageSize: number;
 }
 
-const pageOptions = [60, 100, 200];
-
-export default React.memo(function Pager({ onChange, ...restProps }: Props): ReactElement {
+export default React.memo(function Pager({
+  onChange,
+  pageOptions = [60, 100, 200],
+  ...restProps
+}: Props): ReactElement {
   // console.log(restProps.total,'restProps.total')
   const pageProps = {
     simple: true,
+    pageOptions,
     ...restProps,
     onChange: (pageNum: number) => {
       onChange({
@@ -32,6 +36,7 @@ export default React.memo(function Pager({ onChange, ...restProps }: Props): Rea
       <Select
         size="small"
         defaultValue={pageOptions[0]}
+        style={{ width: 80 }}
         onChange={(pageSize: number) => onChange({ pageSize: pageSize })}
       >
         {pageOptions.map(o => (
