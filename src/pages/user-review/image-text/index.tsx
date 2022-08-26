@@ -42,7 +42,7 @@ export default React.memo(function List() {
   const { run: review } = useRequest(imageService.qualityReview, { manual: true, throwOnError: true });
   const { run: update } = useRequest(imageService.update, { manual: true, throwOnError: true });
   const copyrightOptions = useOptions('image.copyright', ['0', '1', '2', '3', '7', '9']);
-  
+
   const { dataSourceOptions, imageTypeOptions } = usePermissions(AuditType.质量审核);
 
   const {
@@ -137,10 +137,10 @@ export default React.memo(function List() {
     }
 
     if (!query.imageType) {
-      result['imageType'] = imageTypeOptions.join(',')
+      result['imageType'] = imageTypeOptions.join(',');
     }
     if (!query.osiProviderId) {
-      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',')
+      result['osiProviderId'] = dataSourceOptions?.map(o => o.value).join(',');
     }
 
     return result;
@@ -550,6 +550,7 @@ export default React.memo(function List() {
         selectedIds={selectedIds}
         idList={list.map(item => item.id)}
         pagerProps={{
+          pageOptions: [60, 200, 1000, 2000],
           total,
           current: query.pageNum,
           pageSize: query.pageSize,
