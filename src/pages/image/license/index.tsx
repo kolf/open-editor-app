@@ -11,7 +11,7 @@ import { useIntl } from 'react-intl';
 interface Props {}
 
 function isPdf(url: string) {
-  return url.endsWith('.pdf') || !url.endsWith('.jpg');
+  return url.indexOf('.pdf')!==-1
 }
 
 function makeData(data: any) {
